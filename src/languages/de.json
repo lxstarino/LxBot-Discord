@@ -1,0 +1,224 @@
+{
+    "cmds":{
+        "balance": {
+            "title": "{target}'s Saldo",
+            "fields": {
+                "wallet": "Geldbörse",
+                "bank": "Bank",
+                "wallet_value": "{wallet} 💰",
+                "bank_value": "{bank} 💰"
+            }
+        },
+        "daily": {
+            "title": "Tägliche Belohnung",
+            "already_collected": "Du hast bereits deine tägliche Belohnung abgeholt, bitte warte bis zum <t:{time}:f>",
+            "collect": "Du hast heute 5000 💰 abgeholt"
+        },
+        "weekly":{
+            "title": "Wöchentliche Belohnung",
+            "already_collected": "Du hast bereits deine wöchentliche Belohnung abgeholt, bitte warte bis zum <t:{time}:f>",
+            "collect": "Du hast heute 10000 💰 abgeholt"
+        },
+        "monthly":{
+            "title": "Monatliche Belohnung",
+            "already_collected": "Du hast bereits deine monatliche Belohnung abgeholt, bitte warte bis zum <t:{time}:f>",
+            "collect": "Du hast heute 20000 💰 abgeholt"
+        },
+        "deposit":{
+            "title": "Bank",
+            "nem": "Du hast nicht genug Geld in deiner Geldbörse um Geld einzuzahlen!",
+            "successful": "Du hast {amount} 💰 in die Bank eingezahlt"
+        },
+        "withdraw":{
+            "title": "Bank",
+            "nem": "Du hast nicht genügend Geld auf der Bank um diesen Betrag auszuzahlen!",
+            "successful": "Du hast {amount} 💰 von der Bank ausgezahlt"
+        },
+        "transfer":{
+            "title": "Bank",
+            "ctys": "Du kannst dir selber kein Geld überweisen..",
+            "nem": "Du hast nicht genug Geld auf der Bank um diesen Betrag an jemanden zu überweisen!",
+            "successful": "Du hast {amount} 💰 an <@!{target}> erfolgreich überwiesen"
+        },
+        "rob":{
+            "title": "Rob",
+            "crys": "Du kannst dich nicht selber ausrauben..",
+            "rbl": "Du musst mindestens 5000 💰 bei dir tragen, um jemanden auszurauben",
+            "nts": "<@!{target}> trägt nichts bei sich was gestohlen werden könnte.",
+            "caught": "Du wurdest erwischt..\nDu zahltest {amount} 💰 an <@!{target}>",
+            "success": "Du hast erfolgreich {amount} 💰 ausgeraubt von <@!{target}>"
+        },
+        "slots":{
+            "title": "Slots",
+            "win": "[{item1} | {item2} | {item3}]\n**- DU HAST GEWONNEN -**",
+            "lost": "[{item1} | {item2} | {item3}]\n**- DU HAST VERLOREN -**",
+            "nem": "Du hast nicht genug Geld um am Automaten zu spielen.",
+            "fields": {
+                "name1": "Profit",
+                "name2": "Geld",
+                "value1": "-{amount} 💰",
+                "value2": "{amount} 💰"
+            }
+        },
+        "8ball": {
+            "desc": "**Frage**: {question}",
+            "fields": {
+                "name": "Antwort",
+                "value": "{answer}",
+                "answers": [
+                    "Definitiv",
+                    "Warum fragst du mich sowas?",
+                    "Ja",
+                    "Nein",
+                    "Ich werde dies nicht beantworten",
+                    "Vielleicht...",
+                    "Nein...",
+                    "Nein.. einfach nur nein",
+                    "Frag mich später nochmal",
+                    "Meine quellen sagen nein",
+                    "Ich weiß es nicht",
+                    "||Ja||",
+                    "||Nein||"
+                ]
+            }
+        },
+        "coinflip": {
+            "title": "🪙 Münzwurf ({coinside})",
+            "desc": "**Münzen Seite**: {result}",
+            "fields": {
+                "name": "Resultat",
+                "win": "Du hast gewonnen!",
+                "lost": "Du hast verloren!"
+            }
+        },
+        "fact": {
+            "title": "Fakt",
+            "desc": "Angefordert von {user}\n```{response}```"
+        },
+        "roll": {
+            "title": "🎲 Würfeln",
+            "desc": "**{user}** würfelte {number}"
+        },
+        "cuddle": {
+            "title": "🤲 Kuscheln",
+            "desc": "**{user}** kuschelt mit **{target}**"
+        },
+        "hug": {
+            "title": "🤲 Umarmen",
+            "desc": "**{user}** umarmt **{target}**"
+        },
+        "kiss": {
+            "title": "💋 Küssen",
+            "desc": "**{user}** küsst **{target}**"
+        },
+        "pat": {
+            "title": "✋ Streicheln",
+            "desc": "**{user}** streichelt **{target}**"
+        },
+        "poke": {
+            "title": "👉 Stupsen",
+            "desc": "**{user}** stupst **{target}** an"
+        },
+        "slap": {
+            "title": "👋 Schlagen",
+            "desc": "**{user}** schlägt **{target}**"
+        },
+        "avatar": {
+            "title": "{user}'s Profilbild"
+        },
+        "banner": {
+            "desc": "{target} hat kein Banner aber ein Akzentfarbe",
+            "desc2": "{target} hat kein Banner oder eine Akzentfarbe",
+            "desc3": "Banner konnte nicht angefordert werden"
+        },
+        "botinfo": {
+            "createdat": "Erstellt am",
+            "botowner": "Bot Besitzer",
+            "latency": "Latenz",
+            "startedsince": "Gestartet seit:",
+            "commands": "Befehle ({size})"
+        },
+        "channelinfo": {
+            "type": "Art",
+            "createdon": "Erstellt am",
+            "tnf": "Art nicht gefunden",
+            "ntp": "Kein Thema angegeben",
+            "tc": "Text Kanal",
+            "vc": "Sprach Kanal",
+            "ac": "Ankündigungs Kanal",
+            "at": "Ankündigungs Thread",
+            "pt": "Öffentlicher Thread",
+            "pt2": "Privater Thread",
+            "svc": "Bühnensprachkanal"
+        },
+        "poll": {
+            "title": "Umfrage",
+            "desc": "**{user}** fragt:\n{question}",
+            "createdby": "Erstellt von {user}",
+            "pollcreated": "Umfrage erstellt | <#{channel}>"
+        },
+        "serverinfo": {
+            "createdon": "Erstellt am",
+            "ndp": "Kein Beschreibung angegeben",
+            "serverowner": "Server Besitzer",
+            "membercount": "Mitglieder Anzahl",
+            "invitecount": "Einladungscodes",
+            "rescount": "Rollen/Emoji/Sticker Anzahl",
+            "channelcount": "Kanäle ({size})"
+        },
+        "userinfo": {
+            "joinedon": "Beigetreten am",
+            "registeredon": "Registriert am",
+            "roles": "Rollen {size}",
+            "avatar": "Profilbild"
+        },
+        "add/remrole": {
+            "edesc1": "Die Aktion für <@!{target}> konnte nicht bearbeitet werden da der Bot fehlende Rechte hat",
+            "edesc2": "Die Aktion für <@!{target}> konnte nicht bearbeitet werden da der Benutzer nicht gefunden werden konnte",
+            "edesc3": "Die Aktion für <@!{target}> konnte nicht bearbeitet werden da die Rolle ungültig ist",
+            "edesc4":  "Die Rolle ist entweder über mir oder mir fehlen die benötigen Rechte zu sie hinzuzufügen/entfernen",
+            "desc": "Fügte <@&{role}> zu <@!{target}> hinzu",
+            "desc2": "Entfernte <@&{role}> von <@!{target}>"
+        },
+        "ban/unban": {
+            "edesc1": "Die Aktion für <@!{target}> konnte nicht bearbeitet werden da der Bot fehlende Rechte hat",
+            "edesc2": "Die Aktion für <@!{target}> konnte nicht bearbeitet werden da der Benutzer bereits gebannt ist",
+            "edesc3": "Die Aktion für <@!{target}> konnte nicht bearbeitet werden da der Benutzer nicht gebannt ist",
+            "btnconfirm": "Bestätigen",
+            "btncancel": "Ablehnen",
+            "bantitle": "Ban Bestätigung",
+            "bandesc": "Bist du dir sicher das du <@!{target}> bannen möchtest?",
+            "banned": "<@!{target}> wurde gebannt",
+            "unbanned": "<@!{target}> wurde entbannt",
+            "canceled": "Der Prozess wurde abgelehnt",
+            "canceled2": "Der Prozess wurde abgelehnt aufgrund von Zeit"
+        },
+        "kick": {
+            "edesc1": "Die Aktion für <@!{target}> konnte nicht bearbeitet werden da der Benutzer nicht gefunden wurde",
+            "edesc2": "Die Aktion für <@!{target}> konnte nicht bearbeitet werden da der Bot fehlende Rechte hat",
+            "kicked": "<@!{target}> wurde gekickt"
+        },
+        "nuke": {
+            "edesc1": "Die Aktion für <#{channel}> konnte nicht bearbeitet werden da der Bot fehlende Rechte hat",
+            "desc": "Channel geleert von <@!{user}>"
+        } 
+    },
+    "errors": {
+        "nwn": "Gebe eine ganze Zahl an",
+        "unf": "Benutzer wurde nicht gefunden",
+        "uab": "Benutzer ist bereits gebannt",
+        "uinb": "Benutzer ist nicht gebannt",
+        "mp": "Fehlende Berechtigungen",
+        "ivr": "Ungültige Rolle",
+        "npf": {
+            "title": "Kein Profil konnte gefunden werden",
+            "desc": "<@!{target}> hat kein Profil"
+        }
+    },
+    "success": {
+        "pfc":{
+            "title": "Profil erstellt",
+            "desc": "Benutze den Befehl erneut um dein Saldo abzurufen"
+        }
+    }
+}

@@ -1,0 +1,25 @@
+[
+    {
+        "guildId": "1105553798216286220",
+        "panel": "1",
+        "roles": [],
+        "channel": 0,
+        "category": 0
+    },
+    {
+        "guildId": "1105553798216286220",
+        "panel": "2",
+        "roles": [],
+        "channel": 0,
+        "category": 0
+    },
+    {
+        "guildId": "1105553798216286220",
+        "panel": "10",
+        "roles": [
+            "1194884889980436480"
+        ],
+        "channel": 0,
+        "category": 0
+    }
+]

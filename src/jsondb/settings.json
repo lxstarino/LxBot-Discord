@@ -1,0 +1,13 @@
+[
+    {
+        "guildId": "812027063216898068",
+        "disabled_modules": [
+            "NSFW"
+        ],
+        "embed_color": "#141414"
+    },
+    {
+        "guildId": "1105553798216286220",
+        "language": "de"
+    }
+]
