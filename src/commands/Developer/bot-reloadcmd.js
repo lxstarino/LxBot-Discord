@@ -14,6 +14,9 @@ module.exports = {
     async execute(client, interaction) {
         const Cmd = interaction.options.get("command").value
 
+        let ls = client.getLanguage(interaction.guild?.id)
+        const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+
         const Command = client.commands.get(Cmd)
         if(Command){
             const Folder = Command.Folder
@@ -26,9 +29,9 @@ module.exports = {
     
             interaction.client.commands.set(newCommand.data.name, properties);
 
-            client.successEmbed({type: "reply", ephemeral: true, desc: `\`${newCommand.data.name}\` successfully reloaded!`}, interaction)
+            client.successEmbed({type: "reply", ephemeral: true, desc: handlemsg(ls["cmds"]["bot-reloadcmd"]["success"], {command: newCommand.data.name})}, interaction)
         } else {
-            throw({title: "Command not found", desc: `Provide a valid command!\n\nValid Commands:\n${client.commands.map(cmd => {return ` \`${cmd.data.name}\``})}`})
+            throw({title: ls["cmds"]["bot-reloadcmd"]["invalid_title"], desc: handlemsg(ls["cmds"]["bot-reloadcmd"]["invalid_desc"], {commands: client.commands.map(cmd => {return ` \`${cmd.data.name}\``})})})
         }
 
     }  

@@ -12,20 +12,18 @@ module.exports = {
     async execute(client, interaction) {
         const target = interaction.options.get("target")
 
-        const settings = client.settings.storage.data.find(x => x.guildId === interaction.guild.id)
-        let ls = settings ? settings.language ? require(`${process.cwd()}/src/languages/${settings.language}.json`) : require(`${process.cwd()}/src/languages/en.json`) : require(`${process.cwd()}/src/languages/en.json`)
+        let ls = client.getLanguage(interaction.guild?.id)
         const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
 
         if(target.member){
             let files = require("./db/pat-db.json")
 
-            client.basicEmbed({
-                type: "reply",
+            client.Embed([{
                 title: `${ls["cmds"]["pat"]["title"]}`,
                 desc: `${handlemsg(ls["cmds"]["pat"]["desc"], {user: interaction.user.username, target: target.user.username})}`,
                 image: `${files[(Math.floor(Math.random() * files.length))]}`,
                 footer: {text: interaction.user.tag}
-            }, interaction)
+            }], undefined, "reply", undefined, interaction)
         } else {
             client.errEmbed({
                 type: "reply",

@@ -1,0 +1,60 @@
+[
+    {
+        "guildId": "1105553798216286220",
+        "welcomestate": true,
+        "welcomechannel": "1280995343567294514",
+        "welcomerole": "1527917098045804715",
+        "language": "de",
+        "shop_items": [],
+        "logchannel": "1527902503386218536",
+        "birthdaychannel": "1527926260398030908",
+        "counting_channel": "1527929425876750429",
+        "counting_current": 0,
+        "counting_last_user": null,
+        "counting_highscore": 4,
+        "voice_creator_channel": "1527932290506690630",
+        "temp_voice_channels": [],
+        "welcomecard": true
+    },
+    {
+        "guildId": "1368374285520994376",
+        "language": "en",
+        "disabled_modules": [],
+        "embed_color": null,
+        "welcomestate": false,
+        "welcomechannel": null,
+        "welcomerole": null,
+        "shop_items": [
+            {
+                "roleId": "1460303621945299005",
+                "price": 5555555555555555
+            }
+        ]
+    },
+    {
+        "guildId": "1291027235066609715",
+        "language": "de",
+        "disabled_modules": [
+            "Nsfw"
+        ],
+        "embed_color": null,
+        "welcomestate": true,
+        "welcomechannel": "1291034532866424842",
+        "welcomerole": "1291040544025346068",
+        "welcomecard": true,
+        "shop_items": [
+            {
+                "roleId": "1528113726572728362",
+                "price": 500000
+            }
+        ],
+        "logchannel": "1528094519038443701",
+        "birthdaychannel": "1528091413898723519",
+        "counting_channel": "1528091597189677117",
+        "counting_current": 3,
+        "counting_highscore": 31,
+        "counting_last_user": "619915409885364245",
+        "voice_creator_channel": "1528089975407640586",
+        "temp_voice_channels": []
+    }
+]

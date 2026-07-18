@@ -8,8 +8,7 @@ module.exports = {
         const guild_invites = await interaction.guild.invites.fetch()
         const description = interaction.guild.description
 
-        const settings = client.settings.storage.data.find(x => x.guildId === interaction.guild.id)
-        let ls = settings ? settings.language ? require(`${process.cwd()}/src/languages/${settings.language}.json`) : require(`${process.cwd()}/src/languages/en.json`) : require(`${process.cwd()}/src/languages/en.json`)
+        let ls = client.getLanguage(interaction.guild?.id)
         const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
 
         const BoostLevel = {
@@ -18,22 +17,21 @@ module.exports = {
             "2": `${interaction.guild.premiumSubscriptionCount}/14`,
         }
 
-        client.basicEmbed({
-            type: "reply",
+        client.Embed([{
             thumbnail: `${interaction.guild.iconURL() || interaction.user.defaultAvatarURL}`,
             fields: [
                 { name: `${interaction.guild.name}`, value: `${description ? description : ls["cmds"]["serverinfo"]["ndp"]}`, inline: false},
-                { name: `${ls["cmds"]["serverinfo"]["serverowner"]}`, value: `<@!${interaction.guild.ownerId}>`, inline: true},
-                { name: `Server Level (${interaction.guild.premiumTier})`, value: `Boosts: ${BoostLevel[interaction.guild.premiumTier]}`, inline: true},  
+                { name: `${ls["cmds"]["serverinfo"]["serverowner"]}`, value: `<@!${interaction.guild.ownerId}>`, inline: false},
+                { name: `${handlemsg(ls["cmds"]["serverinfo"]["lvl_title"], {level: interaction.guild.premiumTier})}`, value: `${handlemsg(ls["cmds"]["serverinfo"]["lvl_val"], {boosts: BoostLevel[interaction.guild.premiumTier]})}`, inline: true},  
                 { name: `${ls["cmds"]["serverinfo"]["createdon"]}`, value: `🗓️ <t:${Math.round(interaction.guild.createdTimestamp / 1000)}:d>`, inline: true},    
-                { name: `${ls["cmds"]["serverinfo"]["membercount"]}`, value: `**${interaction.guild.memberCount}** member(s)`, inline: true}, 
-                { name: `${ls["cmds"]["serverinfo"]["invitecount"]}`, value: `**${guild_invites.size}** code(s)`, inline: true},  
+                { name: `${ls["cmds"]["serverinfo"]["membercount"]}`, value: `${handlemsg(ls["cmds"]["serverinfo"]["member_val"], {count: interaction.guild.memberCount})}`, inline: true}, 
+                { name: `${ls["cmds"]["serverinfo"]["invitecount"]}`, value: `${handlemsg(ls["cmds"]["serverinfo"]["invite_val"], {count: guild_invites.size})}`, inline: true},  
                 { name: "\u200b", value: `\u200b`, inline: true},  
-                { name: `${ls["cmds"]["serverinfo"]["rescount"]}`, value: `**${interaction.guild.roles.cache.size}** role(s) | **${interaction.guild.emojis.cache.size}** emoji(s) | **${interaction.guild.stickers.cache.size}** sticker(s)`, inline: false},
-                { name: `${handlemsg(ls["cmds"]["serverinfo"]["channelcount"], {size: interaction.guild.channels.cache.size})}`, value: `Categories: **${interaction.guild.channels.cache.filter(c => c.type === 4).size}** | Text Channels: **${interaction.guild.channels.cache.filter(c => c.type === 0).size}** | VC Channels: **${interaction.guild.channels.cache.filter(c => c.type === 2).size}**`, inline: false},
+                { name: `${ls["cmds"]["serverinfo"]["rescount"]}`, value: `${handlemsg(ls["cmds"]["serverinfo"]["res_val"], {roles: interaction.guild.roles.cache.size, emojis: interaction.guild.emojis.cache.size, stickers: interaction.guild.stickers.cache.size})}`, inline: false},
+                { name: `${handlemsg(ls["cmds"]["serverinfo"]["channelcount"], {size: interaction.guild.channels.cache.size})}`, value: `${handlemsg(ls["cmds"]["serverinfo"]["channel_val"], {categories: interaction.guild.channels.cache.filter(c => c.type === 4).size, text: interaction.guild.channels.cache.filter(c => c.type === 0).size, vc: interaction.guild.channels.cache.filter(c => c.type === 2).size})}`, inline: false},
             ],
             timestamp: interaction.createdTimestamp,
-            footer: {text: `Server ID: ${interaction.guild.id}`}
-        }, interaction)
+            footer: {text: `${handlemsg(ls["cmds"]["serverinfo"]["id_footer"], {id: interaction.guild.id})}`}
+        }], undefined, "reply", false, interaction)
     }
 }

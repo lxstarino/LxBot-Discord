@@ -10,21 +10,31 @@ module.exports = (client) => {
         const commandFiles = fs.readdirSync(`./src/commands/${Folder}/`).filter(file => file.endsWith(".js"))
 
         commandFiles.forEach(commandFile => {
-            const command = require(`../../commands/${Folder}/${commandFile}`)
-            const properties = {Folder, ...command}
+            try {
+                const command = require(`../../commands/${Folder}/${commandFile}`)
 
-            client.commands.set(command.data.name, properties)   
-            commands.push(command.data.toJSON())
+                if (!command || !command.data || !command.execute) {
+                    console.warn(`[WARN] Command file "${commandFile}" in "${Folder}" is missing "data" or "execute" properties. Skipping.`);
+                    return;
+                }
+
+                const properties = { Folder, ...command }
+                client.commands.set(command.data.name, properties)
+                commands.push(command.data.toJSON())
+            } catch (err) {
+                console.error(`[ERROR] Failed to load command "${commandFile}" in "${Folder}":`, err);
+            }
         })
     })
 
-    
 
-    const restClient = new REST({version: "9"}).setToken(process.env.token)
-    
+
+    const restClient = new REST({ version: "10" }).setToken(process.env.token)
+
     restClient.put(Routes.applicationCommands(process.env.appid), {
-        body: commands})
-        .then(() => console.log("Commands registered"))
+        body: commands
+    })
+        .then(() => console.log("> Commands successfully registered!"))
         .catch(console.error)
 }
 

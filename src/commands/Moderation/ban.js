@@ -14,11 +14,9 @@ module.exports = {
     async execute(client, interaction) {
         const target = interaction.options.get("target")
 
-        const settings = client.settings.storage.data.find(x => x.guildId === interaction.guild.id)
-        let ls = settings ? settings.language ? require(`${process.cwd()}/src/languages/${settings.language}.json`) : require(`${process.cwd()}/src/languages/en.json`) : require(`${process.cwd()}/src/languages/en.json`)
+        let ls = client.getLanguage(interaction.guild?.id)
         const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
 
-        if(!interaction.guild.members.me.permissions.has(PermissionsBitField.Flags.BanMembers)) throw({title: `${ls["errors"]["mp"]}`, desc: handlemsg(ls["cmds"]["ban/unban"]["edesc1"], {target: target.user.id})})
         if(target.member) if(!target.member.moderatable) throw({title: `${ls["errors"]["mp"]}`, desc: handlemsg(ls["cmds"]["ban/unban"]["edesc1"], {target: target.user.id})})
         const banList = await interaction.guild.bans.fetch()
         if(banList.get(target.user.id)) throw{title: `${ls["errors"]["uab"]}`, desc: handlemsg(ls["cmds"]["ban/unban"]["edesc2"], {target: target.user.id})}
@@ -37,50 +35,62 @@ module.exports = {
                 .setStyle("Danger")
         )
 
-        const msg = await client.basicEmbed({
-            type: "reply",
-            components: [ConfirmMenu],
+        const msg = await client.Embed([{
             title: ls["cmds"]["ban/unban"]["bantitle"],
             desc: handlemsg(ls["cmds"]["ban/unban"]["bandesc"], {target: target.user.id}),
             timestamp: interaction.createdTimestamp,
             footer: {text: `Moderator: ${interaction.user.tag}`}
-        }, interaction)
+        }], [ConfirmMenu], "reply", undefined, interaction)
 
-        msg.awaitMessageComponent({filter: i => i.user.id === interaction.user.id, time: 60000}).then(async(i) => {
-            switch(i.customId){
-                case "ban-confirm":
-                    await interaction.guild.members.ban(target.user.id).then(() => {
-                        client.basicEmbed({
-                            type: "update",
-                            components: [],
-                            title: ls["cmds"]["ban/unban"]["bantitle"],
-                            desc: handlemsg(ls["cmds"]["ban/unban"]["banned"], {target: target.user.id}),
-                            timestamp: i.createdTimestamp,
-                            footer: {text: `Moderator: ${i.user.tag}`}
-                        }, i)
-                    }).catch((err) => {throw({title: "Missing Permissions", desc: `The action for <@!${target.user.id}> can't be processed because the bot is lacking permissions`})})
-                    break
-                case "ban-cancel":
-                    client.basicEmbed({
-                        type: "update",
-                        components: [],
+        try {
+            const i = await msg.awaitMessageComponent({ filter: i => i.user.id === interaction.user.id, time: 60000 })
+            if (i.customId === "ban-confirm") {
+                try {
+                    const reason = interaction.options.getString("reason") || "No reason provided"
+                    await interaction.guild.members.ban(target.user.id, { reason })
+                    await client.Embed([{
                         title: ls["cmds"]["ban/unban"]["bantitle"],
-                        desc: ls["cmds"]["ban/unban"]["canceled"],
+                        desc: handlemsg(ls["cmds"]["ban/unban"]["banned"], { target: target.user.id }),
                         timestamp: i.createdTimestamp,
-                        footer: {text: `Moderator: ${i.user.tag}`}
+                        footer: { text: `Moderator: ${i.user.tag}` }
+                    }], [], "update", undefined, i)
+
+                    const { sendModLog } = require(`${process.cwd()}/src/handlers/functions`)
+                    await sendModLog(client, interaction.guild, {
+                        title: ls["logs"]["ban_title"],
+                        desc: handlemsg(ls["logs"]["ban_desc"], {
+                            target: target.user.id,
+                            tag: target.user.tag,
+                            moderator: interaction.user.id,
+                            reason: reason
+                        }),
+                        color: "#ff0000",
+                        timestamp: Date.now()
+                    })
+                } catch (err) {
+                    await client.errEmbed({
+                        type: "reply",
+                        ephemeral: true,
+                        title: ls["errors"]["mp"],
+                        desc: handlemsg(ls["cmds"]["ban/unban"]["edesc1"], { target: target.user.id })
                     }, i)
-                    break
+                }
+            } else if (i.customId === "ban-cancel") {
+                await client.Embed([{
+                    title: ls["cmds"]["ban/unban"]["bantitle"],
+                    desc: ls["cmds"]["ban/unban"]["canceled"],
+                    timestamp: i.createdTimestamp,
+                    footer: { text: `Moderator: ${i.user.tag}` }
+                }], [], "update", undefined, i)
             }
-        }).catch(() => {
-            client.basicEmbed({
-                type: "editReply",
-                components: [],
+        } catch (err) {
+            await client.Embed([{
                 title: ls["cmds"]["ban/unban"]["bantitle"],
                 desc: ls["cmds"]["ban/unban"]["canceled2"],
                 timestamp: interaction.createdTimestamp,
-                footer: {text: `Moderator: ${interaction.user.tag}`}
-            }, interaction)
-        })
+                footer: { text: `Moderator: ${interaction.user.tag}` }
+            }], [], "editReply", undefined, interaction).catch(() => { })
+        }
     }
 }
 

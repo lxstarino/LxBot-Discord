@@ -6,10 +6,11 @@ module.exports = {
     .setName("bot-stop")
     .setDescription("Stops the bot"),
     async execute(client, interaction){
-        await client.basicEmbed({
-            type: "reply",
-            title: "Bot stopped"
-        },interaction)
+        let ls = client.getLanguage(interaction.guild?.id)
+
+        await client.Embed([{
+            title: ls["cmds"]["bot-stop"]["title"]
+        }], undefined, "reply", undefined, interaction)
         process.exit(0)
     }
 }

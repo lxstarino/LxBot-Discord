@@ -3,54 +3,69 @@ const { SlashCommandBuilder } = require("@discordjs/builders")
 module.exports = {
     data: new SlashCommandBuilder()
     .setName("transfer")
-    .setDescription("Transfer your money to an other user")
+    .setDescription("Transfer your money to another user")
     .addUserOption((option) => option
         .setName("target")
-        .setDescription("target")
+        .setDescription("The user you want to transfer money to")
         .setRequired(true)
     )
     .addNumberOption((option) => option
         .setName("amount")
-        .setDescription("amount")
+        .setDescription("The amount of money to transfer")
         .setMinValue(1)
         .setRequired(true)
+    )
+    .addStringOption((option) => option
+        .setName("source")
+        .setDescription("Transfer from wallet or bank")
+        .setRequired(true)
+        .addChoices(
+            { name: "Wallet", value: "wallet" },
+            { name: "Bank", value: "bank" }
+        )
     ),
     async execute(client, interaction){
-        const target = interaction.options.get("target") || interaction
+        const target = interaction.options.get("target")
         const amount = interaction.options.get("amount").value
+        const source = interaction.options.getString("source")
         
-        const settings = client.settings.storage.data.find(x => x.guildId === interaction.guild.id)
-        let ls = settings ? settings.language ? require(`${process.cwd()}/src/languages/${settings.language}.json`) : require(`${process.cwd()}/src/languages/en.json`) : require(`${process.cwd()}/src/languages/en.json`)
-        const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+        let ls = client.getLanguage(interaction.guild?.id)
+        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/handlers/functions`)
         
         if(!Number.isInteger(amount)) throw({title: `${ls["cmds"]["transfer"]["title"]}`, desc: `${ls["errors"]["nwn"]}`})
 
-        const profile = await client.economy.storage.data.find(x => x.userId === interaction.user.id && x.guildId === interaction.guild.id)
-        if(profile){
-            if(target.user.id == interaction.user.id) throw({title: `${ls["cmds"]["transfer"]["title"]}`, desc: `${ls["cmds"]["transfer"]["ctys"]}`})
-            if(amount > profile.bank) throw({title: `${ls["cmds"]["transfer"]["title"]}`, desc: `${ls["cmds"]["transfer"]["nem"]}`})
+        if(target.user.id === interaction.user.id) throw({title: `${ls["cmds"]["transfer"]["title"]}`, desc: `${ls["cmds"]["transfer"]["ctys"]}`})
 
-            const targetProfile = await client.economy.storage.data.find(x => x.userId === target.user.id && x.guildId === interaction.guild.id)
-            if(!targetProfile) throw({title: `${ls["errors"]["npf"]["title"]}`, desc: `${handlemsg(ls["errors"]["npf"]["desc"], {target: target.user.id})}`})
-            targetProfile.bank += amount
-            profile.bank -= amount
+        // Fetch or create profile for both sender and target
+        const profile = await getOrCreateProfile(client, interaction.user.id, interaction.guild.id)
+        const targetProfile = await getOrCreateProfile(client, target.user.id, interaction.guild.id)
 
-            await client.economy.saveData()
-            client.successEmbed({
-                type: "reply",
-                ephemeral: true,
-                title: `${ls["cmds"]["transfer"]["title"]}`,
-                desc: `${handlemsg(ls["cmds"]["transfer"]["successful"], {amount: amount, target: target.user.id})}`
-            },interaction)
-        } else {
-            await client.economy.createData({guildId: interaction.guild.id, userId: interaction.user.id, wallet: 0, bank: 0, daily: 0, weekly: 0, monthly: 0})
-
-            client.successEmbed({
-                type: "reply",
-                ephemeral: true,
-                title: `${ls["success"]["pfc"]["title"]}`,
-                desc: `${ls["success"]["pfc"]["desc"]}`
-            }, interaction)
+        const balance = source === "wallet" ? profile.wallet : profile.bank
+        if(amount > balance) {
+            if (source === "wallet") {
+                throw({
+                    title: `${ls["cmds"]["transfer"]["title"]}`, 
+                    desc: `${ls["cmds"]["transfer"]["nem_wallet"]}`
+                })
+            } else {
+                throw({title: `${ls["cmds"]["transfer"]["title"]}`, desc: `${ls["cmds"]["transfer"]["nem"]}`})
+            }
         }
+
+        if(source === "wallet") {
+            profile.wallet -= amount
+            targetProfile.wallet += amount
+        } else {
+            profile.bank -= amount
+            targetProfile.bank += amount
+        }
+
+        await client.economy.saveData()
+        client.successEmbed({
+            type: "reply",
+            ephemeral: true,
+            title: `${ls["cmds"]["transfer"]["title"]}`,
+            desc: `${handlemsg(ls["cmds"]["transfer"]["successful"], {amount: amount, target: target.user.id})}`
+        }, interaction)
     }
 }

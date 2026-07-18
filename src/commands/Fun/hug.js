@@ -15,17 +15,15 @@ module.exports = {
         if(target.member){
             let files = require("./db/hug-db.json")
 
-            const settings = client.settings.storage.data.find(x => x.guildId === interaction.guild.id)
-            let ls = settings ? settings.language ? require(`${process.cwd()}/src/languages/${settings.language}.json`) : require(`${process.cwd()}/src/languages/en.json`) : require(`${process.cwd()}/src/languages/en.json`)
+            let ls = client.getLanguage(interaction.guild?.id)
             const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
 
-            client.basicEmbed({
-                type: "reply",
+            client.Embed([{
                 title: `${ls["cmds"]["hug"]["title"]}`,
                 desc: `${handlemsg(ls["cmds"]["hug"]["desc"], {user: interaction.user.username, target: target.user.username})}`,
                 image: `${files[(Math.floor(Math.random() * files.length))]}`,
                 footer: {text: interaction.user.tag}
-            }, interaction)
+            }], undefined, "reply", undefined, interaction)
         } else {
             client.errEmbed({
                 type: "reply",

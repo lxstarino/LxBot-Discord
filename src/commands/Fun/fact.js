@@ -1,22 +1,27 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
-const axios = require("axios")
 
 module.exports = {
+    devOnly: true,
     data: new SlashCommandBuilder()
     .setName("fact")
     .setDescription("Get a random fact"),
     async execute(client, interaction) {
-        const response = await axios("https://uselessfacts.jsph.pl/api/v2/facts/random", {method: "GET"}).catch(err => err)
-        
-        const settings = client.settings.storage.data.find(x => x.guildId === interaction.guild.id)
-        let ls = settings ? settings.language ? require(`${process.cwd()}/src/languages/${settings.language}.json`) : require(`${process.cwd()}/src/languages/en.json`) : require(`${process.cwd()}/src/languages/en.json`)
+        let ls = client.getLanguage(interaction.guild?.id)
         const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
 
-        client.basicEmbed({
-            type: "reply",
-            title: `${ls["cmds"]["fact"]["title"]}`,
-            desc: `${handlemsg(ls["cmds"]["fact"]["desc"], {user: interaction.user.tag, response: response.data.text})}`,
-            footer: {text: `ID: ${response.data.id}`}
-        }, interaction)
+        try {
+            const response = await fetch("https://uselessfacts.jsph.pl/api/v2/facts/random")
+            if (!response.ok) return interaction.reply({ content: ls["cmds"]["fact"]["err_fetch"], ephemeral: true })
+            const data = await response.json()
+
+            client.Embed([{
+                title: `${ls["cmds"]["fact"]["title"]}`,
+                desc: `${handlemsg(ls["cmds"]["fact"]["desc"], {user: interaction.user.tag, response: data.text})}`,
+                footer: {text: `ID: ${data.id}`}
+            }], undefined, "reply", false, interaction)
+        } catch (err) {
+            console.error(err)
+            interaction.reply({ content: ls["cmds"]["fact"]["err_fetch"], ephemeral: true })
+        }
     }
 }

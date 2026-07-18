@@ -2,46 +2,53 @@ const { SlashCommandBuilder } = require("@discordjs/builders")
 
 module.exports = {
     data: new SlashCommandBuilder()
-    .setName("banner")
-    .setDescription("Displays a User Banner")
-    .addUserOption((option) => option
-        .setName("target")
-        .setDescription("target")
-    ),
-    async execute(client, interaction){
-        const target = interaction.options.get("target") || interaction
+        .setName("banner")
+        .setDescription("Displays a User Banner")
+        .addUserOption((option) => option
+            .setName("target")
+            .setDescription("The user whose banner you want to display")
+            .setRequired(false)
+        ),
+    async execute(client, interaction) {
+        const user = interaction.options.getUser("target") || interaction.user
 
-        const settings = client.settings.storage.data.find(x => x.guildId === interaction.guild.id)
-        let ls = settings ? settings.language ? require(`${process.cwd()}/src/languages/${settings.language}.json`) : require(`${process.cwd()}/src/languages/en.json`) : require(`${process.cwd()}/src/languages/en.json`)
+        let ls = client.getLanguage(interaction.guild?.id)
         const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
 
-        await fetch(`https://discord.com/api/v8/users/${target.user.id}`, {
-            headers: { Authorization: `Bot ${client.token}` }
-        }).then(async res => {
-            const {banner, accent_color} = await res.json()
-
-            if(banner){
-                const format = banner.startsWith("a_") ? ".gif" : ".png"
-
-                client.basicEmbed({
+        try {
+            const res = await fetch(`https://discord.com/api/v10/users/${user.id}`, {
+                headers: { Authorization: `Bot ${client.token}` }
+            })
+            
+            if (!res.ok) {
+                return client.errEmbed({
                     type: "reply",
-                    title: `${target.user.tag}'s banner`,
-                    image: `https://cdn.discordapp.com/banners/${target.user.id}/${banner}${format}?size=1024`,
-                    color: accent_color,
-                    footer: {text: `${interaction.user.tag}`}
+                    desc: ls["cmds"]["banner"]["desc2"]
                 }, interaction)
-            } else if(accent_color) {
-                client.basicEmbed({
-                    type: "reply",
-                    desc: `${handlemsg(ls["cmds"]["banner"]["desc"], {target: target.user.tag})}`,
-                    color: accent_color,
-                    footer: {text: `${interaction.user.tag}`}
-                }, interaction) 
-            } else {
-                throw({title: "Banner", desc: `${handlemsg(ls["cmds"]["banner"]["desc2"], {target: target.user.tag})}`})
             }
-        }).catch(() => {
-            throw({title: "Banner", desc: ls["cmds"]["banner"]["desc3"]})
-        })
+
+            const { banner, accent_color } = await res.json()
+            const embedColor = accent_color ? `#${accent_color.toString(16).padStart(6, "0")}` : null
+
+            if (banner) {
+                const format = banner.startsWith("a_") ? ".gif" : ".png"
+                client.Embed([{
+                    title: handlemsg(ls["cmds"]["banner"]["title"], { user: user.tag }),
+                    image: `https://cdn.discordapp.com/banners/${user.id}/${banner}${format}?size=1024`,
+                    color: embedColor,
+                }], undefined, "reply", false, interaction)
+            } else {
+                client.errEmbed({
+                    type: "reply",
+                    desc: `${handlemsg(ls["cmds"]["banner"]["desc1"], { target: user.tag })}`
+                }, interaction)
+            }
+        } catch (err) {
+            console.error(err)
+            client.errEmbed({
+                type: "reply",
+                desc: ls["cmds"]["banner"]["desc2"]
+            }, interaction)
+        }
     }
 }
