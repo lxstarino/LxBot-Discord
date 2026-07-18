@@ -1,0 +1,21 @@
+{
+  "name": "lxbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "bot": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "author": "lxst",
+  "license": "ISC",
+  "dependencies": {
+    "@napi-rs/canvas": "^1.0.2",
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.3.1",
+    "nodemon": "^3.1.14"
+  },
+  "optionalDependencies": {
+    "@napi-rs/canvas-linux-x64-gnu": "^1.0.2"
+  }
+}

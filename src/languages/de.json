@@ -1,0 +1,684 @@
+{
+    "cmds":{
+        "balance": {
+            "title": "{target}'s Saldo",
+            "fields": {
+                "wallet": "Geldbörse",
+                "bank": "Bank",
+                "wallet_value": "{wallet} 💰",
+                "bank_value": "{bank} 💰"
+            }
+        },
+        "daily": {
+            "title": "Tägliche Belohnung",
+            "already_collected": "Du hast bereits deine tägliche Belohnung abgeholt, bitte warte bis zum <t:{time}:f>",
+            "collect": "Du hast heute 5000 💰 abgeholt"
+        },
+        "weekly":{
+            "title": "Wöchentliche Belohnung",
+            "already_collected": "Du hast bereits deine wöchentliche Belohnung abgeholt, bitte warte bis zum <t:{time}:f>",
+            "collect": "Du hast heute 10000 💰 abgeholt"
+        },
+        "monthly":{
+            "title": "Monatliche Belohnung",
+            "already_collected": "Du hast bereits deine monatliche Belohnung abgeholt, bitte warte bis zum <t:{time}:f>",
+            "collect": "Du hast heute 20000 💰 abgeholt"
+        },
+        "deposit":{
+            "title": "Bank",
+            "nem": "Du hast nicht genug Geld in deiner Geldbörse um Geld einzuzahlen!",
+            "successful": "Du hast {amount} 💰 in die Bank eingezahlt"
+        },
+        "withdraw":{
+            "title": "Bank",
+            "nem": "Du hast nicht genügend Geld auf der Bank um diesen Betrag auszuzahlen!",
+            "successful": "Du hast {amount} 💰 von der Bank ausgezahlt"
+        },
+        "transfer":{
+            "title": "Bank",
+            "ctys": "Du kannst dir selber kein Geld überweisen..",
+            "nem": "Du hast nicht genug Geld auf der Bank um diesen Betrag an jemanden zu überweisen!",
+            "nem_wallet": "Du hast nicht genug Geld in deiner Geldbörse um diesen Betrag zu überweisen!",
+            "successful": "Du hast {amount} 💰 an <@!{target}> erfolgreich überwiesen"
+        },
+        "rob":{
+            "title": "Rob",
+            "crys": "Du kannst dich nicht selber ausrauben..",
+            "rbl": "Du musst mindestens 5000 💰 bei dir tragen, um jemanden auszurauben",
+            "nts": "<@!{target}> trägt nichts bei sich was gestohlen werden könnte.",
+            "caught": "Du wurdest erwischt..\nDu zahltest {amount} 💰 an <@!{target}>",
+            "success": "Du hast erfolgreich {amount} 💰 ausgeraubt von <@!{target}>"
+        },
+        "slots":{
+            "title": "Slots",
+            "win": "[{item1} | {item2} | {item3}]\n**- DU HAST GEWONNEN -**",
+            "lost": "[{item1} | {item2} | {item3}]\n**- DU HAST VERLOREN -**",
+            "nem": "Du hast nicht genug Geld um am Automaten zu spielen.",
+            "fields": {
+                "name1": "Profit",
+                "name2": "Geld",
+                "value1": "-{amount} 💰",
+                "value2": "{amount} 💰"
+            }
+        },
+        "8ball": {
+            "title": "🔮 8Ball",
+            "desc": "**Frage**: {question}",
+            "fields": {
+                "name": "Antwort",
+                "value": "{answer}",
+                "answers": [
+                    "Definitiv",
+                    "Warum fragst du mich sowas?",
+                    "Ja",
+                    "Nein",
+                    "Ich werde dies nicht beantworten",
+                    "Vielleicht...",
+                    "Nein...",
+                    "Nein.. einfach nur nein",
+                    "Frag mich später nochmal",
+                    "Meine quellen sagen nein",
+                    "Ich weiß es nicht",
+                    "||Ja||",
+                    "||Nein||"
+                ]
+            }
+        },
+        "coinflip": {
+            "title": "🪙 Münzwurf ({coinside})",
+            "desc": "**Münzen Seite**: {result}",
+            "fields": {
+                "name": "Resultat",
+                "win": "Du hast gewonnen!",
+                "lost": "Du hast verloren!"
+            }
+        },
+        "fact": {
+            "title": "Fakt",
+            "desc": "Angefordert von {user}\n```{response}```",
+            "err_fetch": "Fakten konnten nicht geladen werden."
+        },
+        "roll": {
+            "title": "🎲 Würfeln",
+            "desc": "**{user}** würfelte {number}"
+        },
+        "cuddle": {
+            "title": "🤲 Kuscheln",
+            "desc": "**{user}** kuschelt mit **{target}**"
+        },
+        "hug": {
+            "title": "🤲 Umarmen",
+            "desc": "**{user}** umarmt **{target}**"
+        },
+        "kiss": {
+            "title": "💋 Küssen",
+            "desc": "**{user}** küsst **{target}**"
+        },
+        "pat": {
+            "title": "✋ Streicheln",
+            "desc": "**{user}** streichelt **{target}**"
+        },
+        "poke": {
+            "title": "👉 Stupsen",
+            "desc": "**{user}** stupst **{target}** an"
+        },
+        "slap": {
+            "title": "👋 Schlagen",
+            "desc": "**{user}** schlägt **{target}**"
+        },
+        "avatar": {
+            "title": "{user}'s Profilbild"
+        },
+        "banner": {
+            "title": "Banner von {user}",
+            "desc1": "{target} hat kein Banner",
+            "desc2": "Banner konnte nicht angefordert werden"
+        },
+        "botinfo": {
+            "createdat": "Erstellt am",
+            "botowner": "Bot-Besitzer",
+            "latency": "Latenz",
+            "startedsince": "Online seit:",
+            "commands": "Befehle ({size})",
+            "name": "Bot-Name",
+            "id": "Bot-ID",
+            "version": "Bot-Version",
+            "djs_version": "Discord.js Version",
+            "node_version": "Node.js Version",
+            "servers": "Server gesamt",
+            "commands_val": "Entwicklerbefehle: **{dev}**\nNutzerbefehle: **{user}**",
+            "ram": "RAM-Nutzung",
+            "os": "System OS",
+            "members": "Mitglieder gesamt",
+            "channels": "Kanäle gesamt"
+        },
+        "channelinfo": {
+            "type": "Art",
+            "createdon": "Erstellt am",
+            "tnf": "Art nicht gefunden",
+            "ntp": "Kein Thema angegeben",
+            "tc": "Text-Kanal",
+            "vc": "Sprach-Kanal",
+            "ac": "Ankündigungs-Kanal",
+            "at": "Ankündigungs-Thread",
+            "pt": "Öffentlicher Thread",
+            "pt2": "Privater Thread",
+            "svc": "Bühnensprachkanal",
+            "category": "Kategorie",
+            "slowmode": "Slowmode",
+            "none": "Keiner",
+            "seconds": "{time} Sekunden",
+            "yes": "Ja",
+            "no": "Nein"
+        },
+        "poll": {
+            "title": "📊 Umfrage",
+            "desc": "**{question}**",
+            "createdby": "Umfrage von {user}",
+            "pollcreated": "Umfrage erstellt in <#{channel}>!",
+            "no_options": "Du musst mindestens 2 Optionen angeben!",
+            "too_many_options": "Du kannst maximal 5 Optionen angeben!",
+            "results_title": "📊 Umfrage-Ergebnisse",
+            "results_desc": "**{question}**\n\n{results}",
+            "result_line": "{emoji} **{option}** — {count} Stimme(n) ({percent}%)",
+            "missing_perms": "Ich habe nicht genügend Berechtigungen in <#{channel}>!\n> Stelle sicher, dass ich Berechtigungen für **Nachrichten senden** und **Links einbetten** habe."
+        },
+        "birthday": {
+            "title": "🎂 Geburtstag",
+            "set_success": "Dein Geburtstag wurde auf **{day}/{month}** gesetzt! 🎉",
+            "view_self": "Dein Geburtstag ist der **{day}/{month}**!",
+            "view_other": "Der Geburtstag von <@!{user}> ist der **{day}/{month}**!",
+            "not_set_self": "Du hast noch keinen Geburtstag eingetragen! Benutze `/birthday set` um ihn einzutragen.",
+            "not_set_other": "<@!{user}> hat noch keinen Geburtstag eingetragen.",
+            "invalid_date": "Das ist kein gültiges Datum! Bitte gib einen echten Tag und Monat an.",
+            "wish": "🎂 Alles Gute zum Geburtstag <@!{user}>! 🎉 Ich wünsche dir einen wundervollen Tag! 🥳"
+        },
+        "birthday-setup": {
+            "title": "Geburtstags-Setup",
+            "set_success": "Geburtstags-Kanal erfolgreich auf <#{channel}> gesetzt!",
+            "disabled": "Geburtstags-Kanal erfolgreich deaktiviert.",
+            "err_perms": "Mir fehlen die Rechte, Nachrichten oder Embeds in <#{channel}> zu senden!"
+        },
+        "counting": {
+            "title": "🔢 Zählspiel",
+            "setup_success": "Zähl-Kanal auf <#{channel}> gesetzt! Highscore: **{highscore}**",
+            "disabled": "Zählspiel wurde deaktiviert.",
+            "info_desc": "Aktueller Status des Zählspiels:\n\n> **Aktuelle Zahl**: {current}\n> **Highscore**: {highscore}\n> **Letzter Zähler**: {last_user}",
+            "no_last_user": "Noch niemand",
+            "not_set": "Das Zählspiel ist auf diesem Server nicht eingerichtet.",
+            "admin_only": "Du musst Administrator sein, um dies zu konfigurieren.",
+            "err_perms": "Mir fehlen die Rechte, Nachrichten in <#{channel}> zu lesen oder zu schreiben!",
+            "ruined_title": "💥 Ruiniert!",
+            "ruined_double": "<@!{user}> hat die Reihe ruiniert, da man nicht zweimal hintereinander zählen darf! Der Zähler wurde auf **0** zurückgesetzt.",
+            "ruined_wrong": "<@!{user}> hat die Reihe bei **{wrong}** ruiniert! Erwartet war **{expected}**. Der Zähler wurde auf **0** zurückgesetzt.",
+            "highscore_announce": "🎉 **Neuer Server-Highscore!** Ihr habt **{highscore}** erreicht! Weiter so!"
+        },
+        "voice-setup": {
+            "title": "🎙️ Temp-Voice Setup",
+            "setup_success": "Temp-Voice-Setup erfolgreich abgeschlossen! Kategorie: **{category}**, Beitritts-Kanal: <#{channel}>.",
+            "disabled": "Temp-Voice wurde deaktiviert.",
+            "default_channel_name": "🔊 Kanal von {user}",
+            "err_perms": "Mir fehlen die Rechte, Kanäle zu verwalten oder Mitglieder zu verschieben!"
+        },
+        "voice": {
+            "title": "🎙️ Sprachkanal-Steuerung",
+            "not_in_voice": "Du musst in einem temporären Sprachkanal sein, um diesen Befehl zu nutzen!",
+            "not_owner": "Du bist nicht der Besitzer dieses temporären Sprachkanals!",
+            "locked": "Dein Kanal wurde gesperrt! 🔒",
+            "unlocked": "Dein Kanal ist nun entsperrt! 🔓",
+            "name_changed": "Dein Kanal wurde in **{name}** umbenannt!",
+            "limit_changed": "Das Benutzerlimit deines Kanals wurde auf **{limit}** gesetzt!",
+            "permitted": "<@!{target}> darf deinen Kanal nun betreten!",
+            "rejected": "<@!{target}> wurde aus deinem Kanal gekickt und blockiert!"
+        },
+        "help": {
+            "placeholder": "Wähle eine Kategorie",
+            "category_desc": "Befehle aus dem Modul {module}",
+            "btn_home": "Startseite",
+            "btn_cmdlist": "Befehlsliste",
+            "home_desc": "Bitte benutze das Auswahlmenü unten, um weitere Informationen über ein Modul zu erhalten.\nHinweis: Interaktive Elemente deaktivieren sich in 3 Minuten.\n\n[Meine Website](https://lxst.cc) | [Github](https://github.com/lxstarino)"
+        },
+        "serverinfo": {
+            "createdon": "Erstellt am",
+            "ndp": "Kein Beschreibung angegeben",
+            "serverowner": "Server Besitzer",
+            "membercount": "Mitglieder Anzahl",
+            "invitecount": "Einladungscodes",
+            "rescount": "Rollen/Emoji/Sticker Anzahl",
+            "channelcount": "Kanäle ({size})",
+            "lvl_title": "Server Level ({level})",
+            "lvl_val": "Boosts: {boosts}",
+            "member_val": "**{count}** Mitglied(er)",
+            "invite_val": "**{count}** Code(s)",
+            "res_val": "**{roles}** Rolle(n) | **{emojis}** Emoji(s) | **{stickers}** Sticker",
+            "channel_val": "Kategorien: **{categories}** | Textkanäle: **{text}** | Sprachkanäle: **{vc}**",
+            "id_footer": "Server ID: {id}"
+        },
+        "userinfo": {
+            "joinedon": "Server beigetreten",
+            "registeredon": "Konto erstellt",
+            "roles": "Rollen ({size})",
+            "avatar": "Profilbild",
+            "highest_role": "Höchste Rolle",
+            "balance": "Kontostand",
+            "leveling": "Level & XP",
+            "warnings": "Verwarnungen",
+            "key_perms": "Berechtigungen",
+            "yes": "Ja",
+            "no": "Nein",
+            "admin": "Administrator 👑",
+            "moderator": "Moderator 🛡️",
+            "member": "Mitglied 👤",
+            "no_roles": "Keine Rollen"
+        },
+        "add/remrole": {
+            "edesc1": "Die Aktion für <@!{target}> konnte nicht bearbeitet werden da der Bot fehlende Rechte hat",
+            "edesc2": "Die Aktion für <@!{target}> konnte nicht bearbeitet werden da der Benutzer nicht gefunden werden konnte",
+            "edesc3": "Die Aktion für <@!{target}> konnte nicht bearbeitet werden da die Rolle ungültig ist",
+            "edesc4":  "Die Rolle ist entweder über mir oder mir fehlen die benötigen Rechte zu sie hinzuzufügen/entfernen",
+            "desc": "Fügte <@&{role}> zu <@!{target}> hinzu",
+            "desc2": "Entfernte <@&{role}> von <@!{target}>"
+        },
+        "ban/unban": {
+            "edesc1": "Die Aktion für <@!{target}> konnte nicht bearbeitet werden da der Bot fehlende Rechte hat",
+            "edesc2": "Die Aktion für <@!{target}> konnte nicht bearbeitet werden da der Benutzer bereits gebannt ist",
+            "edesc3": "Die Aktion für <@!{target}> konnte nicht bearbeitet werden da der Benutzer nicht gebannt ist",
+            "btnconfirm": "Bestätigen",
+            "btncancel": "Ablehnen",
+            "bantitle": "Ban Bestätigung",
+            "unbantitle": "Entbannung",
+            "bandesc": "Bist du dir sicher das du <@!{target}> bannen möchtest?",
+            "banned": "<@!{target}> wurde gebannt",
+            "unbanned": "<@!{target}> wurde entbannt",
+            "canceled": "Der Prozess wurde abgelehnt",
+            "canceled2": "Der Prozess wurde abgelehnt aufgrund von Zeit"
+        },
+        "kick": {
+            "title": "Kick",
+            "edesc1": "Die Aktion für <@!{target}> konnte nicht bearbeitet werden da der Benutzer nicht gefunden wurde",
+            "edesc2": "Die Aktion für <@!{target}> konnte nicht bearbeitet werden da der Bot fehlende Rechte hat",
+            "kicked": "<@!{target}> wurde gekickt"
+        },
+        "nuke": {
+            "edesc1": "Die Aktion für <#{channel}> konnte nicht bearbeitet werden da der Bot fehlende Rechte hat",
+            "desc": "Channel geleert von <@!{user}>"
+        },
+        "welcome-msg": {
+            "title": "Willkommen Setup",
+            "updated": "Willkommensnachricht wurde erfolgreich aktualisiert!",
+            "created": "Willkommensnachricht wurde erfolgreich erstellt"
+        },
+        "bot-embed": {
+            "title": "Embed",
+            "success": "Embed-Farbe wurde erfolgreich auf `{hex}` geändert!",
+            "invalid": "Bitte gebe eine gültige Hex-Farbe an!"
+        },
+        "bot-language": {
+            "placeholder": "Wähle eine Sprache",
+            "desc": "Benutze das Auswahlmenü unten, um eine Sprache auszuwählen!\nHinweis: Interaktive Elemente werden in 2 Minuten deaktiviert",
+            "success": "Bot-Sprache wurde erfolgreich auf `{language}` geändert!\nHinweis: Die Übersetzung ist noch nicht zu 100% abgeschlossen"
+        },
+        "bot-modules": {
+            "title": "Bot-Module",
+            "placeholder_enable": "Aktiviere ein Modul",
+            "placeholder_disable": "Deaktiviere ein Modul",
+            "desc": "Benutze das Auswahlmenü unten, um ein Modul zu aktivieren/deaktivieren!\nHinweis: Interaktive Elemente werden in 2 Minuten deaktiviert",
+            "desc_enable": "Aktiviere {module}",
+            "desc_disable": "Deaktiviere {module}",
+            "not_found": "`{module}` wurde in der Liste der deaktivierten Module nicht gefunden!",
+            "enabled": "`{module}` wurde erfolgreich aktiviert!",
+            "disabled": "`{module}` wurde erfolgreich deaktiviert!",
+            "already_disabled": "`{module}` ist bereits deaktiviert!"
+        },
+        "t-setup": {
+            "err_title": "Ticket",
+            "err_desc": "Etwas ist schiefgelaufen, versuche es später noch einmal oder führe das Setup erneut aus",
+            "missing_perms_title": "Fehlende Berechtigungen",
+            "missing_perms_desc": "Dem Bot fehlen Berechtigungen!\n> Stelle sicher, dass der Bot die Berechtigung zum Verwalten von Kanälen und Rollen hat",
+            "first_layer_title": "Ticket-Einrichtung",
+            "first_layer_desc": ">>> Benutze die Auswahlmenüs unten, um deine Panels zu verwalten\nHinweis: Du hast 90 Sekunden Zeit für Interaktionen vor dem Timeout",
+            "placeholder": "Richte ein Ticket-Panel ein",
+            "panel_option_desc": "Verwalte/Editiere Ticket Panel #{panel}",
+            "canceled_title": "Einrichtung abgebrochen",
+            "canceled_desc": "Der Prozess wurde abgebrochen",
+            "timeout_title": "Zeitüberschreitung",
+            "timeout_desc": "Deine Zeit für die Eingabe ist abgelaufen.",
+            "support_title": "Support & Hilfe",
+            "support_desc": "Um ein Ticket zu erstellen, reagiere mit 📩",
+            "btn_create_ticket": "Ticket erstellen",
+            "success_desc": "Panel gesendet an <#{channel}>",
+            "status_title": "Einstellungen für Panel #{panel}",
+            "status_desc": "Hier ist der aktuelle Status für das Ticket-Panel #{panel}:\n\n> **Ziel-Kanal**: {channel}\n> **Kategorie**: {category}\n> **Support-Rollen**: {roles}\n\n*Verwende die Dropdown-Menüs und Buttons unten, um das Panel anzupassen.*",
+            "not_set": "❌ *Nicht festgelegt*",
+            "no_roles_added": "❌ *Keine Rollen*",
+            "select_channel": "Ziel-Kanal auswählen...",
+            "select_role_add": "Support-Rolle hinzufügen...",
+            "select_role_remove": "Support-Rolle entfernen...",
+            "select_role_remove_desc": "Rolle entfernen",
+            "btn_category": "Kategorie erstellen",
+            "btn_category_update": "Kategorie aktualisieren",
+            "btn_send": "Ticket-System senden",
+            "btn_reset": "Panel zurücksetzen",
+            "btn_cancel": "Abbrechen",
+            "err_no_roles": "Bitte füge zuerst mindestens eine Support-Rolle hinzu!",
+            "err_no_channel": "Ziel-Kanal nicht gefunden oder nicht konfiguriert!",
+            "err_no_category": "Kategorie nicht gefunden! Bitte erstelle sie zuerst.",
+            "category_updated": "Kategorie-Berechtigungen wurden für die Rollen aktualisiert! | <#{channel}>",
+            "err_max_roles": "Du kannst maximal 5 Support-Rollen hinzufügen!",
+            "no_roles_found": "Keine zuweisbaren Rollen gefunden",
+            "warning_limit": "\n\n⚠️ **Hinweis:** Da dein Server mehr als 75 zuweisbare Rollen hat, wurden die restlichen Rollen abgeschnitten (Discord erlaubt maximal 5 Zeilen an Menüs/Knöpfen)."
+        },
+        "role-setup": {
+            "first_layer_title": "Rollen-Einrichtung",
+            "first_layer_desc": ">>> Benutze die Auswahlmenüs unten, um deine Rollen-Panels zu verwalten\nHinweis: Du hast 90 Sekunden Zeit für Interaktionen vor dem Timeout",
+            "placeholder": "Richte ein Rollen-Panel ein",
+            "panel_option_desc": "Verwalte/Editiere Rollen-Panel #{panel}",
+            "canceled_title": "Einrichtung abgebrochen",
+            "canceled_desc": "Der Prozess wurde abgebrochen.",
+            "timeout_title": "Zeitüberschreitung",
+            "timeout_desc": "Deine Zeit für die Eingabe ist abgelaufen.",
+            "panel_title": "Rollen-Zuweisung",
+            "panel_desc": "Klicke auf die Buttons unten, um dir Rollen zuzuweisen oder zu entfernen!",
+            "success_desc": "Rollen-Panel wurde erfolgreich an <#{channel}> gesendet!",
+            "status_title": "Einstellungen für Rollen-Panel #{panel}",
+            "status_desc": "Hier ist der aktuelle Status für das Rollen-Panel #{panel}:\n\n> **Ziel-Kanal**: {channel}\n> **Rollen**: {roles}\n\n*Verwende die Dropdown-Menüs und Buttons unten, um das Panel anzupassen.*",
+            "not_set": "❌ *Nicht festgelegt*",
+            "no_roles_added": "❌ *Keine Rollen*",
+            "select_channel": "Ziel-Kanal auswählen...",
+            "select_role_add": "Rolle hinzufügen...",
+            "btn_send": "Rollen-System senden",
+            "btn_reset": "Panel zurücksetzen",
+            "btn_cancel": "Abbrechen",
+            "err_no_roles": "Bitte füge zuerst mindestens eine Rolle hinzu!",
+            "err_no_channel": "Ziel-Kanal nicht gefunden oder nicht konfiguriert!",
+            "err_max_roles": "Du kannst maximal 5 Rollen zu einem Panel hinzufügen!",
+            "no_roles_found": "Keine zuweisbaren Rollen gefunden",
+            "warning_limit": "\n\n⚠️ **Hinweis:** Da dein Server mehr als 75 zuweisbare Rollen hat, wurden die restlichen Rollen abgeschnitten (Discord erlaubt maximal 5 Zeilen an Menüs/Knöpfen).",
+            "not_found": "Diese Rolle existiert auf diesem Server nicht mehr.",
+            "hierarchy_error": "Ich kann dir die Rolle **{roleName}** nicht geben, da sie über oder gleichauf mit meiner höchsten Rolle steht!",
+            "added": "Die Rolle **{roleName}** wurde dir erfolgreich zugewiesen.",
+            "removed": "Die Rolle **{roleName}** wurde erfolgreich von dir entfernt.",
+            "error": "Beim Ändern deiner Rollen ist ein Fehler aufgetreten."
+        },
+        "bot-presence": {
+            "title": "Bot-Präsenz",
+            "desc": "**Aktivität gesetzt auf**:\n{activity}\n\n**Aktivitätstyp gesetzt auf**:\n{type}\n\n**Präsenz gesetzt auf**:\n{status}"
+        },
+        "bot-stop": {
+            "title": "Bot gestoppt"
+        },
+        "bot-reloadcmd": {
+            "success": "`{command}` erfolgreich neu geladen!",
+            "invalid_title": "Befehl nicht gefunden",
+            "invalid_desc": "Gebe einen gültigen Befehl an!\n\nGültige Befehle:\n{commands}"
+        },
+        "nsfw-test": {
+            "err_token": "API-Token konnte nicht abgerufen werden.",
+            "err_search": "Suchergebnisse konnten nicht abgerufen werden.",
+            "err_no_results": "Keine Videos für **{tag}** gefunden.",
+            "err_no_results_seconds": "Keine Videos für **{tag}** mit mindestens **{seconds}s** Länge gefunden."
+        },
+        "work": {
+            "title": "Arbeit",
+            "success": "Du hast als **{job}** gearbeitet und **{amount} 💰** verdient!",
+            "already_worked": "Du hast bereits gearbeitet, bitte warte bis <t:{time}:f>",
+            "list": [
+                "professioneller Schläfer",
+                "Discord-Moderator",
+                "Quietscheentchen-Programmierer",
+                "Fensterputzer für Wolkenkratzer",
+                "Pizzabote",
+                "KI-Prompt-Engineer",
+                "Unterwasser-Korbflechter"
+            ]
+        },
+        "crime": {
+            "title": "Verbrechen",
+            "success": "Du hast erfolgreich **{crime}** und **{amount} 💰** erbeutet!",
+            "caught": "Du wurdest erwischt als du **{crime}** und hast **{amount} 💰** Strafe gezahlt!",
+            "nem": "Du brauchst mindestens 1.000 💰 in deiner Geldbörse, um eine eventuelle Strafe zu zahlen!",
+            "already_crimed": "Du hast bereits ein Verbrechen begangen, bitte warte bis <t:{time}:f>",
+            "list": [
+                "einem Baby Süßigkeiten gestohlen",
+                "ein Auto privat kopiert",
+                "über eine rote Ampel direkt vor einem Polizeiauto gegangen",
+                "einen Limonadenstand ausgeraubt",
+                "das Notensystem der Schule gehackt",
+                "Snacks heimlich ins Kino geschmuggelt"
+            ]
+        },
+        "eco-lb": {
+            "title": "Server-Bestenliste",
+            "format": "**{rank}.** <@!{user}> • Gesamt: **{total} 💰**\n> Geldbörse: *{wallet}* | Bank: *{bank}*",
+            "empty": "Keine Profile auf diesem Server gefunden."
+        },
+        "rps": {
+            "title": "Schere Stein Papier",
+            "win": "Gewonnen! Der Bot hat {botChoice} gewählt. Du gewinnst **{amount} 💰**!",
+            "lost": "Verloren! Der Bot hat {botChoice} gewählt. Du verlierst **{amount} 💰**!",
+            "draw": "Unentschieden! Beide haben {choice} gewählt. Es wurde kein Geld verloren.",
+            "nem": "Du hast nicht genug Geld in deiner Geldbörse für diesen Einsatz!",
+            "rock": "Stein",
+            "paper": "Papier",
+            "scissors": "Schere"
+        },
+        "ship": {
+            "title": "❤️ Liebestest",
+            "desc": "Liebestest zwischen <@!{user1}> und <@!{user2}>:\n\n**{percentage}%** {bar}\n\n> {comment}",
+            "comment_0": "Ein absolutes Desaster. Haltet Abstand! 🛑",
+            "comment_1": "Sieht nicht gut aus. Vielleicht doch lieber nur Freunde? 😕",
+            "comment_2": "Passt ganz okay, braucht aber eine Menge Arbeit. 🤝",
+            "comment_3": "Gute Chemie! Da ist definitiv Potenzial vorhanden. 😏",
+            "comment_4": "Wunderschönes Match! Ein tolles Paar. ❤️",
+            "comment_5": "Perfektes Match! Ihr seid füreinander bestimmt! 💍✨"
+        },
+        "level": {
+            "title": "Level-Rang",
+            "desc": "Rang von <@!{user}>:\n> **Level**: {level}\n> **XP**: {xp} / {needed} XP",
+            "footer": "Rang-Status"
+        },
+        "lvl-lb": {
+            "title": "XP-Bestenliste",
+            "format": "**{rank}.** <@!{user}> • Level: **{level}** ({xp} XP)",
+            "empty": "Keine Profile mit Leveln auf diesem Server gefunden."
+        },
+        "warn": {
+            "title": "Benutzer verwarnen",
+            "success": "Erfolgreich <@!{target}> verwarnt für: **{reason}**\n> Der Benutzer hat jetzt **{count}** Verwarnung(en)."
+        },
+        "warnings": {
+            "title": "Verwarnungen für {user}",
+            "empty": "<@!{target}> hat keine Verwarnungen.",
+            "format": "**#{index}.** Moderator: <@!{moderator}>\n> Grund: **{reason}**\n> Datum: <t:{time}:f>"
+        },
+        "clear-warns": {
+            "title": "Verwarnungen löschen",
+            "success": "Erfolgreich alle Verwarnungen für <@!{target}> gelöscht."
+        },
+        "shop-setup": {
+            "title": "Shop-Einrichtung",
+            "added": "Rolle <@&{role}> erfolgreich für **{price} 💰** zum Shop hinzugefügt!",
+            "removed": "Rolle <@&{role}> erfolgreich aus dem Shop entfernt.",
+            "not_in_shop": "Diese Rolle ist nicht im Shop!",
+            "already_added": "Diese Rolle ist bereits im Shop!",
+            "invalid_price": "Der Preis muss mindestens 1 💰 betragen!"
+        },
+        "log-setup": {
+            "title": "Log-System Setup",
+            "set_success": "Log-Kanal erfolgreich auf <#{channel}> gesetzt!",
+            "disabled": "Log-Kanal erfolgreich deaktiviert.",
+            "err_perms": "Mir fehlen die Rechte, Nachrichten oder Embeds in <#{channel}> zu senden!"
+        },
+        "shop": {
+            "title": "🏪 Server-Shop",
+            "desc": "Willkommen im Server-Shop! Benutze `/buy <rolle>`, um eine Rolle zu kaufen.\n\n**Verfügbare Items:**\n\n{items}",
+            "empty": "Der Shop ist aktuell leer! Ein Administrator kann Rollen mit `/shop-setup add` hinzufügen."
+        },
+        "buy": {
+            "title": "Rolle kaufen",
+            "success": "Erfolgreich die Rolle <@&{role}> für **{price} 💰** gekauft!",
+            "already_has": "Du hast die Rolle <@&{role}> bereits!",
+            "nem": "Du hast nicht genug Geld in deiner Geldbörse, um <@&{role}> zu kaufen (Benötigt {price} 💰)!",
+            "not_for_sale": "Diese Rolle steht im Shop nicht zum Verkauf!"
+        },
+        "fish": {
+            "title": "🎣 Angelausflug",
+            "caught": "Du hast deine Angel ausgeworfen und einen **{fish}** {emoji} gefangen!\n> Seltenheit: **{rarity}**\n> Wert: **{value} 💰**\n> Er wurde zu deinem Inventar hinzugefügt.",
+            "cooldown": "Du bist zu müde zum Angeln! Bitte warte bis <t:{time}:f>"
+        },
+        "sell": {
+            "title": "🐟 Fischmarkt",
+            "success_all": "Erfolgreich alle Fische aus deinem Inventar für insgesamt **{amount} 💰** verkauft!",
+            "empty": "Du hast keine Fische in deinem Inventar zum Verkaufen!"
+        },
+        "fish_rarities": {
+            "common": "Gewöhnlich",
+            "uncommon": "Ungewöhnlich",
+            "rare": "Selten",
+            "legendary": "Legendär"
+        },
+        "fish_names": {
+            "cod": "Dorsch",
+            "salmon": "Lachs",
+            "clownfish": "Clownfisch",
+            "pufferfish": "Kugelfisch",
+            "squid": "Tintenfisch",
+            "shark": "Hai",
+            "seadragon": "Seedrache"
+        },
+        "timeout": {
+            "title": "Mitglied stummschalten",
+            "success": "Erfolgreich <@!{target}> für **{duration}** stummgeschaltet.\n> Grund: **{reason}**",
+            "err_not_moderateable": "Ich kann dieses Mitglied nicht stummschalten! Es hat möglicherweise höhere Rollen als ich oder Administratorrechte.",
+            "durations": {
+                "60s": "60 Sekunden",
+                "5m": "5 Minuten",
+                "10m": "10 Minuten",
+                "1h": "1 Stunde",
+                "1d": "1 Tag",
+                "1w": "1 Woche"
+            }
+        },
+        "untimeout": {
+            "title": "Stummschaltung aufheben",
+            "success": "Stummschaltung für <@!{target}> erfolgreich aufgehoben.\n> Grund: **{reason}**",
+            "err_not_timed_out": "Dieses Mitglied ist aktuell nicht stummgeschaltet!"
+        },
+        "tod": {
+            "title": "Wahrheit oder Pflicht",
+            "truth": "Wahrheit",
+            "dare": "Pflicht",
+            "choose": "Wähle unten Wahrheit oder Pflicht!",
+            "truth_questions": [
+                "Was ist dein größtes Geheimnis?",
+                "Hast du jemals deinen besten Freund/deine beste Freundin angelogen?",
+                "Was ist das Peinlichste, was du je getan hast?",
+                "In wen bist du heimlich verliebt?",
+                "Was ist das schlechteste Geschenk, das du je bekommen hast?",
+                "Hast du jemals bei einer Prüfung geschummelt?",
+                "Was ist deine größte Angst?",
+                "Was war der seltsamste Traum, den du je hattest?"
+            ],
+            "dare_prompts": [
+                "Singe ein Lied deiner Wahl laut vor!",
+                "Mach jetzt sofort 20 Liegestütze!",
+                "Sende ein lustiges Selfie in diesen Kanal!",
+                "Sprich die nächsten 5 Minuten in einem Akzent, den der Server aussucht!",
+                "Erzähle einen richtig schlechten Flachwitz im Chat oder laut!",
+                "Iss einen Löffel scharfe Soße oder Senf!",
+                "Schreibe deinem Crush und erzähle einen Witz!",
+                "Zeige das letzte Foto aus der Galerie deines Handys!"
+            ]
+        },
+        "purge": {
+            "title": "Nachrichten löschen",
+            "success": "Erfolgreich **{count}** Nachrichten gelöscht.",
+            "success_user": "Erfolgreich **{count}** Nachrichten von <@!{target}> gelöscht.",
+            "err_limit": "Ich kann nur Nachrichten löschen, die jünger als 14 Tage sind!",
+            "err_perms": "Mir fehlen die Rechte, Nachrichten in diesem Kanal zu verwalten!"
+        }
+    },
+    "events": {
+        "messageCreate": {
+            "level_up_title": "🎉 Level Aufgestiegen!",
+            "level_up_desc": "Herzlichen Glückwunsch <@!{user}>! Du bist auf **Level {level}** aufgestiegen!"
+        },
+        "onjoin": {
+            "joinmsg": "Hallo <@!{user}>,\nWillkommen zu **{guildname}**. Du bist unser {membercount}tes Mitglied"
+        },
+        "interactionCreate": {
+            "err_server_only": "Diese Befehle sind nur auf Servern verfügbar",
+            "err_dev_only": "Dieser Befehl ist nur für Entwickler verfügbar",
+            "err_nsfw_only": "Dieser Befehl ist nur in NSFW-Kanälen verfügbar",
+            "err_disabled": "Dieser Befehl ist auf diesem Server deaktiviert",
+            "err_bot_missing_perms": "Mir fehlen die nötigen Discord-Rechte, um diese Aktion auszuführen!",
+            "err_bot_missing_basic_perms": "Ich benötige Berechtigungen zum **Senden von Nachrichten** und **Einbetten von Links** in diesem Kanal!",
+            "cooldown_title": "Abklingzeit",
+            "cooldown_desc": "Du hast eine Abklingzeit für {time}s.",
+            "ticket_limit_title": "Ticket-Limit",
+            "ticket_limit_desc": "Ticket-Limit erreicht. Du hast bereits 1 geöffnetes Ticket in <#{channel}>",
+            "ticket_modal_label": "Beschreibe dein Problem/Anliegen",
+            "ticket_modal_title": "Ticket",
+            "ticket_close_label": "Ticket schließen",
+            "ticket_ping_label": "Support pingen",
+            "ticket_ping_no_roles": "Es gibt keine Supporter-Rollen zum Pingen!",
+            "ticket_ping_success": "Supporter-Rollen wurden gepingt!\n{roles}",
+            "ticket_ping_error": "Beim Versuch, die Rollen zu pingen, ist ein Fehler aufgetreten",
+            "ticket_support_title": "Support & Hilfe",
+            "ticket_support_desc": "Hallo <@!{user}>\nDer Support wird in Kürze bei dir sein. Wenn du dieses Ticket schließen möchtest, reagiere mit 🔒\n\n**Angegebene Frage/Problem:**\n```{issue}```",
+            "ticket_created": "Ticket erstellt in <#{channel}>",
+            "ticket_no_panel_title": "Kein Panel gefunden",
+            "ticket_no_panel_desc": "> Ich kann keine Daten für Panel #{panel} finden!\n> Führe `/t-setup` aus, um ein Panel zu erstellen.",
+            "ticket_err_create_channel": "Ticket-Kanal konnte nicht erstellt werden!"
+        }
+    },
+    "errors": {
+        "error": "Fehler",
+        "not_your_turn": "Du bist nicht an der Reihe!",
+        "nwn": "Gebe eine ganze Zahl an",
+        "unf": "Benutzer wurde nicht gefunden",
+        "uab": "Benutzer ist bereits gebannt",
+        "uinb": "Benutzer ist nicht gebannt",
+        "mp": "Fehlende Berechtigungen",
+        "ivr": "Ungültige Rolle",
+        "npf": {
+            "title": "Kein Profil konnte gefunden werden",
+            "desc": "<@!{target}> hat kein Profil"
+        }
+    },
+    "logs": {
+        "ban_title": "🔨 Mitglied gebannt",
+        "ban_desc": "**Mitglied**: <@!{target}> ({tag})\n**ID**: {target}\n**Moderator**: <@!{moderator}>\n**Grund**: {reason}",
+        "unban_title": "🔓 Entbannt",
+        "unban_desc": "**Mitglied**: <@!{target}>\n**ID**: {target}\n**Moderator**: <@!{moderator}>\n**Grund**: {reason}",
+        "kick_title": "👢 Mitglied gekickt",
+        "kick_desc": "**Mitglied**: <@!{target}> ({tag})\n**ID**: {target}\n**Moderator**: <@!{moderator}>\n**Grund**: {reason}",
+        "timeout_title": "⏳ Stummgeschaltet",
+        "timeout_desc": "**Mitglied**: <@!{target}> ({tag})\n**ID**: {target}\n**Moderator**: <@!{moderator}>\n**Dauer**: {duration}\n**Grund**: {reason}",
+        "untimeout_title": "🔊 Stummschaltung aufgehoben",
+        "untimeout_desc": "**Mitglied**: <@!{target}> ({tag})\n**ID**: {target}\n**Moderator**: <@!{moderator}>\n**Grund**: {reason}",
+        "warn_title": "⚠️ Mitglied verwarnt",
+        "warn_desc": "**Mitglied**: <@!{target}> ({tag})\n**ID**: {target}\n**Moderator**: <@!{moderator}>\n**Grund**: {reason}\n**Verwarnungen gesamt**: {count}",
+        "clear_warns_title": "🧹 Verwarnungen gelöscht",
+        "clear_warns_desc": "**Mitglied**: <@!{target}> ({tag})\n**ID**: {target}\n**Moderator**: <@!{moderator}",
+        "purge_title": "🗑️ Nachrichten gelöscht",
+        "purge_desc": "**Kanal**: <#{channel}>\n**Moderator**: <@!{moderator}>\n**Anzahl**: {count}",
+        "purge_user_desc": "**Kanal**: <#{channel}>\n**Moderator**: <@!{moderator}>\n**Mitglied**: <@!{target}>\n**Anzahl**: {count}",
+        "msg_delete_title": "🗑️ Nachricht gelöscht",
+        "msg_delete_desc": "**Mitglied**: <@!{user}> ({tag})\n**Kanal**: <#{channel}>\n**Inhalt**:\n```{content}```",
+        "msg_update_title": "📝 Nachricht bearbeitet",
+        "msg_update_desc": "**Mitglied**: <@!{user}> ({tag})\n**Kanal**: <#{channel}>\n**Vorher**:\n```{before}```\n**Nachher**:\n```{after}```",
+        "role_add_title": "🟢 Rolle hinzugefügt",
+        "role_add_desc": "**Mitglied**: <@!{user}> ({tag})\n**Rolle hinzugefügt**: <@&{role}>",
+        "role_remove_title": "🔴 Rolle entfernt",
+        "role_remove_desc": "**Mitglied**: <@!{user}> ({tag})\n**Rolle entfernt**: <@&{role}>",
+        "member_leave_title": "👋 Mitglied verlassen",
+        "member_leave_desc": "**Nutzer**: {tag}\n**ID**: {userId}\n**Rollen**: {roles}"
+    },
+    "success": {
+        "pfc": {
+            "title": "Profil erstellt",
+            "desc": "Benutze den Befehl erneut um dein Saldo abzurufen"
+        }
+    }
+}

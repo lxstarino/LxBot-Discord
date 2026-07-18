@@ -1,0 +1,687 @@
+{
+    "cmds": {
+        "balance": {
+            "title": "{target}'s balance",
+            "fields": {
+                "wallet": "Wallet",
+                "bank": "Bank",
+                "wallet_value": "{wallet} 💰",
+                "bank_value": "{bank} 💰"
+            }
+        },
+        "daily": {
+            "title": "Daily Reward",
+            "already_collected": "You already collected your daily reward, please wait till <t:{time}:f>",
+            "collect": "You have collected today's earnings: 5000 💰"
+        },
+        "weekly": {
+            "title": "Weekly Reward",
+            "already_collected": "You already collected your weekly reward, please wait till <t:{time}:f>",
+            "collect": "You have collected weeklys's earnings: 10000 💰"
+        },
+        "monthly": {
+            "title": "Monthly Reward",
+            "already_collected": "You already collected your monthly reward, please wait till <t:{time}:f>",
+            "collect": "You have collected monthly's earnings: 20000 💰"
+        },
+        "deposit": {
+            "title": "Bank",
+            "nem": "You dont have enough money in you're wallet to deposit!",
+            "successful": "Deposited {amount} 💰 to bank"
+        },
+        "withdraw": {
+            "title": "Bank",
+            "nem": "You dont have enough money in you're bank to withdraw!",
+            "successful": "Withdrew {amount} 💰 from bank"
+        },
+        "transfer": {
+            "title": "Bank",
+            "ctys": "You're not able to transfer money to yourself..",
+            "nem": "You dont have enough money in you're bank to transfer!",
+            "nem_wallet": "You don't have enough money in your wallet to transfer this amount!",
+            "successful": "You transfered {amount} 💰 successfully to <@!{target}>"
+        },
+        "rob": {
+            "title": "Rob",
+            "crys": "You're not able to rob yourself..",
+            "rbl": "You have to carry atleast 5000 💰 to rob someone",
+            "nts": "<@!{target}> doesn't carry anything that could be stolen.",
+            "caught": "You were caught..\nYou paid {amount} 💰 to <@!{target}>",
+            "success": "You robbed {amount} 💰 from <@!{target}>"
+        },
+        "slots": {
+            "title": "Slots",
+            "win": "[{item1} | {item2} | {item3}]\n**- YOU WON -**",
+            "lost": "[{item1} | {item2} | {item3}]\n**- YOU LOST -**",
+            "nem": "You dont have enough money in you're wallet to play slots!",
+            "fields": {
+                "name1": "Profit",
+                "name2": "Money",
+                "value1": "-{amount} 💰",
+                "value2": "{amount} 💰"
+            }
+        },
+        "8ball": {
+            "title": "🔮 8Ball",
+            "desc": "**Question**: {question}",
+            "fields": {
+                "name": "Answer",
+                "value": "{answer}",
+                "answers": [
+                    "Yes definitely",
+                    "Why you asking me this?",
+                    "Yes",
+                    "No",
+                    "Im not gonna answer this",
+                    "Maybe..",
+                    "No.. just no",
+                    "YEEEEEES",
+                    "Ask again later",
+                    "||Yes||",
+                    "||No||",
+                    "My sources say no",
+                    "I dont know",
+                    "No way.",
+                    "Dont ask me again",
+                    "?"
+                ]
+            }
+        },
+        "coinflip": {
+            "title": "🪙 Coinflip ({coinside})",
+            "desc": "**Coin Side**: {result}",
+            "fields": {
+                "name": "Result",
+                "win": "You Won!",
+                "lost": "You Lost!"
+            }
+        },
+        "fact": {
+            "title": "Fact",
+            "desc": "Requested by {user}\n```{response}```",
+            "err_fetch": "Failed to fetch a fact."
+        },
+        "roll": {
+            "title": "🎲 Roll Dice",
+            "desc": "**{user}** threw a {number}"
+        },
+        "cuddle": {
+            "title": "🤲 Cuddle",
+            "desc": "**{user}** cuddles **{target}**"
+        },
+        "hug": {
+            "title": "🤲 Hug",
+            "desc": "**{user}** hugs **{target}**"
+        },
+        "kiss": {
+            "title": "💋 Kiss",
+            "desc": "**{user}** kisses **{target}**"
+        },
+        "pat": {
+            "title": "✋ Pat",
+            "desc": "**{user}** pats **{target}**"
+        },
+        "poke": {
+            "title": "👉 Poke",
+            "desc": "**{user}** pokes **{target}**"
+        },
+        "slap": {
+            "title": "👋 Slap",
+            "desc": "**{user}** slaps **{target}**"
+        },
+        "avatar": {
+            "title": "{user}'s Avatar"
+        },
+        "banner": {
+            "title": "{user}'s banner",
+            "desc1": "{target} doesn't have a banner",
+            "desc2": "Failed to request banner"
+        },
+        "botinfo": {
+            "createdat": "Created at",
+            "botowner": "Bot Owner",
+            "latency": "Latency",
+            "startedsince": "Started since:",
+            "commands": "Commands ({size})",
+            "name": "Bot Name",
+            "id": "Bot ID",
+            "version": "Bot Version",
+            "djs_version": "Discord.js Version",
+            "node_version": "Node.js Version",
+            "servers": "Servers",
+            "commands_val": "Dev Commands: **{dev}**\nUser Commands: **{user}**",
+            "ram": "RAM Usage",
+            "os": "System",
+            "members": "Total Members",
+            "channels": "Total Channels"
+        },
+        "channelinfo": {
+            "type": "Type",
+            "createdon": "Created on",
+            "tnf": "Type not found",
+            "ntp": "No topic provided",
+            "tc": "Text Channel",
+            "vc": "Voice Chat",
+            "ac": "Announcement Channel",
+            "at": "Announcement Thread",
+            "pt": "Public Thread",
+            "pt2": "Private Thread",
+            "svc": "Stage Voice Channel",
+            "category": "Category",
+            "slowmode": "Slowmode",
+            "none": "None",
+            "seconds": "{time} seconds",
+            "yes": "Yes",
+            "no": "No"
+        },
+        "poll": {
+            "title": "📊 Poll",
+            "desc": "**{question}**",
+            "createdby": "Poll by {user}",
+            "pollcreated": "Poll created in <#{channel}>!",
+            "no_options": "You must provide at least 2 options!",
+            "too_many_options": "You can only have up to 5 options!",
+            "results_title": "📊 Poll Results",
+            "results_desc": "**{question}**\n\n{results}",
+            "result_line": "{emoji} **{option}** — {count} vote(s) ({percent}%)",
+            "missing_perms": "I do not have enough permissions in <#{channel}>!\n> Make sure I have permission to **Send Messages** and **Embed Links**."
+        },
+        "birthday": {
+            "title": "🎂 Birthday",
+            "set_success": "Your birthday has been set to **{day}/{month}**! 🎉",
+            "view_self": "Your birthday is set to **{day}/{month}**!",
+            "view_other": "<@!{user}>'s birthday is **{day}/{month}**!",
+            "not_set_self": "You haven't set your birthday yet! Use `/birthday set` to set it.",
+            "not_set_other": "<@!{user}> hasn't set their birthday yet.",
+            "invalid_date": "That's not a valid date! Please provide a real day and month.",
+            "wish": "🎂 Happy Birthday <@!{user}>! 🎉 Wishing you an amazing day! 🥳"
+        },
+        "birthday-setup": {
+            "title": "Birthday Setup",
+            "set_success": "Birthday channel successfully set to <#{channel}>!",
+            "disabled": "Birthday channel successfully disabled.",
+            "err_perms": "I don't have permission to send messages or embed links in <#{channel}>!"
+        },
+        "counting": {
+            "title": "🔢 Counting Game",
+            "setup_success": "Counting channel set to <#{channel}>! Highscore: **{highscore}**",
+            "disabled": "Counting game has been disabled.",
+            "info_desc": "Current status of the Counting Game:\n\n> **Current Count**: {current}\n> **Highscore**: {highscore}\n> **Last Counter**: {last_user}",
+            "no_last_user": "No one yet",
+            "not_set": "Counting game is not set up on this server.",
+            "admin_only": "You must be an administrator to configure this.",
+            "err_perms": "I don't have permission to write or read messages in <#{channel}>!",
+            "ruined_title": "💥 Ruined!",
+            "ruined_double": "<@!{user}> ruined the count by counting twice in a row! The count has been reset to **0**.",
+            "ruined_wrong": "<@!{user}> ruined the count by typing **{wrong}** instead of **{expected}**! The count has been reset to **0**.",
+            "highscore_announce": "🎉 **New Server Highscore!** You reached **{highscore}**! Keep going!"
+        },
+        "voice-setup": {
+            "title": "🎙️ Temp-Voice Setup",
+            "setup_success": "Temp-Voice setup completed successfully! Category: **{category}**, Join-to-Create Channel: <#{channel}>.",
+            "disabled": "Temp-Voice has been disabled.",
+            "default_channel_name": "🔊 {user}'s Channel",
+            "err_perms": "I don't have permission to manage channels or move members in this server!"
+        },
+        "voice": {
+            "title": "🎙️ Voice Control",
+            "not_in_voice": "You must be in a temporary voice channel to use this command!",
+            "not_owner": "You are not the owner of this temporary voice channel!",
+            "locked": "Your channel has been locked! 🔒",
+            "unlocked": "Your channel is now unlocked! 🔓",
+            "name_changed": "Your channel has been renamed to **{name}**!",
+            "limit_changed": "Your channel user limit has been set to **{limit}**!",
+            "permitted": "<@!{target}> is now permitted to join your channel!",
+            "rejected": "<@!{target}> has been kicked and blocked from your channel!"
+        },
+        "help": {
+            "placeholder": "Select a category",
+            "category_desc": "Commands from {module} module",
+            "btn_home": "Home",
+            "btn_cmdlist": "Commands List",
+            "home_desc": "Please use the Select Menu below to get further information about a module.\nNote: Interactables will disable in 3 minutes\n\n[My Website](https://lxst.cc) | [Github](https://github.com/lxstarino)"
+        },
+        "serverinfo": {
+            "createdon": "Created on",
+            "ndp": "No description provided",
+            "serverowner": "Server Owner",
+            "membercount": "Member Count",
+            "invitecount": "Invite Codes",
+            "rescount": "Role/Emoji/Sticker count",
+            "channelcount": "Channels ({size})",
+            "lvl_title": "Server Level ({level})",
+            "lvl_val": "Boosts: {boosts}",
+            "member_val": "**{count}** member(s)",
+            "invite_val": "**{count}** code(s)",
+            "res_val": "**{roles}** role(s) | **{emojis}** emoji(s) | **{stickers}** sticker(s)",
+            "channel_val": "Categories: **{categories}** | Text Channels: **{text}** | VC Channels: **{vc}**",
+            "id_footer": "Server ID: {id}"
+        },
+        "userinfo": {
+            "joinedon": "Joined Server",
+            "registeredon": "Account Created",
+            "roles": "Roles ({size})",
+            "avatar": "Avatar",
+            "highest_role": "Highest Role",
+            "balance": "Balance",
+            "leveling": "Leveling",
+            "warnings": "Warnings",
+            "key_perms": "Key Permissions",
+            "yes": "Yes",
+            "no": "No",
+            "admin": "Administrator 👑",
+            "moderator": "Moderator 🛡️",
+            "member": "Member 👤",
+            "no_roles": "No roles"
+        },
+        "add/remrole": {
+            "edesc1": "The action for <@!{target}> can't be processed because the bot is lacking permissions",
+            "edesc2": "The action for <@!{target}> can't be processed because the given user was not found",
+            "edesc3": "The action for <@!{target}> can't be processed because the given role is invalid",
+            "edesc4": "The role is either above me or i dont have the required permissions to give/remove the role",
+            "desc": "Added <@&{role}> to <@!{target}>",
+            "desc2": "Removed <@&{role}> from <@!{target}>"
+        },
+        "ban/unban": {
+            "edesc1": "The action for <@!{target}> can't be processed because the bot is lacking permissions",
+            "edesc2": "The action for <@!{target}> can't be processed because the given user is already banned",
+            "edesc3": "The action for <@!{target}> can't be processed because the given user is not banned",
+            "btnconfirm": "Confirm",
+            "btncancel": "Cancel",
+            "bantitle": "Ban Confirmation",
+            "unbantitle": "Unban",
+            "bandesc": "Are you sure you want to ban <@!{target}>?",
+            "banned": "<@!{target}> was banned",
+            "unbanned": "<@!{target}> was unbanned",
+            "canceled": "The process has been cancelled",
+            "canceled2": "The process has been cancelled because this menu expired"
+        },
+        "kick": {
+            "title": "Kick",
+            "edesc1": "The action for <@!{target}> can't be processed because the given user was not found",
+            "edesc2": "The action for <@!{target}> can't be processed because the bot is lacking permissions",
+            "kicked": "<@!{target}> was kicked"
+        },
+        "nuke": {
+            "edesc1": "The action for <#{channel}> can't be processed because the bot is lacking permissions",
+            "desc": "Channel nuked by <@!{user}>"
+        },
+        "welcome-msg": {
+            "title": "Welcome Setup",
+            "updated": "Welcome Message was successfully updated!",
+            "created": "Welcome Message was successfully created"
+        },
+        "bot-embed": {
+            "title": "Embed",
+            "success": "Embed Color was successfully changed to `{hex}`!",
+            "invalid": "Provide a valid Hex Color!"
+        },
+        "bot-language": {
+            "placeholder": "Select a language",
+            "desc": "Use the select menu below to select a language!\nNote: Interactables will disable in 2 minutes",
+            "success": "Bot language was successfully changed to `{language}`!\nNote: The translation is not 100% completed"
+        },
+        "bot-modules": {
+            "title": "Bot Modules",
+            "placeholder_enable": "Enable a module",
+            "placeholder_disable": "Disable a module",
+            "desc": "Use the select menu below to disable/enable a module!\nNote: Interactables will disable in 2 minutes",
+            "desc_enable": "Enable {module}",
+            "desc_disable": "Disable {module}",
+            "not_found": "`{module}` not found in disabled list!",
+            "enabled": "`{module}` was successfully enabled!",
+            "disabled": "`{module}` was successfully disabled!",
+            "already_disabled": "`{module}` is already disabled!"
+        },
+        "t-setup": {
+            "err_title": "Ticket",
+            "err_desc": "Something went wrong, try again later or rerun the setup",
+            "missing_perms_title": "Missing Permissions",
+            "missing_perms_desc": "The bot is lacking permissions!\n> Make sure that the bot has permission to Manage Channels and Roles",
+            "first_layer_title": "Ticket Setup",
+            "first_layer_desc": ">>> Use the Select Menus below to manage your panels\nNote: You have 90 seconds to interact until timeout",
+            "placeholder": "Setup a Ticket Panel",
+            "panel_option_desc": "Manage/Edit Ticket Panel #{panel}",
+            "canceled_title": "Setup canceled",
+            "canceled_desc": "The process has been canceled",
+            "timeout_title": "Timeout",
+            "timeout_desc": "Your time to provide input is expired.",
+            "support_title": "Support & Help",
+            "support_desc": "To create a ticket react with 📩",
+            "btn_create_ticket": "Create Ticket",
+            "success_desc": "Panel send to <#{channel}>",
+            "status_title": "Settings for Panel #{panel}",
+            "status_desc": "Here is the current status for Ticket Panel #{panel}:\n\n> **Target Channel**: {channel}\n> **Category**: {category}\n> **Support Roles**: {roles}\n\n*Use the select menus and buttons below to configure the panel.*",
+            "not_set": "❌ *Not set*",
+            "no_roles_added": "❌ *No roles*",
+            "select_channel": "Select target channel...",
+            "select_role_add": "Add support role...",
+            "select_role_remove": "Remove support role...",
+            "select_role_remove_desc": "Remove this role",
+            "btn_category": "Create Category",
+            "btn_category_update": "Update Category",
+            "btn_send": "Send Ticket System",
+            "btn_reset": "Reset Panel",
+            "btn_cancel": "Cancel",
+            "err_no_roles": "Please add at least one support role first!",
+            "err_no_channel": "Target channel not found or not configured!",
+            "err_no_category": "Category not found! Please create it first.",
+            "category_updated": "Category permissions updated for the configured roles! | <#{channel}>",
+            "err_max_roles": "You can add a maximum of 5 support roles!",
+            "no_roles_found": "No assignable roles found",
+            "warning_limit": "\n\n⚠️ **Note:** Because your server has more than 75 assignable roles, the remaining roles have been cut off (Discord allows a maximum of 5 rows of menus/buttons)."
+        },
+        "role-setup": {
+            "first_layer_title": "Role Setup",
+            "first_layer_desc": ">>> Use the selection menus below to manage your Role Panels\nNote: You have 90 seconds for interaction before timeout",
+            "placeholder": "Set up a Role Panel",
+            "panel_option_desc": "Manage/Edit Role Panel #{panel}",
+            "canceled_title": "Setup Canceled",
+            "canceled_desc": "The process was canceled.",
+            "timeout_title": "Timeout",
+            "timeout_desc": "Your time for input has expired.",
+            "panel_title": "Role Assignment",
+            "panel_desc": "Click the buttons below to assign or remove roles!",
+            "success_desc": "Role panel successfully sent to <#{channel}>!",
+            "status_title": "Settings for Role Panel #{panel}",
+            "status_desc": "Here is the current status for Role Panel #{panel}:\n\n> **Target Channel**: {channel}\n> **Roles**: {roles}\n\n*Use the dropdown menus and buttons below to customize the panel.*",
+            "not_set": "❌ *Not set*",
+            "no_roles_added": "❌ *No roles*",
+            "select_channel": "Select target channel...",
+            "select_role_add": "Add a role...",
+            "btn_send": "Send Role Panel",
+            "btn_reset": "Reset Panel",
+            "btn_cancel": "Cancel",
+            "err_no_roles": "Please add at least one role first!",
+            "err_no_channel": "Target channel not found or not configured!",
+            "err_max_roles": "You can add a maximum of 5 roles to a single panel!",
+            "no_roles_found": "No assignable roles found",
+            "warning_limit": "\n\n⚠️ **Note:** Because your server has more than 75 assignable roles, the remaining roles have been cut off (Discord allows a maximum of 5 rows of menus/buttons).",
+            "not_found": "This role no longer exists on this server.",
+            "hierarchy_error": "I cannot give you the role **{roleName}** because it is positioned higher than or equal to my highest role!",
+            "added": "Role **{roleName}** has been successfully assigned to you.",
+            "removed": "Role **{roleName}** has been successfully removed from you.",
+            "error": "An error occurred while modifying your roles."
+        },
+        "bot-presence": {
+            "title": "Bot Presence",
+            "desc": "**Activity set to**:\n{activity}\n\n**Activity Type set to**:\n{type}\n\n**Presence set to**:\n{status}"
+        },
+        "bot-stop": {
+            "title": "Bot stopped"
+        },
+        "bot-reloadcmd": {
+            "success": "`{command}` successfully reloaded!",
+            "invalid_title": "Command not found",
+            "invalid_desc": "Provide a valid command!\n\nValid Commands:\n{commands}"
+        },
+        "nsfw-test": {
+            "err_token": "Failed to fetch API token.",
+            "err_search": "Failed to fetch search results.",
+            "err_no_results": "No videos found for **{tag}**.",
+            "err_no_results_seconds": "No videos found for **{tag}** with at least **{seconds}s** duration."
+        },
+        "work": {
+            "title": "Work",
+            "success": "You worked as a **{job}** and earned **{amount} 💰**!",
+            "already_worked": "You already worked, please wait until <t:{time}:f>",
+            "list": [
+                "professional sleeper",
+                "Discord Moderator",
+                "rubber duck programmer",
+                "window cleaner for skyscrapers",
+                "pizza delivery driver",
+                "AI prompt engineer",
+                "underwater basket weaver"
+            ]
+        },
+        "crime": {
+            "title": "Crime",
+            "success": "You successfully **{crime}** and made **{amount} 💰**!",
+            "caught": "You were caught **{crime}** and fined **{amount} 💰**!",
+            "nem": "You need at least 1,000 💰 in your wallet to cover a potential fine!",
+            "already_crimed": "You already committed a crime, please wait until <t:{time}:f>",
+            "list": [
+                "stole candy from a baby",
+                "downloaded a car",
+                "jaywalked in front of a police car",
+                "robbed a lemonade stand",
+                "hacked the school's grading system",
+                "sneaked snacks into a movie theater"
+            ]
+        },
+        "eco-lb": {
+            "title": "Server Leaderboard",
+            "format": "**{rank}.** <@!{user}> • Total: **{total} 💰**\n> Wallet: *{wallet}* | Bank: *{bank}*",
+            "empty": "No user profiles found in this server."
+        },
+        "rps": {
+            "title": "Rock Paper Scissors",
+            "win": "You won! The bot chose {botChoice}. You won **{amount} 💰**!",
+            "lost": "You lost! The bot chose {botChoice}. You lost **{amount} 💰**!",
+            "draw": "It's a tie! Both chose {choice}. No money was lost.",
+            "nem": "You don't have enough money in your wallet to bet that much!",
+            "rock": "Rock",
+            "paper": "Paper",
+            "scissors": "Scissors"
+        },
+        "ship": {
+            "title": "❤️ Matchmaking",
+            "desc": "Matchmaking between <@!{user1}> and <@!{user2}>:\n\n**{percentage}%** {bar}\n\n> {comment}",
+            "comment_0": "Complete disaster. Stay away! 🛑",
+            "comment_1": "Not looking good. Maybe just friends? 😕",
+            "comment_2": "A decent match, but needs some work. 🤝",
+            "comment_3": "Good chemistry! There is definitely potential. 😏",
+            "comment_4": "Amazing match! A beautiful couple. ❤️",
+            "comment_5": "Perfect match! You are absolute soulmates! 💍✨"
+        },
+        "level": {
+            "title": "Level Rank",
+            "desc": "Rank of <@!{user}>:\n> **Level**: {level}\n> **XP**: {xp} / {needed} XP",
+            "footer": "Rank status"
+        },
+        "lvl-lb": {
+            "title": "XP Leaderboard",
+            "format": "**{rank}.** <@!{user}> • Level: **{level}** ({xp} XP)",
+            "empty": "No leveling profiles found on this server."
+        },
+        "warn": {
+            "title": "Warn User",
+            "success": "Successfully warned <@!{target}> for: **{reason}**\n> User now has **{count}** warning(s)."
+        },
+        "warnings": {
+            "title": "Warnings for {user}",
+            "empty": "<@!{target}> has no warnings.",
+            "format": "**#{index}.** Moderator: <@!{moderator}>\n> Reason: **{reason}**\n> Date: <t:{time}:f>"
+        },
+        "clear-warns": {
+            "title": "Clear Warnings",
+            "success": "Successfully cleared all warnings for <@!{target}>."
+        },
+        "shop-setup": {
+            "title": "Shop Setup",
+            "added": "Successfully added <@&{role}> to the shop for **{price} 💰**!",
+            "removed": "Successfully removed <@&{role}> from the shop.",
+            "not_in_shop": "That role is not in the shop!",
+            "already_added": "That role is already in the shop!",
+            "invalid_price": "Price must be at least 1 💰!"
+        },
+        "log-setup": {
+            "title": "Logs Setup",
+            "set_success": "Logs channel successfully set to <#{channel}>!",
+            "disabled": "Logs channel successfully disabled.",
+            "err_perms": "I don't have permission to send messages or embed links in <#{channel}>!"
+        },
+        "shop": {
+            "title": "🏪 Server Shop",
+            "desc": "Welcome to the server shop! Use `/buy <role>` to purchase a role.\n\n**Items Available:**\n\n{items}",
+            "empty": "The shop is currently empty! An administrator can add roles using `/shop-setup add`."
+        },
+        "buy": {
+            "title": "Purchase Role",
+            "success": "Successfully purchased the role <@&{role}> for **{price} 💰**!",
+            "already_has": "You already have the role <@&{role}>!",
+            "nem": "You don't have enough money in your wallet to buy <@&{role}> (Requires {price} 💰)!",
+            "not_for_sale": "That role is not for sale in the shop!"
+        },
+        "fish": {
+            "title": "🎣 Fishing Trip",
+            "caught": "You cast your line and caught a **{fish}** {emoji}!\n> Rarity: **{rarity}**\n> Value: **{value} 💰**\n> It has been added to your inventory.",
+            "cooldown": "You're too tired to fish! Please wait until <t:{time}:f>"
+        },
+        "sell": {
+            "title": "🐟 Fish Market",
+            "success_all": "Successfully sold all fish in your inventory for a total of **{amount} 💰**!",
+            "empty": "You don't have any fish in your inventory to sell!"
+        },
+        "fish_rarities": {
+            "common": "Common",
+            "uncommon": "Uncommon",
+            "rare": "Rare",
+            "legendary": "Legendary"
+        },
+        "fish_names": {
+            "cod": "Cod",
+            "salmon": "Salmon",
+            "clownfish": "Clownfish",
+            "pufferfish": "Pufferfish",
+            "squid": "Squid",
+            "shark": "Shark",
+            "seadragon": "Sea Dragon"
+        },
+        "timeout": {
+            "title": "Timeout Member",
+            "success": "Successfully timed out <@!{target}> for **{duration}**.\n> Reason: **{reason}**",
+            "err_not_moderateable": "I cannot timeout this member! They may have higher roles than me, or administrative permissions.",
+            "durations": {
+                "60s": "60 seconds",
+                "5m": "5 minutes",
+                "10m": "10 minutes",
+                "1h": "1 hour",
+                "1d": "1 day",
+                "1w": "1 week"
+            }
+        },
+        "untimeout": {
+            "title": "Remove Timeout",
+            "success": "Successfully removed timeout for <@!{target}>.\n> Reason: **{reason}**",
+            "err_not_timed_out": "This member is not currently timed out!"
+        },
+        "tod": {
+            "title": "Truth or Dare",
+            "truth": "Truth",
+            "dare": "Dare",
+            "choose": "Choose Truth or Dare below!",
+            "truth_questions": [
+                "What is your biggest secret?",
+                "Have you ever lied to your best friend?",
+                "What is the most embarrassing thing you've ever done?",
+                "Who is your secret crush?",
+                "What is the worst gift you have ever received?",
+                "Have you ever cheated on a test?",
+                "What is your biggest fear?",
+                "What is the strangest dream you've ever had?"
+            ],
+            "dare_prompts": [
+                "Sing a song of the group's choice out loud!",
+                "Do 20 push-ups right now!",
+                "Send a funny selfie in this channel!",
+                "Speak in an accent chosen by the server for the next 5 minutes!",
+                "Tell a really bad dad joke out loud or in chat!",
+                "Eat a spoonful of hot sauce or mustard!",
+                "Text your crush and tell them a joke!",
+                "Show the last photo in your phone's gallery!"
+            ]
+        },
+        "purge": {
+            "title": "Purge Messages",
+            "success": "Successfully deleted **{count}** messages.",
+            "success_user": "Successfully deleted **{count}** messages from <@!{target}>.",
+            "err_limit": "You can only delete messages that are under 14 days old!",
+            "err_perms": "I don't have permission to manage messages in this channel!"
+        }
+    },
+    "events": {
+        "messageCreate": {
+            "level_up_title": "🎉 Level Up!",
+            "level_up_desc": "Congratulations <@!{user}>! You leveled up to **Level {level}**!"
+        },
+        "onjoin": {
+            "joinmsg": "Hello <@!{user}>,\nwelcome to **{guildname}**. You are our {membercount}th Member"
+        },
+        "interactionCreate": {
+            "err_server_only": "This command is only available in servers",
+            "err_dev_only": "This command is only available for developers",
+            "err_nsfw_only": "This command is only available in NSFW channels",
+            "err_disabled": "This command is disabled on this server",
+            "err_bot_missing_perms": "I'm missing the required Discord permissions to perform this action!",
+            "err_bot_missing_basic_perms": "I need permissions to **Send Messages** and **Embed Links** in this channel!",
+            "cooldown_title": "Cooldown",
+            "cooldown_desc": "You're on cooldown for {time}s.",
+            "ticket_limit_title": "Ticket limit",
+            "ticket_limit_desc": "Ticket limit reached, You already have 1 ticket open in <#{channel}>",
+            "ticket_modal_label": "Describe your issue/problem",
+            "ticket_modal_title": "Ticket",
+            "ticket_close_label": "Close Ticket",
+            "ticket_ping_label": "Ping Support",
+            "ticket_ping_no_roles": "There are no Supporter Roles to ping!",
+            "ticket_ping_success": "Supporter Roles have been pinged!\n{roles}",
+            "ticket_ping_error": "An error occured while trying to ping roles",
+            "ticket_support_title": "Support & Help",
+            "ticket_support_desc": "Hello <@!{user}>\n Support will be with you shortly. If you want to close this ticket react with 🔒\n\n**Provided Issue/Problem:**\n```{issue}```",
+            "ticket_created": "Ticket created in <#{channel}>",
+            "ticket_no_panel_title": "No panel found",
+            "ticket_no_panel_desc": "> I cant find any data for #{panel} Panel!\n> Run `/t-setup` to create a Panel.",
+            "ticket_err_create_channel": "Could not create ticket channel!"
+        }
+    },
+    "errors": {
+        "error": "Error",
+        "not_your_turn": "It's not your turn!",
+        "nwn": "Provide a whole number",
+        "unf": "User not found",
+        "uab": "User already banned",
+        "uinb": "User is not banned",
+        "mp": "Missing Permissions",
+        "ivr": "Invalid Role",
+        "npf": {
+            "title": "No profile found",
+            "desc": "<@!{target}> has no profile"
+        }
+    },
+    "logs": {
+        "ban_title": "🔨 Member Banned",
+        "ban_desc": "**User**: <@!{target}> ({tag})\n**ID**: {target}\n**Moderator**: <@!{moderator}>\n**Reason**: {reason}",
+        "unban_title": "🔓 Member Unbanned",
+        "unban_desc": "**User**: <@!{target}>\n**ID**: {target}\n**Moderator**: <@!{moderator}>\n**Reason**: {reason}",
+        "kick_title": "👢 Member Kicked",
+        "kick_desc": "**User**: <@!{target}> ({tag})\n**ID**: {target}\n**Moderator**: <@!{moderator}>\n**Reason**: {reason}",
+        "timeout_title": "⏳ Member Timed Out",
+        "timeout_desc": "**User**: <@!{target}> ({tag})\n**ID**: {target}\n**Moderator**: <@!{moderator}>\n**Duration**: {duration}\n**Reason**: {reason}",
+        "untimeout_title": "🔊 Timeout Removed",
+        "untimeout_desc": "**User**: <@!{target}> ({tag})\n**ID**: {target}\n**Moderator**: <@!{moderator}>\n**Reason**: {reason}",
+        "warn_title": "⚠️ Member Warned",
+        "warn_desc": "**User**: <@!{target}> ({tag})\n**ID**: {target}\n**Moderator**: <@!{moderator}>\n**Reason**: {reason}\n**Warning Count**: {count}",
+        "clear_warns_title": "🧹 Warnings Cleared",
+        "clear_warns_desc": "**User**: <@!{target}> ({tag})\n**ID**: {target}\n**Moderator**: <@!{moderator}",
+        "purge_title": "🗑️ Messages Purged",
+        "purge_desc": "**Channel**: <#{channel}>\n**Moderator**: <@!{moderator}>\n**Amount**: {count}",
+        "purge_user_desc": "**Channel**: <#{channel}>\n**Moderator**: <@!{moderator}>\n**User**: <@!{target}>\n**Amount**: {count}",
+        "msg_delete_title": "🗑️ Message Deleted",
+        "msg_delete_desc": "**User**: <@!{user}> ({tag})\n**Channel**: <#{channel}>\n**Content**:\n```{content}```",
+        "msg_update_title": "📝 Message Edited",
+        "msg_update_desc": "**User**: <@!{user}> ({tag})\n**Channel**: <#{channel}>\n**Before**:\n```{before}```\n**After**:\n```{after}```",
+        "role_add_title": "🟢 Role Added",
+        "role_add_desc": "**Member**: <@!{user}> ({tag})\n**Role Added**: <@&{role}>",
+        "role_remove_title": "🔴 Role Removed",
+        "role_remove_desc": "**Member**: <@!{user}> ({tag})\n**Role Removed**: <@&{role}>",
+        "member_leave_title": "👋 Member Left",
+        "member_leave_desc": "**User**: {tag}\n**ID**: {userId}\n**Roles**: {roles}"
+    },
+    "success": {
+        "pfc": {
+            "title": "Profile created",
+            "desc": "Use this command again to check your balance"
+        }
+    }
+}

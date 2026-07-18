@@ -1,0 +1,205 @@
+[
+    {
+        "guildId": "1105553798216286220",
+        "userId": "619915409885364245",
+        "wallet": 26374444395421,
+        "bank": 0,
+        "daily": "2026-07-18T02:46:30.123Z",
+        "weekly": 0,
+        "monthly": "2026-07-18T04:19:29.431Z",
+        "work": "2026-07-18T04:41:24.101Z",
+        "crime": "2026-07-18T02:46:35.598Z",
+        "xp": 143,
+        "lastXpMessage": 1784357279604,
+        "level": 2,
+        "warnings": [],
+        "inventory": {
+            "fish": {
+                "pufferfish": 0,
+                "cod": 0
+            }
+        },
+        "lastFish": 1784350054423,
+        "birthday": {
+            "day": 18,
+            "month": 7
+        },
+        "lastBirthdayWish": 1784356502214
+    },
+    {
+        "guildId": "1105553798216286220",
+        "userId": "1338080989775265792",
+        "wallet": 0,
+        "bank": 0,
+        "daily": 0,
+        "weekly": 0,
+        "monthly": 0,
+        "work": 0,
+        "crime": 0,
+        "xp": 0,
+        "level": 1,
+        "lastXpMessage": 0,
+        "warnings": [],
+        "inventory": {
+            "fish": {}
+        }
+    },
+    {
+        "guildId": "1105553798216286220",
+        "userId": "477837545003024419",
+        "wallet": 0,
+        "bank": 0,
+        "daily": 0,
+        "weekly": 0,
+        "monthly": 0,
+        "work": 0,
+        "crime": 0,
+        "xp": 21,
+        "level": 2,
+        "lastXpMessage": 1784357276625,
+        "warnings": [],
+        "inventory": {
+            "fish": {}
+        }
+    },
+    {
+        "guildId": "1368374285520994376",
+        "userId": "681422996032061494",
+        "wallet": 0,
+        "bank": 0,
+        "daily": 0,
+        "weekly": 0,
+        "monthly": 0,
+        "work": 0,
+        "crime": 0,
+        "xp": 24,
+        "level": 1,
+        "lastXpMessage": 1784394493798,
+        "warnings": [],
+        "inventory": {
+            "fish": {}
+        },
+        "birthday": null
+    },
+    {
+        "guildId": "1291027235066609715",
+        "userId": "477837545003024419",
+        "wallet": 0,
+        "bank": 0,
+        "daily": 0,
+        "weekly": 0,
+        "monthly": 0,
+        "work": 0,
+        "crime": 0,
+        "xp": 23,
+        "level": 1,
+        "lastXpMessage": 1784395330287,
+        "warnings": [],
+        "inventory": {
+            "fish": {}
+        },
+        "birthday": null
+    },
+    {
+        "guildId": "1291027235066609715",
+        "userId": "337960260486692864",
+        "wallet": 0,
+        "bank": 0,
+        "daily": 0,
+        "weekly": 0,
+        "monthly": 0,
+        "work": 0,
+        "crime": 0,
+        "xp": 16,
+        "level": 1,
+        "lastXpMessage": 1784395507632,
+        "warnings": [],
+        "inventory": {
+            "fish": {}
+        },
+        "birthday": null
+    },
+    {
+        "guildId": "1291027235066609715",
+        "userId": "619915409885364245",
+        "wallet": 200,
+        "bank": 34084,
+        "daily": "2026-07-18T18:25:50.385Z",
+        "weekly": "2026-07-18T18:35:56.400Z",
+        "monthly": "2026-07-18T18:35:58.319Z",
+        "work": "2026-07-18T18:35:28.582Z",
+        "crime": "2026-07-18T18:35:21.803Z",
+        "xp": 178,
+        "level": 3,
+        "lastXpMessage": 1784402403152,
+        "warnings": [],
+        "inventory": {
+            "fish": {
+                "salmon": 0
+            }
+        },
+        "birthday": {
+            "day": 20,
+            "month": 8
+        },
+        "lastBirthdayWish": 0,
+        "lastFish": 1784399731045
+    },
+    {
+        "guildId": "1291027235066609715",
+        "userId": "1154117219966537798",
+        "wallet": 0,
+        "bank": 0,
+        "daily": 0,
+        "weekly": 0,
+        "monthly": 0,
+        "work": 0,
+        "crime": 0,
+        "xp": 21,
+        "level": 1,
+        "lastXpMessage": 1784396730028,
+        "warnings": [],
+        "inventory": {
+            "fish": {}
+        },
+        "birthday": null
+    },
+    {
+        "guildId": "1291027235066609715",
+        "userId": "769554253584007169",
+        "wallet": 0,
+        "bank": 0,
+        "daily": 0,
+        "weekly": 0,
+        "monthly": 0,
+        "work": 0,
+        "crime": 0,
+        "xp": 97,
+        "level": 2,
+        "lastXpMessage": 1784402063098,
+        "warnings": [],
+        "inventory": {
+            "fish": {}
+        },
+        "birthday": null
+    },
+    {
+        "guildId": "1291027235066609715",
+        "userId": "569864710967656448",
+        "wallet": 0,
+        "bank": 0,
+        "daily": 0,
+        "weekly": 0,
+        "monthly": 0,
+        "work": 0,
+        "crime": 0,
+        "xp": 397,
+        "level": 2,
+        "lastXpMessage": 1784401542455,
+        "warnings": [],
+        "inventory": {
+            "fish": {}
+        },
+        "birthday": null
+    }
+]
