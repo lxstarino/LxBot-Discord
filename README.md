@@ -20,14 +20,10 @@ To run this bot, you need:
 2. **Install Dependencies**:
    Open your terminal in the project directory and run:
    ```bash
-   npm install
+   npm install discord.js
+   npm install @napi-rs/canvas
+   npm install dotenv
    ```
-
-   ## Dependencies
-
-   * `discord.js`
-   * `@napi-rs/canvas`
-   * `dotenv`
 
 3. **Configure Environment Variables**:
    Create a `.env` file in the root directory of the project and add your credentials:
