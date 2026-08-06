@@ -17,9 +17,10 @@ module.exports = {
 
         try {
             const res = await fetch(`https://discord.com/api/v10/users/${user.id}`, {
-                headers: { Authorization: `Bot ${client.token}` }
+                headers: { Authorization: `Bot ${client.token}` },
+                signal: AbortSignal.timeout(5000)
             })
-            
+
             if (!res.ok) {
                 return client.errEmbed({
                     type: "reply",

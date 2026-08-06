@@ -1,16 +1,22 @@
-const developers = [
-    "399301340326789120",
-    "619915409885364245"
-]
+const { Collection } = require("discord.js")
+const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+
+const developers = process.env.developers
+    ? process.env.developers.split(",").map(id => id.trim())
+    : ["399301340326789120", "619915409885364245"]
 
 module.exports = {
     name: "interactionCreate",
     async execute(interaction, client) {
         client.lastInteraction = interaction
-        const settings = interaction.guild ? client.settings.storage.data.find(x => x.guildId === interaction.guild.id) : null
+        setTimeout(() => {
+            if (client.lastInteraction === interaction) {
+                client.lastInteraction = null
+            }
+        }, 15000)
+
+        const settings = interaction.guild ? client.settings.mapCache?.get(interaction.guild.id) : null
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
-        const { Collection } = require("discord.js")
 
         const handleExecutionError = async (err, interaction) => {
             console.error(err)
@@ -48,7 +54,6 @@ module.exports = {
             if (command.devOnly && !developers.includes(interaction.user.id)) return client.errEmbed({ type: "reply", ephemeral: true, desc: ls["events"]["interactionCreate"]["err_dev_only"] }, interaction)
             if (command.nsfw && !interaction.channel.nsfw) return client.errEmbed({ type: "reply", ephemeral: true, desc: ls["events"]["interactionCreate"]["err_nsfw_only"] }, interaction)
 
-
             if (settings) {
                 if (settings.disabled_modules) {
                     if (settings.disabled_modules.includes(command.Folder)) {
@@ -57,7 +62,6 @@ module.exports = {
                 }
             }
 
-            // Calculate the cooldown duration in milliseconds
             let cooldownAmount = 0;
             if (command.cooldown) {
                 cooldownAmount = typeof command.cooldown === "object" ? (command.cooldown.time || 0) : (command.cooldown * 1000);
@@ -70,7 +74,6 @@ module.exports = {
 
                 const now = Date.now()
                 const timestamps = client.cooldowns.get(command.data.name)
-                // Check if the user already has an active cooldown timestamp
                 if (timestamps.has(interaction.user.id)) {
                     const expirationTime = timestamps.get(interaction.user.id) + cooldownAmount
                     if (now < expirationTime) {
@@ -84,15 +87,12 @@ module.exports = {
                     }
                 }
 
-                // Set the timestamp and schedule automatic removal after the cooldown expires
                 timestamps.set(interaction.user.id, now)
-                setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount)
             }
 
             try {
                 await command.execute(client, interaction)
             } catch (err) {
-                // Remove the cooldown entry if command execution fails
                 if (cooldownAmount > 0) {
                     const timestamps = client.cooldowns.get(command.data.name)
                     if (timestamps) {
@@ -104,10 +104,8 @@ module.exports = {
             }
         }
 
-        // Routes button interactions to registered button handlers
         if (interaction.isButton()) {
             let button = client.buttons.get(interaction.customId)
-            // No exact ID match — fall back to prefix matching (e.g. 'open-ticket')
             if (!button) {
                 for (const [key, btn] of client.buttons.entries()) {
                     if (interaction.customId.startsWith(key)) {
@@ -126,10 +124,8 @@ module.exports = {
             }
         }
 
-        // Routes modal submissions to registered modal handlers
         if (interaction.isModalSubmit()) {
             let modal = client.modals.get(interaction.customId)
-            // No exact ID match — fall back to prefix matching for dynamic modals
             if (!modal) {
                 for (const [key, mdl] of client.modals.entries()) {
                     if (interaction.customId.startsWith(key)) {

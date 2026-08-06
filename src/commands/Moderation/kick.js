@@ -26,7 +26,7 @@ module.exports = {
 
         if(!target.member) throw({title: ls["errors"]["unf"], desc: handlemsg(ls["cmds"]["kick"]["edesc1"], {target: target.user.id})})
         if(!target.member.moderatable) throw({title: ls["errors"]["mp"], desc: handlemsg(ls["cmds"]["kick"]["edesc2"], {target: target.user.id})})
-             
+
         try {
             await interaction.guild.members.kick(target.user.id, reason)
             client.Embed([{

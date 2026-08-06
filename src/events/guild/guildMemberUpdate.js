@@ -8,12 +8,9 @@ module.exports = {
         const oldRoles = oldMember.roles.cache
         const newRoles = newMember.roles.cache
 
-        // Find roles that were added
         const addedRoles = newRoles.filter(r => !oldRoles.has(r.id))
-        // Find roles that were removed
         const removedRoles = oldRoles.filter(r => !newRoles.has(r.id))
 
-        // Skip if no role changes
         if (addedRoles.size === 0 && removedRoles.size === 0) return
 
         let ls = client.getLanguage(newMember.guild.id)

@@ -1,7 +1,6 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
 const RestoreManager = require(`${process.cwd()}/src/utils/RestoreManager`)
 
-// Days in each month (non-leap year is fine for birthday validation)
 const DAYS_IN_MONTH = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 function isValidDate(day, month) {
@@ -10,8 +9,6 @@ function isValidDate(day, month) {
     return true
 }
 
-// ─── Birthday checker — registered with RestoreManager, runs hourly ───────────
-
 RestoreManager.register("Birthday Checker", async (client) => {
     const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/handlers/functions`)
 
@@ -19,13 +16,11 @@ RestoreManager.register("Birthday Checker", async (client) => {
         const now = new Date()
         const today = { day: now.getDate(), month: now.getMonth() + 1 }
 
-        // Find all profiles that have a birthday today
         const birthdayProfiles = client.economy.storage.data.filter(profile => {
             if (!profile.birthday) return false
             return profile.birthday.day === today.day && profile.birthday.month === today.month
         })
 
-        // Group by guild
         const byGuild = {}
         for (const profile of birthdayProfiles) {
             if (!byGuild[profile.guildId]) byGuild[profile.guildId] = []
@@ -37,7 +32,7 @@ RestoreManager.register("Birthday Checker", async (client) => {
                 const guild = client.guilds.cache.get(guildId)
                 if (!guild) continue
 
-                const settings = client.settings.storage.data.find(s => s.guildId === guildId)
+                const settings = client.settings.mapCache?.get(guildId)
                 if (!settings?.birthdaychannel) continue
 
                 const channel = guild.channels.cache.get(settings.birthdaychannel)
@@ -46,8 +41,7 @@ RestoreManager.register("Birthday Checker", async (client) => {
                 const ls = client.getLanguage(guildId)
 
                 for (const userId of userIds) {
-                    // Only wish once per day — track with a lastWished timestamp on the profile
-                    const profile = client.economy.storage.data.find(p => p.userId === userId && p.guildId === guildId)
+                    const profile = client.economy.mapCache?.get(`${guildId}:${userId}`)
                     if (!profile) continue
 
                     const lastWished = profile.lastBirthdayWish || 0
@@ -70,12 +64,9 @@ RestoreManager.register("Birthday Checker", async (client) => {
         }
     }
 
-    // Run immediately on start, then every hour
     await checkBirthdays()
-    setInterval(checkBirthdays, 6000)
+    setInterval(checkBirthdays, 60 * 60 * 1000)
 })
-
-// ─── Command ──────────────────────────────────────────────────────────────────
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -129,7 +120,7 @@ module.exports = {
 
             const profile = await getOrCreateProfile(client, interaction.user.id, interaction.guild.id)
             profile.birthday = { day, month }
-            profile.lastBirthdayWish = 0 // reset so they get wished next time
+            profile.lastBirthdayWish = 0
             await client.economy.saveData()
 
             client.Embed([{

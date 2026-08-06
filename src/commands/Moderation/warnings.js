@@ -13,9 +13,9 @@ module.exports = {
         const user = interaction.options.getUser("target") || interaction.user
 
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/handlers/functions`)
 
-        const profile = client.economy.storage.data.find(x => x.userId === user.id && x.guildId === interaction.guild.id)
+        const profile = await getOrCreateProfile(client, user.id, interaction.guild.id)
         const warnings = profile ? (profile.warnings || []) : []
 
         if (warnings.length === 0) {

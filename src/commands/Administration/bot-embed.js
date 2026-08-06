@@ -6,7 +6,7 @@ module.exports = {
         .setName("bot-embed")
         .setDescription("Change the color of the bot's embed")
         .setDefaultMemberPermissions(PermissionsBitField.Flags.Administrator)
-        .addStringOption(option => 
+        .addStringOption(option =>
             option.setName("hex-color")
             .setDescription("Provide a hex color to change the color of the basic embed. Example: #ffffff")
             .setMaxLength(7)

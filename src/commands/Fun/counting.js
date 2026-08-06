@@ -32,7 +32,6 @@ module.exports = {
         const settings = await getOrCreateSettings(client, interaction.guild.id)
 
         if (subcommand === "setup") {
-            // Require Administrator permission
             if (!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
                 return client.errEmbed({
                     type: "reply",
@@ -44,7 +43,6 @@ module.exports = {
 
             const channel = interaction.options.getChannel("channel")
 
-            // Check bot perms in target channel
             const botMember = interaction.guild.members.me
             const perms = channel.permissionsFor(botMember)
             if (!perms.has(PermissionsBitField.Flags.SendMessages) || !perms.has(PermissionsBitField.Flags.EmbedLinks) || !perms.has(PermissionsBitField.Flags.ReadMessageHistory)) {
@@ -71,7 +69,6 @@ module.exports = {
             }], undefined, "reply", false, interaction)
 
         } else if (subcommand === "disable") {
-            // Require Administrator permission
             if (!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
                 return client.errEmbed({
                     type: "reply",
@@ -101,8 +98,8 @@ module.exports = {
                 }], undefined, "reply", false, interaction)
             }
 
-            const lastUserText = settings.counting_last_user 
-                ? `<@!${settings.counting_last_user}>` 
+            const lastUserText = settings.counting_last_user
+                ? `<@!${settings.counting_last_user}>`
                 : ls["cmds"]["counting"]["no_last_user"]
 
             client.Embed([{

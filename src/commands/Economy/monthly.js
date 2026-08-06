@@ -7,7 +7,7 @@ module.exports = {
     async execute (client, interaction) {
         let ls = client.getLanguage(interaction.guild?.id)
         const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/handlers/functions`)
-        
+
         const profile = await getOrCreateProfile(client, interaction.user.id, interaction.guild.id)
 
         const today = new Date(profile.monthly)

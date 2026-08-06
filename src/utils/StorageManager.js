@@ -7,11 +7,8 @@ module.exports = class StorageManager {
         this.storage.data = []
         this.saveTimeout = null
 
-        // Initializes data loading synchronously on bot start
-        // to avoid race conditions.
         this._init()
 
-        // Setup process exit listeners to guarantee a final synchronous save before shutdown
         process.once("beforeExit", () => this.forceSaveSync())
         process.once("exit", () => this.forceSaveSync())
         process.once("SIGINT", () => {
@@ -24,7 +21,6 @@ module.exports = class StorageManager {
         })
     }
 
-    // Creates new data and appends it to the storage array
     createData(options) {
         return new Promise(async (resolve, reject) => {
             if (!this.init) {
@@ -35,13 +31,11 @@ module.exports = class StorageManager {
             }
 
             this.storage.data.push(options)
-            // Persist data asynchronously
             await this.saveData()
             resolve(options)
         })
     }
 
-    // Writes the data array asynchronously to the JSON file with a 1.5s debounce throttle
     async saveData() {
         if (this.saveTimeout) {
             clearTimeout(this.saveTimeout)
@@ -59,7 +53,6 @@ module.exports = class StorageManager {
         return Promise.resolve()
     }
 
-    // Forces a synchronous write to disk (used on process exit)
     forceSaveSync() {
         if (this.saveTimeout) {
             clearTimeout(this.saveTimeout)
@@ -72,10 +65,8 @@ module.exports = class StorageManager {
         }
     }
 
-    // Reads data synchronously from disk (only used on bot startup)
     getData() {
         if (!fs.existsSync(this.storage.path)) {
-            // File does not exist yet — create an empty array file
             fs.writeFileSync(this.storage.path, "[]", "utf-8")
             return []
         } else {
@@ -103,7 +94,6 @@ module.exports = class StorageManager {
         }
     }
 
-    // Sets the in-memory data array and marks the manager as initialized
     _init() {
         this.storage.data = this.getData()
         this.init = true

@@ -33,7 +33,6 @@ module.exports = {
 
         const percentage = getShipPercentage(u1.id, u2.id)
 
-        // Choose comments based on percentage
         let commentKey = "comment_0"
         if (percentage > 90) {
             commentKey = "comment_5"
@@ -49,7 +48,6 @@ module.exports = {
 
         const comment = ls["cmds"]["ship"][commentKey]
 
-        // Build a visual love progress bar (10 blocks)
         const filledBlocks = Math.round(percentage / 10)
         const emptyBlocks = 10 - filledBlocks
         const bar = "❤️".repeat(filledBlocks) + "🖤".repeat(emptyBlocks)

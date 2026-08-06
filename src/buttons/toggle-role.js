@@ -16,8 +16,14 @@ module.exports = {
             });
         }
 
-        // Check if the bot has permission to manage the role (hierarchy rule)
         const botMember = interaction.guild.members.me;
+        if (!botMember.permissions.has("ManageRoles")) {
+            return await interaction.reply({
+                content: getTranslation("error"),
+                ephemeral: true
+            });
+        }
+
         if (role.position >= botMember.roles.highest.position) {
             return await interaction.reply({
                 content: getTranslation("hierarchy_error", { roleName: role.name }),

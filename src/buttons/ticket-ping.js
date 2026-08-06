@@ -11,7 +11,7 @@ module.exports = {
                 new ButtonBuilder()
                     .setLabel(ls["events"]["interactionCreate"]["ticket_close_label"])
                     .setCustomId("close-ticket")
-                    .setStyle(1) // Primary
+                    .setStyle(1)
                     .setEmoji("🔒")
             )
             interaction.message.edit({ components: [button_row] })

@@ -10,7 +10,8 @@ module.exports = {
         const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
 
         try {
-            const response = await fetch("https://uselessfacts.jsph.pl/api/v2/facts/random")
+            const response = await fetch("https://uselessfacts.jsph.pl/api/v2/facts/random", { signal: AbortSignal.timeout(5000) })
+
             if (!response.ok) return interaction.reply({ content: ls["cmds"]["fact"]["err_fetch"], ephemeral: true })
             const data = await response.json()
 

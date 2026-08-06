@@ -39,7 +39,8 @@
             "ctys": "You're not able to transfer money to yourself..",
             "nem": "You dont have enough money in you're bank to transfer!",
             "nem_wallet": "You don't have enough money in your wallet to transfer this amount!",
-            "successful": "You transfered {amount} 💰 successfully to <@!{target}>"
+            "successful": "You transfered {amount} 💰 successfully to <@!{target}>",
+            "err_bot": "You cannot transfer money to a bot!"
         },
         "rob": {
             "title": "Rob",
@@ -47,7 +48,8 @@
             "rbl": "You have to carry atleast 5000 💰 to rob someone",
             "nts": "<@!{target}> doesn't carry anything that could be stolen.",
             "caught": "You were caught..\nYou paid {amount} 💰 to <@!{target}>",
-            "success": "You robbed {amount} 💰 from <@!{target}>"
+            "success": "You robbed {amount} 💰 from <@!{target}>",
+            "err_bot": "You cannot rob a bot!"
         },
         "slots": {
             "title": "Slots",
@@ -60,6 +62,32 @@
                 "value1": "-{amount} 💰",
                 "value2": "{amount} 💰"
             }
+        },
+        "wheel": {
+            "title": "🎡 Wheel of Fortune",
+            "err_bet_min": "The minimum bet is 10 💰!",
+            "err_bet_wallet": "You don't have enough money in your wallet for this bet!",
+            "spinning": "🎡 Spinning the wheel...",
+            "win": "🎉 **JACKPOT!** The wheel landed on **{multiplier}x**! You won **+{payout} 💰**!",
+            "profit": "✨ The wheel landed on **{multiplier}x**! You made a profit of **+{payout} 💰**!",
+            "loss": "💥 The wheel landed on **{multiplier}x**! You lost **-{loss} 💰**!"
+        },
+        "restart": {
+            "title": "⚙️ Bot Restart",
+            "desc": "🔄 **Restarting bot process...** Please wait a few seconds.",
+            "no_perm": "❌ Only the bot developer can execute this command!"
+        },
+        "hilo": {
+            "title": "🌐 Higher or Lower (Wikipedia Readers)",
+            "desc": "🌐 **{itemA}** has **{countA}** Wikipedia readers in the last 30 days.\n\nDoes **{itemB}** have **Higher ⬆️** or **Lower ⬇️** 30-day readers than **{itemA}**?",
+            "correct": "✨ **Correct!** **{itemB}** has **{countB}** readers!\nStreak Score: **{score}**\n\nDoes **{nextItem}** have **Higher ⬆️** or **Lower ⬇️** readers than **{itemB}**?",
+            "equal": "🤝 **Equal!** Both have **{countB}** readers!\nStreak Score: **{score}**",
+            "gameover": "💥 **Game Over!** **{itemB}** has **{countB}** readers!\nYour final Streak Score is **{score}**!",
+            "stopped": "🛑 **Game Ended!** You stopped with a Streak Score of **{score}**!",
+            "btn_higher": "Higher ⬆️",
+            "btn_lower": "Lower ⬇️",
+            "btn_stop": "Stop 🛑",
+            "btn_retry": "Play Again 🔄"
         },
         "8ball": {
             "title": "🔮 8Ball",
@@ -224,7 +252,7 @@
             "err_perms": "I don't have permission to manage channels or move members in this server!"
         },
         "voice": {
-            "title": "🎙️ Voice Control",
+            "title": "🎙️ Voice Control Panel",
             "not_in_voice": "You must be in a temporary voice channel to use this command!",
             "not_owner": "You are not the owner of this temporary voice channel!",
             "locked": "Your channel has been locked! 🔒",
@@ -232,14 +260,40 @@
             "name_changed": "Your channel has been renamed to **{name}**!",
             "limit_changed": "Your channel user limit has been set to **{limit}**!",
             "permitted": "<@!{target}> is now permitted to join your channel!",
-            "rejected": "<@!{target}> has been kicked and blocked from your channel!"
+            "rejected": "<@!{target}> has been kicked and blocked from your channel!",
+            "kicked": "<@!{target}> has been kicked from your channel!",
+            "kick_err_self": "You cannot kick yourself from your own channel!",
+            "kick_err_not_in_channel": "<@!{target}> is not in your voice channel!",
+            "panel_desc": "Use the buttons and inputs below to manage your temporary voice channel:\n\n> **Channel**: <#{channel}>\n> **Owner**: <@!{owner}>\n> **Status**: {status}\n> **Limit**: {limit}",
+            "panel_status_public": "🔓 Public",
+            "panel_status_private": "🔒 Private (Locked)",
+            "panel_status_no_limit": "No Limit",
+            "panel_status_users": "{limit} Users",
+            "btn_lock": "Lock",
+            "btn_unlock": "Unlock",
+            "btn_rename": "Rename",
+            "btn_limit": "Set Limit",
+            "btn_kick": "Kick Member",
+            "modal_rename_title": "Rename Voice Channel",
+            "modal_rename_label": "New Name",
+            "modal_limit_title": "Set Channel Limit",
+            "modal_limit_label": "User Limit (0-99, 0 = No Limit)",
+            "modal_kick_title": "Kick Member",
+            "modal_kick_label": "Member Username or ID"
         },
         "help": {
-            "placeholder": "Select a category",
+            "placeholder": "Select a category...",
             "category_desc": "Commands from {module} module",
             "btn_home": "Home",
-            "btn_cmdlist": "Commands List",
-            "home_desc": "Please use the Select Menu below to get further information about a module.\nNote: Interactables will disable in 3 minutes\n\n[My Website](https://lxst.cc) | [Github](https://github.com/lxstarino)"
+            "btn_cmdlist": "All Commands",
+            "title_home": "📖 Help & Command Overview",
+            "home_desc": "> 💡 **Tip:** Select a module from the dropdown menu below to view all commands & details.\n> ⏱️ *This interactive menu automatically deactivates after **3 minutes** of inactivity.*\n\n[Website](https://lxst.cc) | [GitHub](https://github.com/lxstarino)",
+            "categories_title": "Categories Available",
+            "footer_home": "{totalCmdCount} Commands total across {categoryCount} Categories",
+            "title_all": "📋 All Commands Overview",
+            "desc_all": "Here is a quick overview of all commands grouped by category:",
+            "requested_by": "Requested by {user}",
+            "no_commands": "No commands found in this category."
         },
         "serverinfo": {
             "createdon": "Created on",
@@ -310,6 +364,33 @@
             "title": "Welcome Setup",
             "updated": "Welcome Message was successfully updated!",
             "created": "Welcome Message was successfully created"
+        },
+        "autorole-setup": {
+            "title": "🤖 Auto-Role Setup",
+            "set_success": "Auto-Role has been successfully set to <@&{role}>!",
+            "disabled": "Auto-Role has been successfully disabled.",
+            "err_bot_hierarchy": "I cannot assign the role <@&{role}> because it is higher than or equal to my highest role!"
+        },
+        "verify-setup": {
+            "title": "🔒 Verification Setup",
+            "set_success": "Verification panel successfully sent to <#{channel}> with role <@&{role}>!",
+            "disabled": "Verification system has been disabled.",
+            "panel_title": "🛡️ Member Verification",
+            "panel_desc": "Welcome to **{guildname}**!\nTo gain access to the rest of the server channels, please click the **Verify** button below and solve the Captcha challenge.",
+            "btn_verify": "Verify",
+            "err_bot_hierarchy": "I cannot assign the role <@&{role}> because it is higher than or equal to my highest role!"
+        },
+        "verify": {
+            "title": "🔐 Captcha Verification",
+            "already_verified": "You are already verified on this server!",
+            "captcha_desc": "Please solve the Captcha shown in the image below to complete your verification.\n\n> ⏱️ *This Captcha expires in **5 minutes**.*",
+            "btn_enter_code": "Enter Code",
+            "btn_refresh": "New Captcha",
+            "modal_title": "Enter Captcha Code",
+            "modal_label": "5-Character Code (Case-Insensitive)",
+            "success": "🎉 **Verification Successful!** You have been granted access to the server.",
+            "err_invalid_code": "❌ **Incorrect Code!** Please check the Captcha image and try again.",
+            "err_expired": "⏰ **Captcha Expired!** Click **Verify** again to generate a new Captcha image."
         },
         "bot-embed": {
             "title": "Embed",
@@ -409,6 +490,10 @@
         },
         "bot-stop": {
             "title": "Bot stopped"
+        },
+        "bot-restart": {
+            "title": "Bot Restarting",
+            "desc": "The bot will restart <t:{time}:R>..."
         },
         "bot-reloadcmd": {
             "success": "`{command}` successfully reloaded!",
@@ -512,6 +597,17 @@
             "disabled": "Logs channel successfully disabled.",
             "err_perms": "I don't have permission to send messages or embed links in <#{channel}>!"
         },
+        "freegames-setup": {
+            "title": "Free Games Tracker Setup",
+            "set_success": "Free games tracker channel successfully set to <#{channel}>!",
+            "disabled": "Free games tracker successfully disabled.",
+            "err_perms": "I don't have permission to send messages or embed links in <#{channel}>!",
+            "embed_worth": "Worth",
+            "embed_platforms": "Platforms",
+            "embed_end_date": "End Date",
+            "embed_instructions": "Instructions",
+            "embed_free": "FREE"
+        },
         "shop": {
             "title": "🏪 Server Shop",
             "desc": "Welcome to the server shop! Use `/buy <role>` to purchase a role.\n\n**Items Available:**\n\n{items}",
@@ -530,9 +626,15 @@
             "cooldown": "You're too tired to fish! Please wait until <t:{time}:f>"
         },
         "sell": {
-            "title": "🐟 Fish Market",
-            "success_all": "Successfully sold all fish in your inventory for a total of **{amount} 💰**!",
-            "empty": "You don't have any fish in your inventory to sell!"
+            "title": "🏪 Market",
+            "success_all": "Successfully sold all items in your inventory for a total of **{amount} 💰**!",
+            "empty": "You don't have any items in your inventory to sell!"
+        },
+        "inventory": {
+            "title": "🎒 {user}'s Inventory",
+            "desc": "**Fish inventory:**\n\n{items}\n\nEstimated value: **{total} 💰**",
+            "empty_self": "Your inventory is currently empty! Use `/fish` to catch some fish.",
+            "empty_other": "<@!{user}>'s inventory is empty!"
         },
         "fish_rarities": {
             "common": "Common",
@@ -548,6 +650,53 @@
             "squid": "Squid",
             "shark": "Shark",
             "seadragon": "Sea Dragon"
+        },
+        "mine": {
+            "title": "⛏️ Mining Trip",
+            "mined": "You swung your pickaxe and mined some **{ore}** {emoji}!\n> Rarity: **{rarity}**\n> Value: **{value} 💰**\n> It has been added to your inventory.",
+            "cooldown": "Your muscles are too sore to mine! Please wait until <t:{time}:f>"
+        },
+        "ore_rarities": {
+            "common": "Common",
+            "uncommon": "Uncommon",
+            "rare": "Rare",
+            "legendary": "Legendary"
+        },
+        "ore_names": {
+            "coal": "Coal",
+            "iron": "Iron Ore",
+            "gold": "Gold Ore",
+            "diamond": "Diamond"
+        },
+        "tictactoe": {
+            "title": "❌ Tic-Tac-Toe ⭕",
+            "bot_opponent": "You cannot play against a bot!",
+            "self_opponent": "You cannot play against yourself!",
+            "invite": "<@!{opponent}>, you have been challenged to a game of Tic-Tac-Toe by <@!{challenger}>! Do you accept?",
+            "invite_declined": "<@!{opponent}> declined the invitation.",
+            "invite_timeout": "<@!{opponent}> did not respond in time.",
+            "btn_accept": "Accept",
+            "btn_decline": "Decline",
+            "game_start": "Game started! <@!{player}> (❌) goes first.",
+            "your_turn": "It's your turn, <@!{player}> ({symbol})!",
+            "winner": "🎉 Congratulations! <@!{player}> ({symbol}) won the game!",
+            "tie": "🤝 The game ended in a tie!",
+            "timeout": "The game was terminated due to 5 minutes of inactivity."
+        },
+        "connect4": {
+            "title": "🔴 Connect 4 🟡",
+            "bot_opponent": "You cannot play against a bot!",
+            "self_opponent": "You cannot play against yourself!",
+            "invite": "<@!{opponent}>, you have been challenged to a game of Connect 4 by <@!{challenger}>! Do you accept?",
+            "invite_declined": "<@!{opponent}> declined the invitation.",
+            "invite_timeout": "<@!{opponent}> did not respond in time.",
+            "btn_accept": "Accept",
+            "btn_decline": "Decline",
+            "game_start": "Game started! <@!{player}> (🔴) goes first.",
+            "your_turn": "It's your turn, <@!{player}> ({symbol})!",
+            "winner": "🎉 Congratulations! <@!{player}> ({symbol}) won the game!",
+            "tie": "🤝 The game ended in a tie!",
+            "timeout": "The game was terminated due to 5 minutes of inactivity."
         },
         "timeout": {
             "title": "Timeout Member",
@@ -567,44 +716,31 @@
             "success": "Successfully removed timeout for <@!{target}>.\n> Reason: **{reason}**",
             "err_not_timed_out": "This member is not currently timed out!"
         },
-        "tod": {
-            "title": "Truth or Dare",
-            "truth": "Truth",
-            "dare": "Dare",
-            "choose": "Choose Truth or Dare below!",
-            "truth_questions": [
-                "What is your biggest secret?",
-                "Have you ever lied to your best friend?",
-                "What is the most embarrassing thing you've ever done?",
-                "Who is your secret crush?",
-                "What is the worst gift you have ever received?",
-                "Have you ever cheated on a test?",
-                "What is your biggest fear?",
-                "What is the strangest dream you've ever had?"
-            ],
-            "dare_prompts": [
-                "Sing a song of the group's choice out loud!",
-                "Do 20 push-ups right now!",
-                "Send a funny selfie in this channel!",
-                "Speak in an accent chosen by the server for the next 5 minutes!",
-                "Tell a really bad dad joke out loud or in chat!",
-                "Eat a spoonful of hot sauce or mustard!",
-                "Text your crush and tell them a joke!",
-                "Show the last photo in your phone's gallery!"
-            ]
-        },
         "purge": {
             "title": "Purge Messages",
             "success": "Successfully deleted **{count}** messages.",
             "success_user": "Successfully deleted **{count}** messages from <@!{target}>.",
             "err_limit": "You can only delete messages that are under 14 days old!",
             "err_perms": "I don't have permission to manage messages in this channel!"
+        },
+        "level-reward-setup": {
+            "title": "🎁 Level Role Rewards",
+            "add_success": "Successfully set **Level {level}** reward to role <@&{role}>!",
+            "remove_success": "Successfully removed role reward for **Level {level}**.",
+            "remove_not_found": "No level role reward is configured for **Level {level}**.",
+            "clear_success": "Successfully cleared all level role rewards.",
+            "list_title": "📜 Configured Level Role Rewards",
+            "list_empty": "No level role rewards are configured for this server yet. Use `/level-reward-setup add` to add one!",
+            "list_field_name": "Level {level}",
+            "list_field_value": "Role: <@&{role}>",
+            "err_bot_hierarchy": "I cannot assign the role <@&{role}> because it is higher than or equal to my highest role!"
         }
     },
     "events": {
         "messageCreate": {
             "level_up_title": "🎉 Level Up!",
-            "level_up_desc": "Congratulations <@!{user}>! You leveled up to **Level {level}**!"
+            "level_up_desc": "Congratulations <@!{user}>! You leveled up to **Level {level}**!",
+            "level_up_reward": "\n🏆 **New Role Reward:** {roles}"
         },
         "onjoin": {
             "joinmsg": "Hello <@!{user}>,\nwelcome to **{guildname}**. You are our {membercount}th Member"

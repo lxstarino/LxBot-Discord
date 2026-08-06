@@ -15,11 +15,11 @@ module.exports = (client) => {
         components: components,
         ephemeral: ephemeral
     }, interaction) {
+        const emoji = client.emojis.cache.find(emoji => emoji.id === "1194545522967597086") ? "<:check:1194545522967597086>" : "✅"
         if (title) {
-            embed.setDescription(`${client.emojis.cache.find(emoji => emoji.id === "1194545522967597086") ? `<:check:1194545522967597086> **${title}**\n${desc ? desc : ""}` : `✅ **${title}**\n${desc ? desc : ""}`}`)
-        }
-        else {
-            embed.setDescription(`${client.emojis.cache.find(emoji => emoji.id === "1194545522967597086") ? `<:check:1194545522967597086> **Successful**\n${desc ? desc : ""}` : `✅ **Successful**\n${desc ? desc : ""}`}`)
+            embed.setDescription(`${emoji} **${title}**\n${desc ? desc : ""}`)
+        } else {
+            embed.setDescription(`${emoji} ${desc ? desc : ""}`)
         }
         if (color) { embed.setColor(color) } else { embed.setColor("#087c24") }
 
@@ -40,11 +40,11 @@ module.exports = (client) => {
         components: components,
         ephemeral: ephemeral
     }, interaction) {
+        const emoji = client.emojis.cache.find(emoji => emoji.id === "1194542111056474154") ? "<:error:1194542111056474154>" : "❌"
         if (title) {
-            embed.setDescription(`${client.emojis.cache.find(emoji => emoji.id === "1194542111056474154") ? `<:error:1194542111056474154> **${title}**\n${desc ? desc : ""}` : `❌ **${title}**\n${desc ? desc : ""}`}`)
-        }
-        else {
-            embed.setDescription(`${client.emojis.cache.find(emoji => emoji.id === "1194542111056474154") ? `<:error:1194542111056474154> **Error**\n${desc ? desc : ""}` : `❌ **Error**\n${desc ? desc : ""}`}`)
+            embed.setDescription(`${emoji} **${title}**\n${desc ? desc : ""}`)
+        } else {
+            embed.setDescription(`${emoji} ${desc ? desc : ""}`)
         }
         if (color) { embed.setColor(color) } else { embed.setColor("#e02c44") }
         return client.sendEmbed({
@@ -54,16 +54,6 @@ module.exports = (client) => {
             ephemeral: ephemeral
         }, interaction)
     }
-
-    /**
-     * Sends one or more Embeds
-     * @param {Array<Object>} embedList 
-     * @param {Array<Object>} componentList 
-     * @param {Enumerator} msgType
-     * @param {boolean} ephemeral 
-     * @param {Object} interaction 
-     * @returns {Promise} 
-     */
 
     client.Embed = function (embedList, componentList, msgType, ephemeral, interaction, fileList = [], content) {
         const embeds = [];
@@ -81,11 +71,12 @@ module.exports = (client) => {
             timestamp,
         } of embedList) {
             if (interaction && interaction.guild) {
-                let hex = client.settings.storage.data.find(x => x.guildId === interaction.guild.id)
+                let hex = client.settings.mapCache?.get(interaction.guild.id)
                 if (hex && hex.embed_color) {
                     embed.setColor(hex.embed_color);
                 }
             }
+
             if (title) embed.setTitle(title);
             if (desc) embed.setDescription(desc);
             if (color) embed.setColor(color);

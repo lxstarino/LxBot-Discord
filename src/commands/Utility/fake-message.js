@@ -17,11 +17,10 @@ async function ensureFonts() {
         fs.mkdirSync(fontsDir, { recursive: true });
     }
 
-    // Download regular font if missing
     if (!fs.existsSync(regularPath)) {
         console.log("[Fake-Message] Downloading ggsans.woff2...");
         try {
-            const res = await fetch("https://github.com/damnxav/gg-sans-font/raw/main/ggsans.woff2");
+            const res = await fetch("https://github.com/damnxav/gg-sans-font/raw/main/ggsans.woff2", { signal: AbortSignal.timeout(8000) });
             if (res.ok) {
                 const arrayBuffer = await res.arrayBuffer();
                 fs.writeFileSync(regularPath, Buffer.from(arrayBuffer));
@@ -33,11 +32,11 @@ async function ensureFonts() {
         }
     }
 
-    // Download bold font if missing
     if (!fs.existsSync(boldPath)) {
         console.log("[Fake-Message] Downloading ggsansbold.woff2...");
         try {
-            const res = await fetch("https://github.com/damnxav/gg-sans-font/raw/main/ggsansbold.woff2");
+            const res = await fetch("https://github.com/damnxav/gg-sans-font/raw/main/ggsansbold.woff2", { signal: AbortSignal.timeout(8000) });
+
             if (res.ok) {
                 const arrayBuffer = await res.arrayBuffer();
                 fs.writeFileSync(boldPath, Buffer.from(arrayBuffer));
@@ -49,7 +48,6 @@ async function ensureFonts() {
         }
     }
 
-    // Register with GlobalFonts
     try {
         if (fs.existsSync(regularPath)) {
             GlobalFonts.registerFromPath(regularPath, "gg sans");
@@ -99,10 +97,8 @@ module.exports = {
             .setRequired(true)
         ),
     async execute(client, interaction) {
-        // Defer response since font downloading, canvas drawing, and image fetching can take a moment
         await interaction.deferReply();
 
-        // Ensure the Discord fonts are loaded and registered locally
         await ensureFonts();
 
         const targetUser = interaction.options.getUser("user");
@@ -110,28 +106,22 @@ module.exports = {
         const targetMember = interaction.guild ? interaction.guild.members.cache.get(targetUser.id) : null;
 
         try {
-            // Get user visual properties
             const avatarUrl = targetUser.displayAvatarURL({ extension: "png", size: 128 });
             const displayName = targetMember ? targetMember.displayName : targetUser.username;
             const nameColor = targetMember && targetMember.displayHexColor !== "#000000" ? targetMember.displayHexColor : "#f2f3f5";
 
-            // 1. Measure text & wrap lines
-            // We use a temporary canvas context to calculate layout measurements
             const tempCanvas = createCanvas(1, 1);
             const tempCtx = tempCanvas.getContext("2d");
             tempCtx.font = '15px "gg sans", sans-serif';
-            const lines = getLines(tempCtx, message, 640); // 750px width - 72px left - 38px right = 640px max width
+            const lines = getLines(tempCtx, message, 640);
 
-            // 2. Setup canvas dimensions based on number of wrapped lines
             const canvasHeight = Math.max(72, 52 + lines.length * 20);
             const canvas = createCanvas(750, canvasHeight);
             const ctx = canvas.getContext("2d");
 
-            // Fill background with Discord dark mode color
             ctx.fillStyle = "#313338";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // 3. Draw circular avatar
             const avatar = await loadImage(avatarUrl);
             ctx.save();
             ctx.beginPath();
@@ -141,21 +131,18 @@ module.exports = {
             ctx.drawImage(avatar, 16, 16, 40, 40);
             ctx.restore();
 
-            // 4. Draw user display name
             ctx.fillStyle = nameColor;
             ctx.font = 'bold 16px "gg sans", sans-serif';
             ctx.textBaseline = "alphabetic";
             ctx.fillText(displayName, 72, 31);
             const nameWidth = ctx.measureText(displayName).width;
 
-            // 5. Draw timestamp
             const now = new Date();
             const timeStr = now.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
             ctx.fillStyle = "#949ba4";
             ctx.font = '12px "gg sans", sans-serif';
             ctx.fillText(timeStr, 72 + nameWidth + 8, 30);
 
-            // 6. Draw message content
             ctx.fillStyle = "#dbdee1";
             ctx.font = '15px "gg sans", sans-serif';
             let currentY = 52;
@@ -164,14 +151,12 @@ module.exports = {
                 currentY += 20;
             }
 
-            // Export to buffer and send
             const buffer = canvas.toBuffer("image/png");
             const attachment = new AttachmentBuilder(buffer, { name: "message.png" });
 
             await interaction.editReply({ files: [attachment] });
         } catch (err) {
             console.error("[Fake-Message] Error generating fake message image:", err);
-            // Inform the user in case of failure
             let ls = client.getLanguage(interaction.guild?.id);
             await interaction.editReply({
                 content: ls["errors"]?.["error"] || "Ein Fehler ist aufgetreten beim Generieren des Bildes."

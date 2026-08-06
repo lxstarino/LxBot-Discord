@@ -22,7 +22,6 @@ module.exports = {
 
         const settings = await getOrCreateSettings(client, interaction.guild.id)
 
-        // Check if the bot has permissions to manage channels & move members
         const botMember = interaction.guild.members.me
         if (!botMember.permissions.has(PermissionsBitField.Flags.ManageChannels) || !botMember.permissions.has(PermissionsBitField.Flags.MoveMembers)) {
             return client.errEmbed({
@@ -37,13 +36,11 @@ module.exports = {
             await interaction.deferReply({ ephemeral: true })
 
             try {
-                // 1. Create Category
                 const category = await interaction.guild.channels.create({
                     name: "Temp Voice Channels",
                     type: ChannelType.GuildCategory
                 })
 
-                // 2. Create Voice Channel inside Category
                 const channel = await interaction.guild.channels.create({
                     name: "➕ Join to Create",
                     type: ChannelType.GuildVoice,
@@ -76,7 +73,6 @@ module.exports = {
             await interaction.deferReply({ ephemeral: true })
 
             try {
-                // Delete creator channel if it exists
                 if (settings.voice_creator_channel) {
                     const creatorChan = interaction.guild.channels.cache.get(settings.voice_creator_channel)
                     if (creatorChan) {
@@ -88,7 +84,6 @@ module.exports = {
                     }
                 }
 
-                // Delete all active temp voice channels
                 if (settings.temp_voice_channels && settings.temp_voice_channels.length > 0) {
                     for (const chId of settings.temp_voice_channels) {
                         const channel = interaction.guild.channels.cache.get(chId)

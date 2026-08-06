@@ -27,8 +27,6 @@ module.exports = (client) => {
         })
     })
 
-
-
     const restClient = new REST({ version: "10" }).setToken(process.env.token)
 
     restClient.put(Routes.applicationCommands(process.env.appid), {
@@ -37,13 +35,3 @@ module.exports = (client) => {
         .then(() => console.log("> Commands successfully registered!"))
         .catch(console.error)
 }
-
-
-
-
-
-
-
-
-
-

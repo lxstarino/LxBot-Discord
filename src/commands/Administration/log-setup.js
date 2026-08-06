@@ -31,7 +31,6 @@ module.exports = {
         if (subcommand === "set") {
             const channel = interaction.options.getChannel("channel")
 
-            // Check if bot can send messages and embed links in the target channel
             const botMember = interaction.guild.members.me
             const perms = channel.permissionsFor(botMember)
             if (!perms.has(PermissionsBitField.Flags.SendMessages) || !perms.has(PermissionsBitField.Flags.EmbedLinks)) {

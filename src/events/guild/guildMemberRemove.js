@@ -7,7 +7,6 @@ module.exports = {
 
         let ls = client.getLanguage(member.guild.id)
 
-        // Build a list of the member's roles (excluding @everyone)
         const roles = member.roles.cache
             .filter(r => r.id !== member.guild.id)
             .map(r => `<@&${r.id}>`)

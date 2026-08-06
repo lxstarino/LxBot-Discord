@@ -110,16 +110,15 @@ module.exports = {
                 const panel = client.ticket.storage.data.find(x => x.panel === SetupNumber && x.guildId === interaction.guild.id)
                 if (!panel) return
 
-                // Fetch and filter assignable roles (below bot and admin role positions, not managed)
                 const botMember = interaction.guild.members.me;
                 const adminMember = interaction.member;
 
                 const assignableRoles = interaction.guild.roles.cache
-                    .filter(role => 
-                        role.id !== interaction.guild.id && // Not @everyone
-                        !role.managed && // Not bot/integration role
-                        role.position < botMember.roles.highest.position && // Below bot
-                        role.position < adminMember.roles.highest.position // Below admin
+                    .filter(role =>
+                        role.id !== interaction.guild.id &&
+                        !role.managed &&
+                        role.position < botMember.roles.highest.position &&
+                        role.position < adminMember.roles.highest.position
                     )
                     .sort((a, b) => b.position - a.position);
 
@@ -151,7 +150,6 @@ module.exports = {
                         );
                         comp.push(disabledRow);
                     } else {
-                        // Display up to 3 select menus (max 75 roles)
                         const maxChunks = Math.min(chunks.length, 3);
                         for (let c = 0; c < maxChunks; c++) {
                             const chunk = chunks[c];
@@ -160,8 +158,8 @@ module.exports = {
                                 return {
                                     label: role.name.substring(0, 50),
                                     value: role.id,
-                                    description: isAdded 
-                                        ? (isDe ? "Klicken zum Entfernen" : "Click to remove") 
+                                    description: isAdded
+                                        ? (isDe ? "Klicken zum Entfernen" : "Click to remove")
                                         : (isDe ? "Klicken zum Hinzufügen" : "Click to add"),
                                     emoji: isAdded ? "✅" : "➕"
                                 };
@@ -215,7 +213,6 @@ module.exports = {
 
                     const isDe = client.getLanguage(interaction.guild?.id)?.language === "de";
 
-                    // Add warning if roles exceed 75 (max 3 select menus + channel select + buttons = 5 ActionRows)
                     if (chunks.length > 3) {
                         statusDesc += ls["cmds"]["t-setup"]["warning_limit"];
                     }
@@ -241,12 +238,11 @@ module.exports = {
 
                 await render_panel()
 
-                // Fetch original message again to create collector
                 const msg = await interaction.fetchReply().catch(() => null);
                 if (!msg) return;
                 const collector = msg.createMessageComponentCollector({
                     filter: i => i.user.id === interaction.user.id,
-                    time: 300000 // 5 minutes config time
+                    time: 300000
                 })
 
                 collector.on("collect", async (i) => {
@@ -258,10 +254,8 @@ module.exports = {
                     } else if (i.customId.startsWith("ticket-role-toggle-")) {
                         const roleId = i.values[0]
                         if (panel.roles.includes(roleId)) {
-                            // Remove role
                             panel.roles = panel.roles.filter(r => r !== roleId)
                         } else {
-                            // Add role (up to 5 support roles limit)
                             if (panel.roles.length >= 5) {
                                 return i.reply({
                                     content: ls["cmds"]["t-setup"]["err_max_roles"],
@@ -283,7 +277,6 @@ module.exports = {
                         let category = interaction.guild.channels.cache.get(panel.category)
 
                         if (category) {
-                            // Category exists! Update permissions for roles on it
                             await category.permissionOverwrites.edit(interaction.guild.roles.everyone.id, {
                                 ViewChannel: false
                             })
@@ -305,7 +298,6 @@ module.exports = {
                             await i.deferUpdate()
                             await render_panel()
                         } else {
-                            // Create new Category
                             category = await interaction.guild.channels.create({
                                 name: "Tickets",
                                 type: ChannelType.GuildCategory,

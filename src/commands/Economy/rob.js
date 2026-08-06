@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+const { SlashCommandBuilder } = require("discord.js")
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -15,10 +15,10 @@ module.exports = {
         let ls = client.getLanguage(interaction.guild?.id)
         const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/handlers/functions`)
 
+        if (target.user.bot) throw ({ title: `${ls["cmds"]["rob"]["title"]}`, desc: ls["cmds"]["rob"]["err_bot"] })
+        if (target.user.id == interaction.user.id) throw ({ title: `${ls["cmds"]["rob"]["title"]}`, desc: `${ls["cmds"]["rob"]["crys"]}` })
         const profile = await getOrCreateProfile(client, interaction.user.id, interaction.guild.id)
-
-        if(target.user.id == interaction.user.id) throw ({title: `${ls["cmds"]["rob"]["title"]}`, desc: `${ls["cmds"]["rob"]["crys"]}`})
-        if(profile.wallet < 5000) throw({title: `${ls["cmds"]["rob"]["title"]}`, desc: `${ls["cmds"]["rob"]["rbl"]}`})
+        if (profile.wallet < 5000) throw ({ title: `${ls["cmds"]["rob"]["title"]}`, desc: `${ls["cmds"]["rob"]["rbl"]}` })
 
         const targetProfile = await getOrCreateProfile(client, target.user.id, interaction.guild.id)
         if(targetProfile.wallet < 5000) throw({title: `${ls["cmds"]["rob"]["title"]}`, desc: `${handlemsg(ls["cmds"]["rob"]["nts"], {target: target.user.id})}`})

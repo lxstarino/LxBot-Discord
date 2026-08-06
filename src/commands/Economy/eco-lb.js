@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
+const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -6,36 +7,30 @@ module.exports = {
         .setDescription("Show the richest users in the server"),
     async execute(client, interaction) {
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
 
-        // Filter profiles belonging to the current guild and sort by total wealth (wallet + bank) descending
-        const guildProfiles = client.economy.storage.data
-            .filter(x => x.guildId === interaction.guild.id)
-            .map(x => ({
-                ...x,
-                total: (x.wallet || 0) + (x.bank || 0)
-            }))
-            .sort((a, b) => b.total - a.total)
+        const topTen = client.economy.storage.data
+            .filter(x => x.guildId === interaction.guild.id && ((x.wallet || 0) + (x.bank || 0)) > 0)
+            .sort((a, b) => ((b.wallet || 0) + (b.bank || 0)) - ((a.wallet || 0) + (a.bank || 0)))
+            .slice(0, 10)
 
-        if (!guildProfiles.length) {
+        if (!topTen.length) {
             return client.Embed([{
                 title: ls["cmds"]["eco-lb"]["title"],
                 desc: ls["cmds"]["eco-lb"]["empty"]
             }], undefined, "reply", undefined, interaction)
         }
 
-        // Get top 10 profiles
-        const topTen = guildProfiles.slice(0, 10)
         let descriptionLines = []
 
         topTen.forEach((profile, index) => {
+            const total = (profile.wallet || 0) + (profile.bank || 0)
             descriptionLines.push(
                 handlemsg(ls["cmds"]["eco-lb"]["format"], {
                     rank: index + 1,
                     user: profile.userId,
-                    total: profile.total,
-                    wallet: profile.wallet,
-                    bank: profile.bank
+                    total: total,
+                    wallet: profile.wallet || 0,
+                    bank: profile.bank || 0
                 })
             )
         })

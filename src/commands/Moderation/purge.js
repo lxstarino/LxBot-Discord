@@ -1,5 +1,4 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { PermissionsBitField } = require("discord.js")
+const { SlashCommandBuilder, PermissionsBitField } = require("discord.js")
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -22,7 +21,6 @@ module.exports = {
         let ls = client.getLanguage(interaction.guild?.id)
         const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
 
-        // Check if bot has ManageMessages permission in this channel
         if (!interaction.guild.members.me.permissionsIn(interaction.channel).has(PermissionsBitField.Flags.ManageMessages)) {
             return client.errEmbed({
                 type: "reply",
@@ -41,9 +39,7 @@ module.exports = {
             let deletedCount = 0
 
             if (targetUser) {
-                // Fetch the last 100 messages in the channel
                 const messages = await interaction.channel.messages.fetch({ limit: 100 })
-                // Filter messages from the target user
                 const targetMessages = messages.filter(m => m.author.id === targetUser.id).first(amount)
 
                 if (targetMessages.length > 0) {
@@ -65,7 +61,6 @@ module.exports = {
                 timestamp: Date.now()
             })
 
-            // Check if the bulkDelete succeeded but deleted fewer messages because of the 14 days limit
             if (deletedCount < amount && !targetUser) {
                 return client.Embed([{
                     title: ls["cmds"]["purge"]["title"],
@@ -75,7 +70,7 @@ module.exports = {
                 }], undefined, "editReply", true, interaction)
             }
 
-            const successDesc = targetUser 
+            const successDesc = targetUser
                 ? handlemsg(ls["cmds"]["purge"]["success_user"], { count: deletedCount, target: targetUser.id })
                 : handlemsg(ls["cmds"]["purge"]["success"], { count: deletedCount })
 

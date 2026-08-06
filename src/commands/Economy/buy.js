@@ -18,7 +18,6 @@ module.exports = {
         const settings = await getOrCreateSettings(client, interaction.guild.id)
         settings.shop_items = settings.shop_items || []
 
-        // Automatic cleanup of deleted roles from the shop database
         const initialCount = settings.shop_items.length
         settings.shop_items = settings.shop_items.filter(item => interaction.guild.roles.cache.has(item.roleId))
         if (settings.shop_items.length !== initialCount) {
@@ -46,9 +45,9 @@ module.exports = {
             }, interaction)
         }
 
-        // Check if user already has the role
-        const member = await interaction.guild.members.fetch(interaction.user.id)
+        const member = interaction.member
         if (member.roles.cache.has(role.id)) {
+
             return client.errEmbed({
                 type: "reply",
                 ephemeral: true,
@@ -57,7 +56,6 @@ module.exports = {
             }, interaction)
         }
 
-        // Deduct money and save database
         profile.wallet -= shopItem.price
         await client.economy.saveData()
 
@@ -65,7 +63,6 @@ module.exports = {
             await member.roles.add(role)
         } catch (err) {
             console.error("Failed to add role:", err)
-            // Refund the user if assignment fails
             profile.wallet += shopItem.price
             await client.economy.saveData()
             throw ({

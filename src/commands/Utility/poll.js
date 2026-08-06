@@ -1,11 +1,8 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { PermissionsBitField, ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js")
+const { SlashCommandBuilder, PermissionsBitField, ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js")
 const RestoreManager = require(`${process.cwd()}/src/utils/RestoreManager`)
 
 const POLL_EMOJIS = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣"]
 const POLL_BUTTON_STYLES = [ButtonStyle.Primary, ButtonStyle.Success, ButtonStyle.Danger, ButtonStyle.Secondary, ButtonStyle.Primary]
-
-// ─── Shared helpers (used both on creation and on restore) ───────────────────
 
 function buildComponents(options, disabled = false) {
     const rows = []
@@ -27,7 +24,8 @@ function buildComponents(options, disabled = false) {
 }
 
 function getColor(client, guildId) {
-    const hex = client.settings.storage.data.find(x => x.guildId === guildId)?.embed_color?.replace("#", "") || "5865F2"
+    const settings = client.settings.mapCache?.get(guildId)
+    const hex = settings?.embed_color?.replace("#", "") || "5865F2"
     return parseInt(hex, 16)
 }
 
@@ -70,7 +68,6 @@ function attachCollector(client, pollMsg, pollData, handlemsg) {
         if (!i.customId.startsWith("poll_vote_")) return
         const optionIdx = parseInt(i.customId.replace("poll_vote_", ""))
 
-        // Update voterMap in memory and persist
         pollData.voterMap[i.user.id] = optionIdx
         const record = client.polls.storage.data.find(p => p.pollId === pollId)
         if (record) {
@@ -105,15 +102,12 @@ async function finalisePoll(client, pollMsg, pollData, handlemsg) {
         components: buildComponents(options, true)
     }).catch(() => { })
 
-    // Remove from storage
     const idx = client.polls.storage.data.findIndex(p => p.pollId === pollId)
     if (idx !== -1) {
         client.polls.storage.data.splice(idx, 1)
         await client.polls.saveData()
     }
 }
-
-// ─── Restore handler — registered once, called by RestoreManager on ready ────
 
 RestoreManager.register("Polls", async (client) => {
     const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
@@ -134,8 +128,6 @@ RestoreManager.register("Polls", async (client) => {
         }
     }
 })
-
-// ─── Command definition ───────────────────────────────────────────────────────
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -204,7 +196,6 @@ module.exports = {
             .map(name => interaction.options.getString(name))
             .filter(Boolean)
 
-        // Permission check
         const perms = targetChannel.permissionsFor(interaction.guild.members.me)
         if (!perms.has(PermissionsBitField.Flags.SendMessages) || !perms.has(PermissionsBitField.Flags.EmbedLinks)) {
             return client.errEmbed({
@@ -216,10 +207,10 @@ module.exports = {
 
         const endsAt = Date.now() + durationMs
         const pollData = {
-            pollId: null, // filled after send
+            pollId: null,
             guildId: interaction.guild.id,
             channelId: targetChannel.id,
-            messageId: null, // filled after send
+            messageId: null,
             question, options, endsAt,
             creatorTag: interaction.user.tag,
             creatorAvatar: interaction.user.displayAvatarURL(),
@@ -231,15 +222,12 @@ module.exports = {
             components: buildComponents(options, false)
         })
 
-        // Now we have the message ID — save to storage
         pollData.pollId = pollMsg.id
         pollData.messageId = pollMsg.id
         await client.polls.createData(pollData)
 
-        // Attach the live collector
         attachCollector(client, pollMsg, pollData, handlemsg)
 
-        // Confirm to admin
         client.successEmbed({
             type: "reply", ephemeral: true,
             desc: handlemsg(ls["cmds"]["poll"]["pollcreated"], { channel: targetChannel.id }),

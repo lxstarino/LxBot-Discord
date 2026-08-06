@@ -23,10 +23,10 @@ module.exports = {
 
             delete require.cache[require.resolve(`../../../src/commands/${Folder}/${Command.data.name}`)]
             interaction.client.commands.delete(Command);
-    
+
             const newCommand = require(`../../../src/commands/${Folder}/${Command.data.name}`)
             const properties = {Folder, ...newCommand}
-    
+
             interaction.client.commands.set(newCommand.data.name, properties);
 
             client.successEmbed({type: "reply", ephemeral: true, desc: handlemsg(ls["cmds"]["bot-reloadcmd"]["success"], {command: newCommand.data.name})}, interaction)
@@ -34,5 +34,5 @@ module.exports = {
             throw({title: ls["cmds"]["bot-reloadcmd"]["invalid_title"], desc: handlemsg(ls["cmds"]["bot-reloadcmd"]["invalid_desc"], {commands: client.commands.map(cmd => {return ` \`${cmd.data.name}\``})})})
         }
 
-    }  
+    }
 }

@@ -21,7 +21,7 @@ module.exports = {
         const banList = await interaction.guild.bans.fetch()
         if(banList.get(target.user.id)) throw{title: `${ls["errors"]["uab"]}`, desc: handlemsg(ls["cmds"]["ban/unban"]["edesc2"], {target: target.user.id})}
 
-        const ConfirmMenu = new ActionRowBuilder()  
+        const ConfirmMenu = new ActionRowBuilder()
         .addComponents(
             new ButtonBuilder()
                 .setCustomId("ban-confirm")
@@ -93,4 +93,3 @@ module.exports = {
         }
     }
 }
-
