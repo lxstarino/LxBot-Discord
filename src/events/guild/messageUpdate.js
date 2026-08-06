@@ -3,14 +3,12 @@ const { sendModLog, handlemsg } = require(`${process.cwd()}/src/handlers/functio
 module.exports = {
     name: "messageUpdate",
     async execute(oldMessage, newMessage, client) {
-        // Ignore partial messages, bots, DM messages, and if content didn't change
         if (newMessage.partial || !newMessage.author || newMessage.author.bot || !newMessage.guild) return
         if (oldMessage.content === newMessage.content) return
 
         let ls = client.getLanguage(newMessage.guild.id)
 
-        // Prevent logging in the log channel itself to avoid loops
-        const settings = client.settings.storage.data.find(x => x.guildId === newMessage.guild.id)
+        const settings = client.settings.mapCache ? client.settings.mapCache.get(newMessage.guild.id) : client.settings.storage.data.find(x => x.guildId === newMessage.guild.id)
         if (settings && settings.logchannel === newMessage.channel.id) return
 
         await sendModLog(client, newMessage.guild, {

@@ -1,7 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
 
-
-
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("crime")
@@ -11,8 +9,7 @@ module.exports = {
         const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/handlers/functions`)
 
         const profile = await getOrCreateProfile(client, interaction.user.id, interaction.guild.id)
-        
-        // Cooldown check (2 hours)
+
         const lastCrime = new Date(profile.crime || 0)
         const nextCrime = new Date(lastCrime)
         nextCrime.setHours(nextCrime.getHours() + 2)
@@ -26,7 +23,6 @@ module.exports = {
             }, interaction)
         }
 
-        // Ensure they have enough money in wallet for a potential fine
         if (profile.wallet < 1000) {
             throw({
                 title: ls["cmds"]["crime"]["title"],
@@ -39,7 +35,6 @@ module.exports = {
 
         const successChance = Math.random() * 100
         if (successChance > 45) {
-            // Success: win 300 to 1500
             const reward = Math.floor(Math.random() * 1201) + 300
             profile.wallet += reward
             profile.crime = new Date(interaction.createdTimestamp)
@@ -52,7 +47,6 @@ module.exports = {
                 desc: handlemsg(ls["cmds"]["crime"]["success"], { crime: randomCrime, amount: reward })
             }, interaction)
         } else {
-            // Caught: lose 200 to 800
             const fine = Math.floor(Math.random() * 601) + 200
             profile.wallet = Math.max(0, profile.wallet - fine)
             profile.crime = new Date(interaction.createdTimestamp)

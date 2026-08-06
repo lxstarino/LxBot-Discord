@@ -29,12 +29,12 @@ module.exports = {
         try {
             await target.member.roles.add(role.id)
             client.successEmbed({
-                type: "reply", 
-                ephemeral: true, 
+                type: "reply",
+                ephemeral: true,
                 desc: `${handlemsg(ls["cmds"]["add/remrole"]["desc"], {target: target.user.id, role: role.id})}`
             }, interaction)
         } catch (err) {
             throw({title: `${ls["errors"]["mp"]}`, desc: `${ls["cmds"]["add/remrole"]["edesc4"]}`})
-        }  
+        }
     }
 }

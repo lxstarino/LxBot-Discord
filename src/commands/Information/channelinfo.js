@@ -9,7 +9,7 @@ module.exports = {
         const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
 
         const types = {
-            0: `${ls["cmds"]["channelinfo"]["tc"]}`, 
+            0: `${ls["cmds"]["channelinfo"]["tc"]}`,
             2: `${ls["cmds"]["channelinfo"]["vc"]}`,
             5: `${ls["cmds"]["channelinfo"]["ac"]}`,
             10: `${ls["cmds"]["channelinfo"]["at"]}`,
@@ -20,7 +20,7 @@ module.exports = {
 
         const channel = interaction.channel
         const parentName = channel.parent ? channel.parent.name : ls["cmds"]["channelinfo"]["none"]
-        
+
         let slowmode = ls["cmds"]["channelinfo"]["none"]
         if (channel.rateLimitPerUser !== undefined && channel.rateLimitPerUser > 0) {
             slowmode = handlemsg(ls["cmds"]["channelinfo"]["seconds"], { time: channel.rateLimitPerUser })

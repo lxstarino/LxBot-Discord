@@ -21,7 +21,7 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionsBitField.Flags.Administrator),
     async execute(client, interaction) {
         let ls = client.getLanguage(interaction.guild?.id)
-        const settings = client.settings.storage.data.find(x => x.guildId === interaction.guild?.id);
+        const settings = client.settings.mapCache ? client.settings.mapCache.get(interaction.guild?.id) : client.settings.storage.data.find(x => x.guildId === interaction.guild?.id);
         const lang = settings?.language === "de" ? "de" : "en";
         const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
         const getTranslation = (key, replaceObj = {}) => {
@@ -110,16 +110,15 @@ module.exports = {
                 const panel = client.reactionRoles.storage.data.find(x => x.panel === SetupNumber && x.guildId === interaction.guild.id);
                 if (!panel) return;
 
-                // Fetch and filter assignable roles (below bot and admin role positions, not managed)
                 const botMember = interaction.guild.members.me;
                 const adminMember = interaction.member;
 
                 const assignableRoles = interaction.guild.roles.cache
                     .filter(role =>
-                        role.id !== interaction.guild.id && // Not @everyone
-                        !role.managed && // Not bot/integration role
-                        role.position < botMember.roles.highest.position && // Below bot
-                        role.position < adminMember.roles.highest.position // Below admin
+                        role.id !== interaction.guild.id &&
+                        !role.managed &&
+                        role.position < botMember.roles.highest.position &&
+                        role.position < adminMember.roles.highest.position
                     )
                     .sort((a, b) => b.position - a.position);
 
@@ -149,7 +148,6 @@ module.exports = {
                         );
                         comp.push(disabledRow);
                     } else {
-                        // Display up to 3 select menus (max 75 roles)
                         const maxChunks = Math.min(chunks.length, 3);
                         for (let c = 0; c < maxChunks; c++) {
                             const chunk = chunks[c];
@@ -203,7 +201,6 @@ module.exports = {
                         roles: panel.roles.length > 0 ? panel.roles.map(r => `<@&${r}>`).join(", ") : getTranslation("no_roles_added")
                     });
 
-                    // Add warning if roles exceed 75 (max 3 select menus + channel select + buttons = 5 ActionRows)
                     if (chunks.length > 3) {
                         statusDesc += getTranslation("warning_limit");
                     }
@@ -233,7 +230,7 @@ module.exports = {
                 if (!msg) return;
                 const collector = msg.createMessageComponentCollector({
                     filter: i => i.user.id === interaction.user.id,
-                    time: 300000 // 5 minutes
+                    time: 300000
                 });
 
                 collector.on("collect", async (i) => {
@@ -244,10 +241,8 @@ module.exports = {
                     } else if (i.customId.startsWith("role-toggle-")) {
                         const roleId = i.values[0];
                         if (panel.roles.includes(roleId)) {
-                            // Remove role
                             panel.roles = panel.roles.filter(r => r !== roleId);
                         } else {
-                            // Add role (up to 5 roles on a single message)
                             if (panel.roles.length >= 10) {
                                 return i.reply({
                                     content: lang === "de" ? "Du kannst maximal 10 Rollen zu einem Panel hinzufügen!" : "You can add a maximum of 5 roles to a single panel!",
@@ -274,7 +269,6 @@ module.exports = {
                             });
                         }
 
-                        // Chunk buttons into ActionRows of max 5 buttons each
                         const rows = [];
                         let currentRow = new ActionRowBuilder();
 
@@ -296,7 +290,6 @@ module.exports = {
                             }
                         }
 
-                        // Send the Button Roles message to the target channel
                         await client.Embed([{
                             title: getTranslation("panel_title"),
                             desc: getTranslation("panel_desc")

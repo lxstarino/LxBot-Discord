@@ -27,23 +27,14 @@ module.exports = {
         const userBadge = Badges[flags[0]] || ""
 
         if (member) {
-            const profile = client.economy.storage.data.find(x => x.userId === user.id && x.guildId === interaction.guild.id) || {
-                wallet: 0,
-                bank: 0,
-                level: 1,
-                xp: 0,
-                warnings: []
-            }
+            const profile = await getOrCreateProfile(client, user.id, interaction.guild.id)
             const warningsCount = profile.warnings ? profile.warnings.length : 0
 
-            // Get roles (excluding @everyone)
             const roles = member.roles.cache.filter(role => role.id !== interaction.guild.id)
             const rolesString = roles.size > 0 ? roles.map(role => `<@&${role.id}>`).join(" ") : ls["cmds"]["userinfo"]["no_roles"]
 
-            // Highest role
             const highestRole = member.roles.highest.id !== interaction.guild.id ? `<@&${member.roles.highest.id}>` : "@everyone"
 
-            // Key Permissions
             let perms = ls["cmds"]["userinfo"]["member"]
             if (member.permissions.has(PermissionsBitField.Flags.Administrator)) {
                 perms = ls["cmds"]["userinfo"]["admin"]
@@ -75,7 +66,6 @@ module.exports = {
                 footer: { text: `ID: ${user.id}` }
             }], undefined, "reply", false, interaction)
         } else {
-            // Safe fallback for when member is not available
             client.Embed([{
                 thumbnail: user.displayAvatarURL(),
                 fields: [

@@ -24,8 +24,8 @@ module.exports = {
         client.Embed([{
             title: `${handlemsg(ls["cmds"]["coinflip"]["title"], {coinside: coinside})}`,
             desc: `${handlemsg(ls["cmds"]["coinflip"]["desc"], {result: result})}`,
-            fields: coinside == result 
-                ? [{name: `${ls["cmds"]["coinflip"]["fields"]["name"]}`, value: `${ls["cmds"]["coinflip"]["fields"]["win"]}`}] 
+            fields: coinside == result
+                ? [{name: `${ls["cmds"]["coinflip"]["fields"]["name"]}`, value: `${ls["cmds"]["coinflip"]["fields"]["win"]}`}]
                 : [{name: `${ls["cmds"]["coinflip"]["fields"]["name"]}`, value: `${ls["cmds"]["coinflip"]["fields"]["lost"]}`}],
             footer: {text: interaction.user.tag}
         }], undefined, "reply", false, interaction)

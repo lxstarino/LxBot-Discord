@@ -3,18 +3,15 @@ const { getOrCreateProfile, getOrCreateSettings, handlemsg } = require(`${proces
 module.exports = {
     name: "messageCreate",
     async execute(message, client) {
-        // Ignore bots and DM messages
         if (message.author.bot || !message.guild) return
 
-        const settings = await getOrCreateSettings(client, message.guild.id)
+        const settings = client.settings.mapCache?.get(message.guild.id) || await getOrCreateSettings(client, message.guild.id)
 
-        // Counting Game Logic
         if (settings.counting_channel && message.channel.id === settings.counting_channel) {
             const num = parseInt(message.content.trim(), 10)
             const expected = (settings.counting_current || 0) + 1
             const ls = client.getLanguage(message.guild.id)
 
-            // If it's not a valid number or has extra text, ruin it
             if (isNaN(num) || message.content.trim() !== String(num)) {
                 settings.counting_current = 0
                 settings.counting_last_user = null
@@ -31,11 +28,11 @@ module.exports = {
                     color: 0xff0000,
                     timestamp: new Date().toISOString()
                 }
-                client.Embed([embed], undefined, undefined, undefined, message.channel)
+                client.Embed([embed], undefined, undefined, undefined, message.channel).catch(() => {})
+
                 return
             }
 
-            // Check double counting
             if (settings.counting_last_user === message.author.id) {
                 settings.counting_current = 0
                 settings.counting_last_user = null
@@ -50,11 +47,11 @@ module.exports = {
                     color: 0xff0000,
                     timestamp: new Date().toISOString()
                 }
-                client.Embed([embed], undefined, undefined, undefined, message.channel)
+                client.Embed([embed], undefined, undefined, undefined, message.channel).catch(() => {})
+
                 return
             }
 
-            // Check correct number
             if (num !== expected) {
                 settings.counting_current = 0
                 settings.counting_last_user = null
@@ -71,16 +68,15 @@ module.exports = {
                     color: 0xff0000,
                     timestamp: new Date().toISOString()
                 }
-                client.Embed([embed], undefined, undefined, undefined, message.channel)
+                client.Embed([embed], undefined, undefined, undefined, message.channel).catch(() => {})
+
                 return
             }
 
-            // Correct count! Update state
             settings.counting_current = expected
             settings.counting_last_user = message.author.id
             await message.react("✅").catch(() => {})
 
-            // Check and announce new highscore
             if (expected > (settings.counting_highscore || 0)) {
                 settings.counting_highscore = expected
                 await message.react("👑").catch(() => {})
@@ -89,22 +85,36 @@ module.exports = {
             await client.settings.saveData()
         }
 
-        // If Leveling module is disabled, do not grant XP
         if (settings.disabled_modules && settings.disabled_modules.includes("Leveling")) return
 
-        const profile = await getOrCreateProfile(client, message.author.id, message.guild.id)
+        const cacheKey = `${message.guild.id}:${message.author.id}`
+        const cachedProfile = client.economy.mapCache?.get(cacheKey)
 
-        // 15-second cooldown per user to prevent spam
+        if (settings.level_roles && Array.isArray(settings.level_roles) && settings.level_roles.length > 0 && message.member) {
+            const profileToCheck = cachedProfile || await getOrCreateProfile(client, message.author.id, message.guild.id)
+            const currentLevel = profileToCheck.level || 1
+
+            for (const reward of settings.level_roles) {
+                if (currentLevel >= reward.level && !message.member.roles.cache.has(reward.roleId)) {
+                    try {
+                        await message.member.roles.add(reward.roleId)
+                    } catch (err) {
+                        console.error(`[LevelRoles] Failed to assign role ${reward.roleId} to user ${message.author.id}:`, err)
+                    }
+                }
+            }
+        }
+
         const now = Date.now()
         const cooldown = 15000
-        if (profile.lastXpMessage && (now - profile.lastXpMessage) < cooldown) return
+        if (cachedProfile && cachedProfile.lastXpMessage && (now - cachedProfile.lastXpMessage) < cooldown) return
 
-        // Generate random XP between 15 and 25
+        const profile = cachedProfile || await getOrCreateProfile(client, message.author.id, message.guild.id)
+
         const xpGained = Math.floor(Math.random() * 11) + 15
         profile.xp = (profile.xp || 0) + xpGained
         profile.lastXpMessage = now
 
-        // Check level up
         let level = profile.level || 1
         let neededXp = level * level * 100
 
@@ -112,11 +122,29 @@ module.exports = {
             profile.level = level + 1
             profile.xp -= neededXp
 
-            // Send level up message
+            const awardedRoles = []
+            if (settings.level_roles && Array.isArray(settings.level_roles) && message.member) {
+                for (const reward of settings.level_roles) {
+                    if (profile.level >= reward.level && !message.member.roles.cache.has(reward.roleId)) {
+                        try {
+                            await message.member.roles.add(reward.roleId)
+                            awardedRoles.push(`<@&${reward.roleId}>`)
+                        } catch (err) {
+                            console.error(`[LevelRoles] Failed to assign role ${reward.roleId} to user ${message.author.id}:`, err)
+                        }
+                    }
+                }
+            }
+
             let ls = client.getLanguage(message.guild.id)
+            let desc = handlemsg(ls["events"]["messageCreate"]["level_up_desc"], { user: message.author.id, level: profile.level })
+            if (awardedRoles.length > 0 && ls["events"]["messageCreate"]["level_up_reward"]) {
+                desc += handlemsg(ls["events"]["messageCreate"]["level_up_reward"], { roles: awardedRoles.join(", ") })
+            }
+
             const levelUpEmbed = {
                 title: ls["events"]["messageCreate"]["level_up_title"],
-                description: handlemsg(ls["events"]["messageCreate"]["level_up_desc"], { user: message.author.id, level: profile.level })
+                description: desc
             }
 
             client.Embed([levelUpEmbed], undefined, undefined, undefined, message.channel, undefined, `<@${message.author.id}>`)

@@ -44,5 +44,3 @@ Once the configuration is complete, you can start the bot using:
   ```
 
 ---
-
-

@@ -5,16 +5,13 @@ async function generateWelcomeCard(avatarUrl, username, memberCount) {
     const canvas = createCanvas(700, 250);
     const ctx = canvas.getContext("2d");
 
-    // Load custom background image
     const backgroundUrl = "https://cdn.discordapp.com/attachments/1517162401357627463/1528077451811361010/image.png?ex=6a5cfc86&is=6a5bab06&hm=925855c1a3fb2c8e3fc7a04e1550416547ccf9a17c6d406b800ff3ac06964de1&";
     const background = await loadImage(backgroundUrl);
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-    // Semi-transparent overlay to ensure high contrast for text
     ctx.fillStyle = "rgba(0, 0, 0, 0.45)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Draw circular avatar
     const avatar = await loadImage(avatarUrl);
     ctx.save();
     ctx.beginPath();
@@ -24,19 +21,16 @@ async function generateWelcomeCard(avatarUrl, username, memberCount) {
     ctx.drawImage(avatar, 50, 50, 150, 150);
     ctx.restore();
 
-    // Draw circular border
     ctx.strokeStyle = "#ffffff";
     ctx.lineWidth = 5;
     ctx.beginPath();
     ctx.arc(125, 125, 75, 0, Math.PI * 2, true);
     ctx.stroke();
 
-    // Render "Welcome!" title
     ctx.fillStyle = "#ffffff";
     ctx.font = "bold 36px sans-serif";
     ctx.fillText("Welcome!", 240, 95);
 
-    // Render username (truncated if too long to fit nicely)
     ctx.fillStyle = "#e0a3ff";
     ctx.font = "bold 38px sans-serif";
     let displayName = username;
@@ -45,7 +39,6 @@ async function generateWelcomeCard(avatarUrl, username, memberCount) {
     }
     ctx.fillText(displayName, 240, 148);
 
-    // Render member count
     ctx.fillStyle = "#c0c0c0";
     ctx.font = "24px sans-serif";
     ctx.fillText(`Member #${memberCount}`, 240, 192);
@@ -57,13 +50,13 @@ module.exports = {
     name: "guildMemberAdd",
     async execute(member, client) {
 
-        const settings = client.settings.storage.data.find(x => x.guildId === member.guild.id)
+        const { getOrCreateSettings, handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+        const settings = client.settings.mapCache?.get(member.guild.id) || await getOrCreateSettings(client, member.guild.id)
         let ls = client.getLanguage(member.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
 
         if (settings) {
             if (settings.welcomestate == true) {
-                let channel = member.guild.channels.cache.find(c => c.id === settings.welcomechannel);
+                let channel = settings.welcomechannel ? member.guild.channels.cache.get(settings.welcomechannel) : null;
                 if (channel != undefined) {
                     const welcomeMsg = handlemsg(ls["events"]["onjoin"]["joinmsg"], {
                         user: member.user.id,
@@ -96,14 +89,18 @@ module.exports = {
                         }], undefined, undefined, undefined, channel)
                     }
                 }
+            }
 
-                let role = member.guild.roles.cache.find(r => r.id === settings.welcomerole);
-                if (role != undefined && role.id !== member.guild.id) {
+            const roleId = settings.autorole
+            if (roleId) {
+                const role = member.guild.roles.cache.get(roleId)
+                if (role && role.id !== member.guild.id) {
                     await member.roles.add(role.id).catch((err) => {
-                        console.error(`[Welcome-Setup] Failed to add role ${role.name} to user ${member.user.tag}:`, err)
+                        console.error(`[Auto-Role] Failed to add role ${role.name} to user ${member.user.tag}:`, err)
                     })
                 }
             }
         }
+
     }
 }

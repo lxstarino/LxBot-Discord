@@ -14,7 +14,16 @@
         "counting_highscore": 4,
         "voice_creator_channel": "1527932290506690630",
         "temp_voice_channels": [],
-        "welcomecard": true
+        "welcomecard": true,
+        "level_roles": [
+            {
+                "level": 2,
+                "roleId": "1528083519484596375"
+            }
+        ],
+        "autorole": "1528083507627430018",
+        "verify_channel": "1280995343567294514",
+        "verify_role": "1528083527000789163"
     },
     {
         "guildId": "1368374285520994376",
@@ -29,7 +38,17 @@
                 "roleId": "1460303621945299005",
                 "price": 5555555555555555
             }
-        ]
+        ],
+        "counting_channel": "1528794354477568092",
+        "counting_current": 0,
+        "counting_last_user": null,
+        "counting_highscore": 96,
+        "voice_creator_channel": "1528808867503542304",
+        "temp_voice_channels": [],
+        "level_roles": [],
+        "autorole": null,
+        "logchannel": "1373275509940686990",
+        "freegames_channel": "1441503933146337434"
     },
     {
         "guildId": "1291027235066609715",
@@ -51,10 +70,11 @@
         "logchannel": "1528094519038443701",
         "birthdaychannel": "1528091413898723519",
         "counting_channel": "1528091597189677117",
-        "counting_current": 3,
-        "counting_highscore": 31,
-        "counting_last_user": "619915409885364245",
+        "counting_current": 53,
+        "counting_highscore": 53,
+        "counting_last_user": "569864710967656448",
         "voice_creator_channel": "1528089975407640586",
-        "temp_voice_channels": []
+        "temp_voice_channels": [],
+        "freegames_channel": "1529008239281307761"
     }
 ]

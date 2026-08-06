@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
 
 module.exports = {
+    cooldown: 5,
     data: new SlashCommandBuilder()
         .setName("level")
         .setDescription("Check your or someone else's level")
@@ -12,7 +13,7 @@ module.exports = {
     async execute(client, interaction) {
         const target = interaction.options.get("target") || interaction
         const userId = target.user ? target.user.id : target.id || interaction.user.id
-        
+
         let ls = client.getLanguage(interaction.guild?.id)
         const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/handlers/functions`)
 

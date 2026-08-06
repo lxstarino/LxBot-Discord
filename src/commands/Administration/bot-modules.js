@@ -23,13 +23,13 @@ module.exports = {
                 .setCustomId("module-select-disable")
                 .setPlaceholder(ls["cmds"]["bot-modules"]["placeholder_disable"])
                 .addOptions(
-                    modules.filter(x => x !== "Settings").map((module) => {
+                    modules.filter(x => x !== "Administration").map((module) => {
                         return{
                             label: module,
                             value: module,
                             description: handlemsg(ls["cmds"]["bot-modules"]["desc_disable"], {module: module.toLowerCase()})
                         }
-                    }) 
+                    })
                 )
             )
 
@@ -38,13 +38,13 @@ module.exports = {
                 .setCustomId("module-select-enable")
                 .setPlaceholder(ls["cmds"]["bot-modules"]["placeholder_enable"])
                 .addOptions(
-                    modules.filter(x => x !== "Settings").map((module) => {
+                    modules.filter(x => x !== "Administration").map((module) => {
                         return{
                             label: module,
                             value: module,
                             description: handlemsg(ls["cmds"]["bot-modules"]["desc_enable"], {module: module.toLowerCase()})
                         }
-                    }) 
+                    })
                 )
             )
 
@@ -64,8 +64,8 @@ module.exports = {
                         await i.update({components: [module_select_enable, module_select_disable]})
                         if(innerSettings.disabled_modules && !innerSettings.disabled_modules.includes(i.values[0])){
                             return client.errEmbed({type: "followUp", ephemeral: true, title: ls["cmds"]["bot-modules"]["title"], desc: handlemsg(ls["cmds"]["bot-modules"]["not_found"], {module: i.values[0]}), components: []}, i)
-                        }  
-    
+                        }
+
                         if (innerSettings.disabled_modules) {
                             innerSettings.disabled_modules.splice(innerSettings.disabled_modules.indexOf(i.values[0]), 1)
                             await client.settings.saveData()
@@ -81,7 +81,7 @@ module.exports = {
                         if(innerSettings.disabled_modules && innerSettings.disabled_modules.includes(i.values[0])){
                             return client.errEmbed({type: "followUp", ephemeral: true, title: ls["cmds"]["bot-modules"]["title"], desc: handlemsg(ls["cmds"]["bot-modules"]["already_disabled"], {module: i.values[0]}), components: []}, i)
                         }
- 
+
                         if (!innerSettings.disabled_modules) innerSettings.disabled_modules = []
                         innerSettings.disabled_modules.push(i.values[0])
                         await client.settings.saveData()

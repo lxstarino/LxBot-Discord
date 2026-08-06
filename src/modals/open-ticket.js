@@ -3,49 +3,59 @@ const { ActionRowBuilder, ButtonBuilder, PermissionsBitField } = require("discor
 module.exports = {
     customId: "open-ticket",
     async execute(client, interaction, ls, handlemsg) {
-        const panelNum = interaction.customId.slice(interaction.customId.length - 1)
+        const panelNum = interaction.customId.replace("open-ticket-", "").replace("open-ticket", "") || "1"
         const panel_data = client.ticket.storage.data.find(x => x.guildId === interaction.guild.id && String(x.panel) === String(panelNum))
-        
+
         if (panel_data) {
+            const overwrites = [
+                {
+                    id: interaction.guild.roles.everyone.id,
+                    deny: [PermissionsBitField.Flags.ViewChannel],
+                },
+                {
+                    id: interaction.user.id,
+                    allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages],
+                },
+                {
+                    id: client.user.id,
+                    allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.ManageChannels]
+                }
+            ]
+
+            if (Array.isArray(panel_data.roles)) {
+                for (const roleId of panel_data.roles) {
+                    if (interaction.guild.roles.cache.has(roleId)) {
+                        overwrites.push({
+                            id: roleId,
+                            allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages]
+                        })
+                    }
+                }
+            }
+
+            const parentCategory = panel_data.category && interaction.guild.channels.cache.has(panel_data.category) ? panel_data.category : undefined
+
             let Channel = await interaction.guild.channels.create({
                 name: `ticket-${interaction.user.id}`,
-                type: 0, // GuildText
-                parent: interaction.guild.channels.cache.find(channel => channel.id === panel_data.category) ? panel_data.category : undefined,
-                permissionOverwrites: [
-                    {
-                        id: interaction.guild.roles.everyone,
-                        deny: [PermissionsBitField.Flags.ViewChannel],
-                    },
-                    {
-                        id: interaction.user.id,
-                        allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages],
-                    },
-                    {
-                        id: client.user.id,
-                        allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.ManageChannels]
-                    }
-                ],
+                type: 0,
+                parent: parentCategory,
+                permissionOverwrites: overwrites
             }).catch(err => console.log(err))
 
             if (!Channel) {
                 return await interaction.reply({ ephemeral: true, content: ls["events"]["interactionCreate"]["ticket_err_create_channel"] })
             }
 
-            panel_data.roles.map(async role => {
-                if (interaction.guild.roles.cache.find(r => r.id === role))
-                    await Channel.permissionOverwrites.edit(role, { ViewChannel: true, SendMessages: true }).catch(err => console.log(err))
-            })
-
             const button_row = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setLabel(ls["events"]["interactionCreate"]["ticket_close_label"])
                     .setCustomId("close-ticket")
-                    .setStyle(1) // Primary
+                    .setStyle(1)
                     .setEmoji("🔒"),
                 new ButtonBuilder()
                     .setLabel(ls["events"]["interactionCreate"]["ticket_ping_label"])
                     .setCustomId("ticket-ping")
-                    .setStyle(4) // Danger
+                    .setStyle(4)
                     .setEmoji("🚨")
             )
 

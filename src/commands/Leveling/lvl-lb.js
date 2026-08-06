@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
+const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -6,25 +7,22 @@ module.exports = {
         .setDescription("Show the highest level users on the server"),
     async execute(client, interaction) {
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
 
-        const guildProfiles = client.economy.storage.data
-            .filter(x => x.guildId === interaction.guild.id && x.xp !== undefined)
+        const topTen = client.economy.storage.data
+            .filter(x => x.guildId === interaction.guild.id && ((x.level || 1) > 1 || (x.xp || 0) > 0))
             .sort((a, b) => {
-                if ((b.level || 1) !== (a.level || 1)) {
-                    return (b.level || 1) - (a.level || 1)
-                }
-                return (b.xp || 0) - (a.xp || 0)
+                const lvlDiff = (b.level || 1) - (a.level || 1)
+                return lvlDiff !== 0 ? lvlDiff : (b.xp || 0) - (a.xp || 0)
             })
+            .slice(0, 10)
 
-        if (!guildProfiles.length) {
+        if (!topTen.length) {
             return client.Embed([{
                 title: ls["cmds"]["lvl-lb"]["title"],
                 desc: ls["cmds"]["lvl-lb"]["empty"]
             }], undefined, "reply", undefined, interaction)
         }
 
-        const topTen = guildProfiles.slice(0, 10)
         let descriptionLines = []
 
         topTen.forEach((profile, index) => {

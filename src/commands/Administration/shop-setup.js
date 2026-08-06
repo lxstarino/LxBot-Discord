@@ -43,7 +43,6 @@ module.exports = {
         const settings = await getOrCreateSettings(client, interaction.guild.id)
         settings.shop_items = settings.shop_items || []
 
-        // Automatic cleanup of deleted roles from the shop database
         const initialCount = settings.shop_items.length
         settings.shop_items = settings.shop_items.filter(item => interaction.guild.roles.cache.has(item.roleId))
         if (settings.shop_items.length !== initialCount) {

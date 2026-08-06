@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+const { SlashCommandBuilder } = require("discord.js")
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -9,7 +9,7 @@ module.exports = {
         .setDescription("The user you want to transfer money to")
         .setRequired(true)
     )
-    .addNumberOption((option) => option
+    .addIntegerOption((option) => option
         .setName("amount")
         .setDescription("The amount of money to transfer")
         .setMinValue(1)
@@ -26,17 +26,15 @@ module.exports = {
     ),
     async execute(client, interaction){
         const target = interaction.options.get("target")
-        const amount = interaction.options.get("amount").value
+        const amount = interaction.options.getInteger("amount")
         const source = interaction.options.getString("source")
-        
+
         let ls = client.getLanguage(interaction.guild?.id)
         const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/handlers/functions`)
-        
-        if(!Number.isInteger(amount)) throw({title: `${ls["cmds"]["transfer"]["title"]}`, desc: `${ls["errors"]["nwn"]}`})
 
+        if (target.user.bot) throw ({ title: `${ls["cmds"]["transfer"]["title"]}`, desc: ls["cmds"]["transfer"]["err_bot"] })
         if(target.user.id === interaction.user.id) throw({title: `${ls["cmds"]["transfer"]["title"]}`, desc: `${ls["cmds"]["transfer"]["ctys"]}`})
 
-        // Fetch or create profile for both sender and target
         const profile = await getOrCreateProfile(client, interaction.user.id, interaction.guild.id)
         const targetProfile = await getOrCreateProfile(client, target.user.id, interaction.guild.id)
 
@@ -44,7 +42,7 @@ module.exports = {
         if(amount > balance) {
             if (source === "wallet") {
                 throw({
-                    title: `${ls["cmds"]["transfer"]["title"]}`, 
+                    title: `${ls["cmds"]["transfer"]["title"]}`,
                     desc: `${ls["cmds"]["transfer"]["nem_wallet"]}`
                 })
             } else {

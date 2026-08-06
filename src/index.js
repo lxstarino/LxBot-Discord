@@ -1,7 +1,34 @@
 require("dotenv").config()
 const fs = require("fs")
+const { spawn } = require("child_process")
+const path = require("path")
 const StorageManager = require("./utils/StorageManager")
 const { Client, Collection, GatewayIntentBits } = require("discord.js")
+
+const isWorker = process.env.IS_CHILD_PROCESS === "true"
+const isNodemon = Boolean(process.env.NODEMON || process.env.NODEMON_CONFIG)
+
+if (!isWorker && !isNodemon) {
+    function startBotWorker() {
+        const child = spawn(process.execPath, [__filename], {
+            cwd: process.cwd(),
+            stdio: "inherit",
+            env: { ...process.env, IS_CHILD_PROCESS: "true" }
+        })
+
+        child.on("exit", (code) => {
+            if (code === 42) {
+                console.log("\n[Bot] Restarting process...\n")
+                startBotWorker()
+            } else {
+                process.exit(code || 0)
+            }
+        })
+    }
+
+    startBotWorker()
+    return
+}
 
 const client = new Client({
     intents: [
@@ -18,9 +45,6 @@ client.cooldowns = new Collection()
 
 const folders = fs.readdirSync("./src/handlers").filter(dir => !dir.endsWith(".js"))
 
-
-
-
 for (directory of folders) {
     const handlers = fs.readdirSync(`./src/handlers/${directory}`).filter(file => file.endsWith(".js"))
     for (file of handlers) {
@@ -28,15 +52,13 @@ for (directory of folders) {
     }
 }
 
-
-
-const EcoManager = new StorageManager("./src/storages/economy.json")
+const EcoManager = new StorageManager("./src/storages/profile.json")
 client.economy = EcoManager
 
 const Ticket = new StorageManager("./src/storages/ticket.json")
 client.ticket = Ticket
 
-const Settings = new StorageManager("./src/storages/settings.json")
+const Settings = new StorageManager("./src/storages/server_settings.json")
 client.settings = Settings
 
 const Polls = new StorageManager("./src/storages/polls.json")
@@ -45,7 +67,8 @@ client.polls = Polls
 const ReactionRoles = new StorageManager("./src/storages/reaction-roles.json")
 client.reactionRoles = ReactionRoles
 
-// In-memory language cache to avoid synchronous disk reads on every event/interaction
+client.captchas = new Map()
+
 const langCache = {}
 
 function loadLanguage(langCode) {
@@ -60,14 +83,12 @@ function loadLanguage(langCode) {
     }
 }
 
-// Read and load all initial language files
 if (fs.existsSync("./src/languages")) {
     const langFiles = fs.readdirSync("./src/languages").filter(file => file.endsWith(".json"))
     for (const file of langFiles) {
         loadLanguage(file.replace(".json", ""))
     }
 
-    // Watch the directory for changes to update the cache dynamically in development
     fs.watch("./src/languages", (eventType, filename) => {
         if (filename && filename.endsWith(".json")) {
             const langCode = filename.replace(".json", "")
@@ -77,15 +98,13 @@ if (fs.existsSync("./src/languages")) {
     })
 }
 
-// Global helper to get the server language 
 client.getLanguage = function (guildId) {
     let langCode = "en"
     if (guildId) {
-        const settings = client.settings.storage.data.find(x => x.guildId === guildId)
+        const settings = client.settings.mapCache?.get(guildId)
         if (settings?.language) langCode = settings.language
     }
     return langCache[langCode] || langCache["en"] || {}
 }
 
 client.login(process.env.token)
-

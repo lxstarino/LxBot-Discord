@@ -4,9 +4,11 @@ module.exports = (client) => {
 
         if (err && (err.code === 50013 || err.message?.includes("Missing Permissions"))) {
             const lastInteraction = client.lastInteraction
-            if (lastInteraction) {
+            if (lastInteraction && (Date.now() - (lastInteraction.createdTimestamp || 0) < 15000)) {
                 console.error("Unhandled Missing Permissions error caught globally:", err)
                 try {
+                    client.lastInteraction = null
+
                     const ls = client.getLanguage(lastInteraction.guild?.id)
                     const title = ls["errors"]["mp"] || "Missing Permissions"
                     const desc = `> ${ls["events"]["interactionCreate"]["err_bot_missing_perms"]}`

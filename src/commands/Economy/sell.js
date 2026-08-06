@@ -10,19 +10,28 @@ const fishPrices = {
     seadragon: 10000
 }
 
+const orePrices = {
+    coal: 100,
+    iron: 250,
+    gold: 800,
+    diamond: 5000
+}
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("sell")
-        .setDescription("Sell caught fish from your inventory for money"),
+        .setDescription("Sell all caught fish and mined ores from your inventory for money"),
     async execute(client, interaction) {
         let ls = client.getLanguage(interaction.guild?.id)
         const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/handlers/functions`)
 
-        const profile = await getOrCreateProfile(client, interaction.user.id, interaction.guild.id)
+        const cacheKey = `${interaction.guild.id}:${interaction.user.id}`
+        const profile = client.economy.mapCache?.get(cacheKey) || await getOrCreateProfile(client, interaction.user.id, interaction.guild.id)
+
         profile.inventory = profile.inventory || {}
         profile.inventory.fish = profile.inventory.fish || {}
+        profile.inventory.ore = profile.inventory.ore || {}
 
-        // Calculate total value of all fish in inventory
         let totalValue = 0
         let totalCount = 0
 
@@ -30,7 +39,15 @@ module.exports = {
             if (count > 0 && fishPrices[fishKey]) {
                 totalValue += fishPrices[fishKey] * count
                 totalCount += count
-                profile.inventory.fish[fishKey] = 0 // Clear inventory of this fish
+                profile.inventory.fish[fishKey] = 0
+            }
+        })
+
+        Object.entries(profile.inventory.ore).forEach(([oreKey, count]) => {
+            if (count > 0 && orePrices[oreKey]) {
+                totalValue += orePrices[oreKey] * count
+                totalCount += count
+                profile.inventory.ore[oreKey] = 0
             }
         })
 
@@ -43,7 +60,6 @@ module.exports = {
             }, interaction)
         }
 
-        // Add to wallet and save
         profile.wallet += totalValue
         await client.economy.saveData()
 

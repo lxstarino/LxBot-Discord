@@ -27,8 +27,7 @@ module.exports = {
         const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/handlers/functions`)
 
         const profile = await getOrCreateProfile(client, interaction.user.id, interaction.guild.id)
-        
-        // 30 seconds cooldown
+
         const now = Date.now()
         const cooldown = 30000
         if (profile.lastFish && (now - profile.lastFish) < cooldown) {
@@ -41,22 +40,19 @@ module.exports = {
             }, interaction)
         }
 
-        // Determine rarity
         const roll = Math.random() * 100
         let rarity = "common"
         if (roll > 95) rarity = "legendary"
         else if (roll > 80) rarity = "rare"
         else if (roll > 50) rarity = "uncommon"
 
-        // Pick random fish from rarity
         const options = fishList[rarity]
         const fish = options[Math.floor(Math.random() * options.length)]
 
-        // Add to inventory
         profile.inventory = profile.inventory || {}
         profile.inventory.fish = profile.inventory.fish || {}
         profile.inventory.fish[fish.key] = (profile.inventory.fish[fish.key] || 0) + 1
-        
+
         profile.lastFish = now
         await client.economy.saveData()
 

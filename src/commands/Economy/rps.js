@@ -53,7 +53,6 @@ module.exports = {
         const botChoiceString = `${displayBot} ${emojis[botChoice]}`
 
         if (userChoice === botChoice) {
-            // Draw
             client.Embed([{
                 title: ls["cmds"]["rps"]["title"],
                 desc: handlemsg(ls["cmds"]["rps"]["draw"], { choice: userChoiceString })
@@ -63,7 +62,6 @@ module.exports = {
             (userChoice === "paper" && botChoice === "rock") ||
             (userChoice === "scissors" && botChoice === "paper")
         ) {
-            // User Wins
             profile.wallet += betAmount
             await client.economy.saveData()
 
@@ -74,7 +72,6 @@ module.exports = {
                 desc: handlemsg(ls["cmds"]["rps"]["win"], { botChoice: botChoiceString, amount: betAmount })
             }, interaction)
         } else {
-            // Bot Wins
             profile.wallet -= betAmount
             await client.economy.saveData()
 
