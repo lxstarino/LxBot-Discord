@@ -23,6 +23,7 @@ To run this bot, you need:
    npm install discord.js
    npm install @napi-rs/canvas
    npm install dotenv
+   npm install nodemon
    ```
 
 3. **Configure Environment Variables**:
