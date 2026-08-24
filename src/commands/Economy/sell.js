@@ -23,7 +23,7 @@ module.exports = {
         .setDescription("Sell all caught fish and mined ores from your inventory for money"),
     async execute(client, interaction) {
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/utils/functions`)
 
         const cacheKey = `${interaction.guild.id}:${interaction.user.id}`
         const profile = client.economy.mapCache?.get(cacheKey) || await getOrCreateProfile(client, interaction.user.id, interaction.guild.id)
@@ -61,7 +61,6 @@ module.exports = {
         }
 
         profile.wallet += totalValue
-        await client.economy.saveData()
 
         client.Embed([{
             title: ls["cmds"]["sell"]["title"],

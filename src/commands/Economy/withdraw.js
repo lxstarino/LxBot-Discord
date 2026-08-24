@@ -14,7 +14,7 @@ module.exports = {
         const amount = interaction.options.getInteger("amount")
 
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/utils/functions`)
 
         if(!Number.isInteger(amount)) throw({title: `${ls["cmds"]["withdraw"]["title"]}`, desc: `${ls["errors"]["nwn"]}`})
 
@@ -25,7 +25,6 @@ module.exports = {
         profile.wallet += amount
         profile.bank -= amount
 
-        await client.economy.saveData()
         client.successEmbed({
             type: "reply",
             ephemeral: true,

@@ -1,21 +1,22 @@
-const {SlashCommandBuilder} = require("@discordjs/builders")
-const fs = require("fs")
+const { SlashCommandBuilder } = require("@discordjs/builders")
 
 module.exports = {
     devOnly: true,
     data: new SlashCommandBuilder()
-    .setName("bot-reloadcmd")
-    .setDescription("Reload a command from bot")
+    .setName("bot-reload")
+    .setDescription("Reload a specific command from the bot files")
     .addStringOption(option => option
         .setName("command")
-        .setDescription("The command you want to reload")
+        .setDescription("The name of the command to reload")
         .setRequired(true)
     ),
     async execute(client, interaction) {
         const Cmd = interaction.options.get("command").value
 
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
+
+        const reloadLs = ls["cmds"]["bot-reload"] || ls["cmds"]["bot-reloadcmd"] || {}
 
         const Command = client.commands.get(Cmd)
         if(Command){
@@ -29,9 +30,9 @@ module.exports = {
 
             interaction.client.commands.set(newCommand.data.name, properties);
 
-            client.successEmbed({type: "reply", ephemeral: true, desc: handlemsg(ls["cmds"]["bot-reloadcmd"]["success"], {command: newCommand.data.name})}, interaction)
+            client.successEmbed({type: "reply", ephemeral: true, desc: handlemsg(reloadLs["success"] || "Reloaded command `{command}` successfully", {command: newCommand.data.name})}, interaction)
         } else {
-            throw({title: ls["cmds"]["bot-reloadcmd"]["invalid_title"], desc: handlemsg(ls["cmds"]["bot-reloadcmd"]["invalid_desc"], {commands: client.commands.map(cmd => {return ` \`${cmd.data.name}\``})})})
+            throw({title: reloadLs["invalid_title"] || "Invalid Command", desc: handlemsg(reloadLs["invalid_desc"] || "Available commands: {commands}", {commands: client.commands.map(cmd => {return ` \`${cmd.data.name}\``})})})
         }
 
     }

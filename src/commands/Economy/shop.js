@@ -6,7 +6,7 @@ module.exports = {
         .setDescription("View items available for purchase in the server shop"),
     async execute(client, interaction) {
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/utils/functions`)
 
         const settings = await getOrCreateSettings(client, interaction.guild.id)
         settings.shop_items = settings.shop_items || []
@@ -14,7 +14,7 @@ module.exports = {
         const initialCount = settings.shop_items.length
         settings.shop_items = settings.shop_items.filter(item => interaction.guild.roles.cache.has(item.roleId))
         if (settings.shop_items.length !== initialCount) {
-            await client.settings.saveData()
+
         }
 
         if (settings.shop_items.length === 0) {

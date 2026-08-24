@@ -19,7 +19,7 @@ module.exports = {
         const result = coin_side[Math.floor(Math.random() * coin_side.length)]
 
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
 
         client.Embed([{
             title: `${handlemsg(ls["cmds"]["coinflip"]["title"], {coinside: coinside})}`,

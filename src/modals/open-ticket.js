@@ -4,7 +4,7 @@ module.exports = {
     customId: "open-ticket",
     async execute(client, interaction, ls, handlemsg) {
         const panelNum = interaction.customId.replace("open-ticket-", "").replace("open-ticket", "") || "1"
-        const panel_data = client.ticket.storage.data.find(x => x.guildId === interaction.guild.id && String(x.panel) === String(panelNum))
+        const panel_data = client.ticket.mapCache?.get(`${interaction.guild.id}:${panelNum}`) || (client.db ? client.db.getTicket(interaction.guild.id, panelNum) : null)
 
         if (panel_data) {
             const overwrites = [

@@ -19,7 +19,7 @@ module.exports = {
         ),
     async execute(client, interaction) {
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
 
         if (!interaction.guild.members.me.permissionsIn(interaction.channel).has(PermissionsBitField.Flags.ManageMessages)) {
             return client.errEmbed({
@@ -51,7 +51,7 @@ module.exports = {
                 deletedCount = deleted.size
             }
 
-            const { sendModLog } = require(`${process.cwd()}/src/handlers/functions`)
+            const { sendModLog } = require(`${process.cwd()}/src/utils/functions`)
             await sendModLog(client, interaction.guild, {
                 title: ls["logs"]["purge_title"],
                 desc: targetUser

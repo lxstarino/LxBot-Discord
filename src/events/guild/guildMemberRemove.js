@@ -1,4 +1,4 @@
-const { sendModLog, handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+const { sendModLog, handlemsg } = require(`${process.cwd()}/src/utils/functions`)
 
 module.exports = {
     name: "guildMemberRemove",

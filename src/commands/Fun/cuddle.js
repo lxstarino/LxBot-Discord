@@ -13,7 +13,7 @@ module.exports = {
         const target = interaction.options.get("target")
 
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
 
         if(target.member){
             let files = require("./db/cuddle-db.json")

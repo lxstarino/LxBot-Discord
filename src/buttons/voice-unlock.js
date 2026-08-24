@@ -3,7 +3,7 @@ const { PermissionsBitField } = require("discord.js")
 module.exports = {
     customId: "voice-unlock",
     async execute(client, interaction, ls, handlemsg) {
-        const { getOrCreateSettings, getVoicePanelData } = require(`${process.cwd()}/src/handlers/functions`)
+        const { getOrCreateSettings, getVoicePanelData } = require(`${process.cwd()}/src/utils/functions`)
         const settings = await getOrCreateSettings(client, interaction.guild.id)
         const voiceChannel = interaction.member.voice.channel
 

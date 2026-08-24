@@ -1,7 +1,7 @@
 module.exports = {
     customId: "voice-limit-modal",
     async execute(client, interaction, ls, handlemsg) {
-        const { getOrCreateSettings } = require(`${process.cwd()}/src/handlers/functions`)
+        const { getOrCreateSettings } = require(`${process.cwd()}/src/utils/functions`)
         const settings = await getOrCreateSettings(client, interaction.guild.id)
         const voiceChannel = interaction.member.voice.channel
 

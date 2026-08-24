@@ -24,7 +24,7 @@ module.exports = {
         .setDescription("Go fishing to catch fish that can be sold for money"),
     async execute(client, interaction) {
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/utils/functions`)
 
         const profile = await getOrCreateProfile(client, interaction.user.id, interaction.guild.id)
 
@@ -54,7 +54,6 @@ module.exports = {
         profile.inventory.fish[fish.key] = (profile.inventory.fish[fish.key] || 0) + 1
 
         profile.lastFish = now
-        await client.economy.saveData()
 
         const fishName = ls["cmds"]["fish_names"][fish.key]
         const rarityName = ls["cmds"]["fish_rarities"][rarity]

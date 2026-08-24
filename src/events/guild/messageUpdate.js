@@ -1,4 +1,4 @@
-const { sendModLog, handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+const { sendModLog, handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/utils/functions`)
 
 module.exports = {
     name: "messageUpdate",
@@ -8,7 +8,7 @@ module.exports = {
 
         let ls = client.getLanguage(newMessage.guild.id)
 
-        const settings = client.settings.mapCache ? client.settings.mapCache.get(newMessage.guild.id) : client.settings.storage.data.find(x => x.guildId === newMessage.guild.id)
+        const settings = client.settings.mapCache?.get(newMessage.guild.id) || await getOrCreateSettings(client, newMessage.guild.id)
         if (settings && settings.logchannel === newMessage.channel.id) return
 
         await sendModLog(client, newMessage.guild, {

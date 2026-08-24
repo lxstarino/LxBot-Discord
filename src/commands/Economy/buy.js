@@ -13,7 +13,7 @@ module.exports = {
         const role = interaction.options.getRole("role")
 
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateProfile, getOrCreateSettings } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg, getOrCreateProfile, getOrCreateSettings } = require(`${process.cwd()}/src/utils/functions`)
 
         const settings = await getOrCreateSettings(client, interaction.guild.id)
         settings.shop_items = settings.shop_items || []
@@ -21,7 +21,7 @@ module.exports = {
         const initialCount = settings.shop_items.length
         settings.shop_items = settings.shop_items.filter(item => interaction.guild.roles.cache.has(item.roleId))
         if (settings.shop_items.length !== initialCount) {
-            await client.settings.saveData()
+
         }
 
         const shopItem = settings.shop_items.find(item => item.roleId === role.id)
@@ -57,14 +57,13 @@ module.exports = {
         }
 
         profile.wallet -= shopItem.price
-        await client.economy.saveData()
 
         try {
             await member.roles.add(role)
         } catch (err) {
             console.error("Failed to add role:", err)
             profile.wallet += shopItem.price
-            await client.economy.saveData()
+
             throw ({
                 title: ls["cmds"]["buy"]["title"],
                 desc: "Could not assign role. Make sure the bot's role is positioned above the purchased role and has 'Manage Roles' permission!"

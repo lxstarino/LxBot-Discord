@@ -1,93 +1,140 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
-const { PermissionsBitField, ActionRowBuilder, StringSelectMenuBuilder } = require("discord.js")
+const { PermissionsBitField, ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle } = require("discord.js")
 
-const fs = require("fs")
+const MODULE_EMOJIS = {
+    "Economy": "💰",
+    "Fun": "🎉",
+    "Games": "🎮",
+    "Information": "ℹ️",
+    "Leveling": "🏆",
+    "Moderation": "🛡️",
+    "Utility": "⚙️",
+    "Developer": "👨‍💻"
+}
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("bot-modules")
-        .setDescription("Disable/Enable Modules from the bot that are not required for your server.")
+        .setDescription("Enable or disable specific bot modules on your server")
         .setDefaultMemberPermissions(PermissionsBitField.Flags.Administrator),
-        async execute(client, interaction){
-            let ls = client.getLanguage(interaction.guild?.id)
-            const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/handlers/functions`)
+    async execute(client, interaction) {
+        const ls = client.getLanguage(interaction.guild?.id)
+        const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/utils/functions`)
+        const settings = await getOrCreateSettings(client, interaction.guild.id)
+        if (!settings.disabled_modules) settings.disabled_modules = []
 
-            const settings = await getOrCreateSettings(client, interaction.guild.id)
+        const allModules = [...new Set(client.commands.map(cmd => cmd.Folder))]
+            .filter(folder => folder && folder !== "Administration")
+            .sort()
 
-            const modules = [
-                ...new Set(client.commands.map(cmd => cmd.Folder))
-            ]
+        function buildPayload() {
+            const disabledSet = new Set(settings.disabled_modules || [])
 
-            const module_select_disable = new ActionRowBuilder().addComponents(
-                new StringSelectMenuBuilder()
-                .setCustomId("module-select-disable")
-                .setPlaceholder(ls["cmds"]["bot-modules"]["placeholder_disable"])
-                .addOptions(
-                    modules.filter(x => x !== "Administration").map((module) => {
-                        return{
-                            label: module,
-                            value: module,
-                            description: handlemsg(ls["cmds"]["bot-modules"]["desc_disable"], {module: module.toLowerCase()})
-                        }
-                    })
-                )
-            )
+            const statusLines = allModules.map(mod => {
+                const emoji = MODULE_EMOJIS[mod] || "📁"
+                const isEnabled = !disabledSet.has(mod)
+                const statusTag = isEnabled
+                    ? `\`🟢 ${ls["cmds"]["bot-modules"]["status_enabled"]}\``
+                    : `\`🔴 ${ls["cmds"]["bot-modules"]["status_disabled"]}\``
+                return `> ${emoji} **${mod}** • ${statusTag}`
+            }).join("\n")
 
-            const module_select_enable = new ActionRowBuilder().addComponents(
-                new StringSelectMenuBuilder()
-                .setCustomId("module-select-enable")
-                .setPlaceholder(ls["cmds"]["bot-modules"]["placeholder_enable"])
-                .addOptions(
-                    modules.filter(x => x !== "Administration").map((module) => {
-                        return{
-                            label: module,
-                            value: module,
-                            description: handlemsg(ls["cmds"]["bot-modules"]["desc_enable"], {module: module.toLowerCase()})
-                        }
-                    })
-                )
-            )
+            const description = handlemsg(ls["cmds"]["bot-modules"]["desc"], {
+                guild: interaction.guild.name,
+                status_list: statusLines
+            })
 
-            const msg = await client.Embed([{
-                title: ls["cmds"]["bot-modules"]["title"],
-                thumbnail: `${client.user.displayAvatarURL()}`,
-                desc: ls["cmds"]["bot-modules"]["desc"],
-                footer: {text: `${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL()}
-            }], [module_select_enable, module_select_disable], "reply", true, interaction)
+            const selectOptions = allModules.map(mod => {
+                const isEnabled = !disabledSet.has(mod)
+                const emoji = isEnabled ? "🟢" : "🔴"
+                const optDesc = isEnabled
+                    ? ls["cmds"]["bot-modules"]["opt_desc_enabled"]
+                    : ls["cmds"]["bot-modules"]["opt_desc_disabled"]
 
-            if (!msg) return;
-            const col = msg.createMessageComponentCollector({filter: i => i.user.id === interaction.user.id, time: 120000})
-            col.on("collect", async(i) => {
-                const innerSettings = await getOrCreateSettings(client, interaction.guild.id)
-                switch(i.customId){
-                    case "module-select-enable":
-                        await i.update({components: [module_select_enable, module_select_disable]})
-                        if(innerSettings.disabled_modules && !innerSettings.disabled_modules.includes(i.values[0])){
-                            return client.errEmbed({type: "followUp", ephemeral: true, title: ls["cmds"]["bot-modules"]["title"], desc: handlemsg(ls["cmds"]["bot-modules"]["not_found"], {module: i.values[0]}), components: []}, i)
-                        }
-
-                        if (innerSettings.disabled_modules) {
-                            innerSettings.disabled_modules.splice(innerSettings.disabled_modules.indexOf(i.values[0]), 1)
-                            await client.settings.saveData()
-                            client.successEmbed({type: "followUp", ephemeral: true, title: ls["cmds"]["bot-modules"]["title"], desc: handlemsg(ls["cmds"]["bot-modules"]["enabled"], {module: i.values[0]}), components: []}, i)
-                        } else {
-                            innerSettings.disabled_modules = []
-                            await client.settings.saveData()
-                            client.errEmbed({type: "followUp", ephemeral: true, title: ls["cmds"]["bot-modules"]["title"], desc: handlemsg(ls["cmds"]["bot-modules"]["not_found"], {module: i.values[0]}), components: []}, i)
-                        }
-                        break;
-                    case "module-select-disable":
-                        await i.update({components: [module_select_enable, module_select_disable]})
-                        if(innerSettings.disabled_modules && innerSettings.disabled_modules.includes(i.values[0])){
-                            return client.errEmbed({type: "followUp", ephemeral: true, title: ls["cmds"]["bot-modules"]["title"], desc: handlemsg(ls["cmds"]["bot-modules"]["already_disabled"], {module: i.values[0]}), components: []}, i)
-                        }
-
-                        if (!innerSettings.disabled_modules) innerSettings.disabled_modules = []
-                        innerSettings.disabled_modules.push(i.values[0])
-                        await client.settings.saveData()
-                        client.successEmbed({type: "followUp", ephemeral: true, title: ls["cmds"]["bot-modules"]["title"], desc: handlemsg(ls["cmds"]["bot-modules"]["disabled"], {module: i.values[0]}), components: []}, i)
-                        break;
+                return {
+                    label: mod,
+                    value: mod,
+                    description: optDesc,
+                    emoji: emoji
                 }
             })
+
+            const selectRow = new ActionRowBuilder().addComponents(
+                new StringSelectMenuBuilder()
+                    .setCustomId("module-toggle-select")
+                    .setPlaceholder(ls["cmds"]["bot-modules"]["placeholder"])
+                    .addOptions(selectOptions)
+            )
+
+            const buttonsRow = new ActionRowBuilder().addComponents(
+                new ButtonBuilder()
+                    .setCustomId("btn-enable-all")
+                    .setLabel(ls["cmds"]["bot-modules"]["btn_enable_all"])
+                    .setEmoji("✅")
+                    .setStyle(ButtonStyle.Success),
+                new ButtonBuilder()
+                    .setCustomId("btn-disable-all")
+                    .setLabel(ls["cmds"]["bot-modules"]["btn_disable_all"])
+                    .setEmoji("❌")
+                    .setStyle(ButtonStyle.Danger)
+            )
+
+            return {
+                embeds: [{
+                    title: ls["cmds"]["bot-modules"]["title"],
+                    desc: description,
+                    thumbnail: client.user.displayAvatarURL(),
+                    footer: { text: interaction.user.tag, iconURL: interaction.user.displayAvatarURL() }
+                }],
+                components: [selectRow, buttonsRow]
+            }
         }
+
+        const initial = buildPayload()
+        const msg = await client.Embed(initial.embeds, initial.components, "reply", true, interaction)
+        if (!msg) return
+
+        const collector = msg.createMessageComponentCollector({
+            filter: i => i.user.id === interaction.user.id,
+            time: 120000
+        })
+
+        collector.on("collect", async (i) => {
+            if (i.customId === "module-toggle-select") {
+                const targetModule = i.values[0]
+                if (!settings.disabled_modules) settings.disabled_modules = []
+
+                const index = settings.disabled_modules.indexOf(targetModule)
+                if (index > -1) {
+                    settings.disabled_modules.splice(index, 1)
+                } else {
+                    settings.disabled_modules.push(targetModule)
+                }
+
+                const updated = buildPayload()
+                await client.Embed(updated.embeds, updated.components, "update", undefined, i)
+
+            } else if (i.customId === "btn-enable-all") {
+                settings.disabled_modules = []
+                const updated = buildPayload()
+                await client.Embed(updated.embeds, updated.components, "update", undefined, i)
+
+            } else if (i.customId === "btn-disable-all") {
+                settings.disabled_modules = [...allModules]
+                const updated = buildPayload()
+                await client.Embed(updated.embeds, updated.components, "update", undefined, i)
+            }
+        })
+
+        collector.on("end", async (collected, reason) => {
+            if (reason === "time") {
+                await client.errEmbed({
+                    type: "editReply",
+                    title: ls["cmds"]["bot-modules"]["title"],
+                    desc: ls["cmds"]["bot-modules"]["timeout"],
+                    components: []
+                }, interaction).catch(() => { })
+            }
+        })
+    }
 }

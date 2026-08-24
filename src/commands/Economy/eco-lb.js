@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
-const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -8,10 +8,7 @@ module.exports = {
     async execute(client, interaction) {
         let ls = client.getLanguage(interaction.guild?.id)
 
-        const topTen = client.economy.storage.data
-            .filter(x => x.guildId === interaction.guild.id && ((x.wallet || 0) + (x.bank || 0)) > 0)
-            .sort((a, b) => ((b.wallet || 0) + (b.bank || 0)) - ((a.wallet || 0) + (a.bank || 0)))
-            .slice(0, 10)
+        const topTen = client.db.getEconomyLeaderboard(interaction.guild.id, 10)
 
         if (!topTen.length) {
             return client.Embed([{

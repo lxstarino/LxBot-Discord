@@ -38,7 +38,7 @@ module.exports = {
         const subcommand = interaction.options.getSubcommand()
 
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/utils/functions`)
 
         const settings = await getOrCreateSettings(client, interaction.guild.id)
         settings.shop_items = settings.shop_items || []
@@ -46,7 +46,7 @@ module.exports = {
         const initialCount = settings.shop_items.length
         settings.shop_items = settings.shop_items.filter(item => interaction.guild.roles.cache.has(item.roleId))
         if (settings.shop_items.length !== initialCount) {
-            await client.settings.saveData()
+
         }
 
         if (subcommand === "add") {
@@ -77,13 +77,11 @@ module.exports = {
                 price: price
             })
 
-            await client.settings.saveData()
-
             client.Embed([{
                 title: ls["cmds"]["shop-setup"]["title"],
                 desc: handlemsg(ls["cmds"]["shop-setup"]["added"], { role: role.id, price: price.toLocaleString() }),
                 timestamp: interaction.createdTimestamp
-            }], undefined, "reply", false, interaction)
+            }], undefined, "reply", true, interaction)
 
         } else if (subcommand === "remove") {
             const role = interaction.options.getRole("role")
@@ -99,13 +97,12 @@ module.exports = {
             }
 
             settings.shop_items.splice(index, 1)
-            await client.settings.saveData()
 
             client.Embed([{
                 title: ls["cmds"]["shop-setup"]["title"],
                 desc: handlemsg(ls["cmds"]["shop-setup"]["removed"], { role: role.id }),
                 timestamp: interaction.createdTimestamp
-            }], undefined, "reply", false, interaction)
+            }], undefined, "reply", true, interaction)
 
         } else if (subcommand === "list") {
             if (settings.shop_items.length === 0) {
@@ -113,7 +110,7 @@ module.exports = {
                     title: ls["cmds"]["shop-setup"]["title"],
                     desc: ls["cmds"]["shop"]["empty"],
                     timestamp: interaction.createdTimestamp
-                }], undefined, "reply", false, interaction)
+                }], undefined, "reply", true, interaction)
             }
 
             const listStr = settings.shop_items.map((item, index) => {
@@ -124,7 +121,7 @@ module.exports = {
                 title: ls["cmds"]["shop-setup"]["title"],
                 desc: listStr,
                 timestamp: interaction.createdTimestamp
-            }], undefined, "reply", false, interaction)
+            }], undefined, "reply", true, interaction)
         }
     }
 }

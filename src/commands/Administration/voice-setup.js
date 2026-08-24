@@ -18,7 +18,7 @@ module.exports = {
     async execute(client, interaction) {
         const subcommand = interaction.options.getSubcommand()
         const ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/utils/functions`)
 
         const settings = await getOrCreateSettings(client, interaction.guild.id)
 
@@ -49,7 +49,6 @@ module.exports = {
 
                 settings.voice_creator_channel = channel.id
                 settings.temp_voice_channels = []
-                await client.settings.saveData()
 
                 client.Embed([{
                     title: ls["cmds"]["voice-setup"]["title"],
@@ -85,8 +84,10 @@ module.exports = {
                 }
 
                 if (settings.temp_voice_channels && settings.temp_voice_channels.length > 0) {
-                    for (const chId of settings.temp_voice_channels) {
-                        const channel = interaction.guild.channels.cache.get(chId)
+                    for (const chInfo of settings.temp_voice_channels) {
+                        const chId = typeof chInfo === "string" ? chInfo : chInfo.channelId
+                        if (!chId) continue
+                        const channel = interaction.guild.channels.cache.get(chId) || await interaction.guild.channels.fetch(chId).catch(() => null)
                         if (channel) {
                             await channel.delete().catch(() => {})
                         }
@@ -95,7 +96,6 @@ module.exports = {
 
                 settings.voice_creator_channel = null
                 settings.temp_voice_channels = []
-                await client.settings.saveData()
 
                 client.Embed([{
                     title: ls["cmds"]["voice-setup"]["title"],

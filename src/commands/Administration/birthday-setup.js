@@ -24,7 +24,7 @@ module.exports = {
     async execute(client, interaction) {
         const subcommand = interaction.options.getSubcommand()
         const ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/utils/functions`)
 
         const settings = await getOrCreateSettings(client, interaction.guild.id)
 
@@ -43,23 +43,21 @@ module.exports = {
             }
 
             settings.birthdaychannel = channel.id
-            await client.settings.saveData()
 
             client.Embed([{
                 title: ls["cmds"]["birthday-setup"]["title"],
                 desc: handlemsg(ls["cmds"]["birthday-setup"]["set_success"], { channel: channel.id }),
                 timestamp: interaction.createdTimestamp
-            }], undefined, "reply", false, interaction)
+            }], undefined, "reply", true, interaction)
 
         } else if (subcommand === "disable") {
             settings.birthdaychannel = null
-            await client.settings.saveData()
 
             client.Embed([{
                 title: ls["cmds"]["birthday-setup"]["title"],
                 desc: ls["cmds"]["birthday-setup"]["disabled"],
                 timestamp: interaction.createdTimestamp
-            }], undefined, "reply", false, interaction)
+            }], undefined, "reply", true, interaction)
         }
     }
 }

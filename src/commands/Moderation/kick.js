@@ -22,7 +22,7 @@ module.exports = {
         const reason = interaction.options.getString("reason") || "No reason provided"
 
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
 
         if(!target.member) throw({title: ls["errors"]["unf"], desc: handlemsg(ls["cmds"]["kick"]["edesc1"], {target: target.user.id})})
         if(!target.member.moderatable) throw({title: ls["errors"]["mp"], desc: handlemsg(ls["cmds"]["kick"]["edesc2"], {target: target.user.id})})
@@ -36,7 +36,7 @@ module.exports = {
                 footer: { text: `Moderator: ${interaction.user.tag}` }
             }], undefined, "reply", undefined, interaction)
 
-            const { sendModLog } = require(`${process.cwd()}/src/handlers/functions`)
+            const { sendModLog } = require(`${process.cwd()}/src/utils/functions`)
             await sendModLog(client, interaction.guild, {
                 title: ls["logs"]["kick_title"],
                 desc: handlemsg(ls["logs"]["kick_desc"], {

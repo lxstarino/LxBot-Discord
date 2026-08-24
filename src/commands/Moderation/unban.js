@@ -15,7 +15,7 @@ module.exports = {
         const target = interaction.options.get("target")
 
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
 
         const banList = await interaction.guild.bans.fetch()
         if (!banList.get(target.user.id)) throw ({ title: `${ls["errors"]["uinb"]}`, desc: handlemsg(ls["cmds"]["ban/unban"]["edesc3"], { target: target.user.id }) })
@@ -29,7 +29,7 @@ module.exports = {
                 footer: { text: `Moderator: ${interaction.user.tag}` }
             }], undefined, "reply", undefined, interaction)
 
-            const { sendModLog } = require(`${process.cwd()}/src/handlers/functions`)
+            const { sendModLog } = require(`${process.cwd()}/src/utils/functions`)
             await sendModLog(client, interaction.guild, {
                 title: ls["logs"]["unban_title"],
                 desc: handlemsg(ls["logs"]["unban_desc"], {

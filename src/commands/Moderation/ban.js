@@ -15,25 +15,25 @@ module.exports = {
         const target = interaction.options.get("target")
 
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
 
         if(target.member) if(!target.member.moderatable) throw({title: `${ls["errors"]["mp"]}`, desc: handlemsg(ls["cmds"]["ban/unban"]["edesc1"], {target: target.user.id})})
         const banList = await interaction.guild.bans.fetch()
         if(banList.get(target.user.id)) throw{title: `${ls["errors"]["uab"]}`, desc: handlemsg(ls["cmds"]["ban/unban"]["edesc2"], {target: target.user.id})}
 
         const ConfirmMenu = new ActionRowBuilder()
-        .addComponents(
-            new ButtonBuilder()
-                .setCustomId("ban-confirm")
-                .setLabel(ls["cmds"]["ban/unban"]["btnconfirm"])
-                .setEmoji(client.emojis.cache.find(emoji => emoji.id === "1194541395508219974") ? "<:check:1194541395508219974>" : "✅")
-                .setStyle("Success"),
-            new ButtonBuilder()
-                .setCustomId("ban-cancel")
-                .setLabel(ls["cmds"]["ban/unban"]["btncancel"])
-                .setEmoji(client.emojis.cache.find(emoji => emoji.id === "1194394464588927076") ? "<:cross:1194394464588927076>" : "❌")
-                .setStyle("Danger")
-        )
+            .addComponents(
+                new ButtonBuilder()
+                    .setCustomId("ban-confirm")
+                    .setLabel(ls["cmds"]["ban/unban"]["btnconfirm"])
+                    .setEmoji("✅")
+                    .setStyle("Success"),
+                new ButtonBuilder()
+                    .setCustomId("ban-cancel")
+                    .setLabel(ls["cmds"]["ban/unban"]["btncancel"])
+                    .setEmoji("❌")
+                    .setStyle("Danger")
+            )
 
         const msg = await client.Embed([{
             title: ls["cmds"]["ban/unban"]["bantitle"],
@@ -55,7 +55,7 @@ module.exports = {
                         footer: { text: `Moderator: ${i.user.tag}` }
                     }], [], "update", undefined, i)
 
-                    const { sendModLog } = require(`${process.cwd()}/src/handlers/functions`)
+                    const { sendModLog } = require(`${process.cwd()}/src/utils/functions`)
                     await sendModLog(client, interaction.guild, {
                         title: ls["logs"]["ban_title"],
                         desc: handlemsg(ls["logs"]["ban_desc"], {

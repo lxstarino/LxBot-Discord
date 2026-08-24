@@ -7,7 +7,7 @@ module.exports = {
 
     async execute(client, interaction) {
         const ls = client.getLanguage(interaction.guild?.id)
-        const { getOrCreateSettings, getVoicePanelData } = require(`${process.cwd()}/src/handlers/functions`)
+        const { getOrCreateSettings, getVoicePanelData } = require(`${process.cwd()}/src/utils/functions`)
 
         const settings = await getOrCreateSettings(client, interaction.guild.id)
         const voiceChannel = interaction.member.voice.channel

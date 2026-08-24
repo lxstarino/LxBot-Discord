@@ -24,14 +24,13 @@ module.exports = {
         const card = interaction.options.get("card")?.value ?? false
 
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/handlers/functions`)
+        const { getOrCreateSettings } = require(`${process.cwd()}/src/utils/functions`)
 
         const settings = await getOrCreateSettings(client, interaction.guild.id)
 
         settings.welcomestate = state
         settings.welcomechannel = channel ? channel.channel.id : null;
         settings.welcomecard = card
-        await client.settings.saveData()
 
         client.successEmbed({ type: "reply", ephemeral: true, title: ls["cmds"]["welcome-msg"]["title"], desc: ls["cmds"]["welcome-msg"]["updated"] }, interaction)
     }

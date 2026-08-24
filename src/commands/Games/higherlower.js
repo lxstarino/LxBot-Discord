@@ -88,7 +88,7 @@ module.exports = {
         .setDescription("Play Higher or Lower with live Wikipedia Top 1,000 Most Read topics"),
     async execute(client, interaction) {
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
 
         const usedTopics = new Set()
 

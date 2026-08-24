@@ -6,7 +6,7 @@ module.exports = {
         .setDescription("Commit a high-risk crime to win or lose money"),
     async execute(client, interaction) {
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/utils/functions`)
 
         const profile = await getOrCreateProfile(client, interaction.user.id, interaction.guild.id)
 
@@ -38,7 +38,6 @@ module.exports = {
             const reward = Math.floor(Math.random() * 1201) + 300
             profile.wallet += reward
             profile.crime = new Date(interaction.createdTimestamp)
-            await client.economy.saveData()
 
             client.successEmbed({
                 type: "reply",
@@ -50,7 +49,6 @@ module.exports = {
             const fine = Math.floor(Math.random() * 601) + 200
             profile.wallet = Math.max(0, profile.wallet - fine)
             profile.crime = new Date(interaction.createdTimestamp)
-            await client.economy.saveData()
 
             client.errEmbed({
                 type: "reply",

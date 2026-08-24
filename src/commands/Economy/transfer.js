@@ -30,7 +30,7 @@ module.exports = {
         const source = interaction.options.getString("source")
 
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/utils/functions`)
 
         if (target.user.bot) throw ({ title: `${ls["cmds"]["transfer"]["title"]}`, desc: ls["cmds"]["transfer"]["err_bot"] })
         if(target.user.id === interaction.user.id) throw({title: `${ls["cmds"]["transfer"]["title"]}`, desc: `${ls["cmds"]["transfer"]["ctys"]}`})
@@ -58,7 +58,6 @@ module.exports = {
             targetProfile.bank += amount
         }
 
-        await client.economy.saveData()
         client.successEmbed({
             type: "reply",
             ephemeral: true,

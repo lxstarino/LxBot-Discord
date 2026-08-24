@@ -1,4 +1,4 @@
-const { cleanupGuildData } = require(`${process.cwd()}/src/handlers/functions`)
+const { cleanupGuildData } = require(`${process.cwd()}/src/utils/functions`)
 
 module.exports = {
     name: "guildDelete",

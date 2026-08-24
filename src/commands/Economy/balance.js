@@ -12,7 +12,7 @@ module.exports = {
         const target = interaction.options.get("target") || interaction
 
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/utils/functions`)
 
         const profile = await getOrCreateProfile(client, target.user.id, interaction.guild.id)
 

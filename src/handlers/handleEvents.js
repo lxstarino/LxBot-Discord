@@ -7,7 +7,7 @@ module.exports = (client) => {
         const EventFiles = fs.readdirSync(`./src/events/${EventFolder}/`).filter(file => file.endsWith(".js"))
 
         EventFiles.forEach(EventFile => {
-            const event = require(`../../events/${EventFolder}/${EventFile}`)
+            const event = require(`../events/${EventFolder}/${EventFile}`)
             client.on(event.name, (...args) => event.execute(...args, client))
         })
     })

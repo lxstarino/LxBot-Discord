@@ -28,7 +28,7 @@ module.exports = {
         ),
     async execute(client, interaction) {
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
 
         const challenger = interaction.user
         const opponent = interaction.options.getUser("opponent")
@@ -152,7 +152,7 @@ module.exports = {
                 if (color) {
                     embed.setColor(color)
                 } else if (interaction.guild) {
-                    const hex = client.settings.mapCache?.get(interaction.guild.id)
+                    const hex = client.settings?.mapCache?.get(interaction.guild.id) || (client.db ? client.db.getSettings(interaction.guild.id) : null)
                     if (hex && hex.embed_color) {
                         embed.setColor(hex.embed_color)
                     } else {

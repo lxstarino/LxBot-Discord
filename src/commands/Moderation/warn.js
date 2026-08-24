@@ -22,7 +22,7 @@ module.exports = {
         const reason = interaction.options.getString("reason") || "No reason provided"
 
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/utils/functions`)
 
         const profile = await getOrCreateProfile(client, target.user.id, interaction.guild.id)
         profile.warnings = profile.warnings || []
@@ -33,8 +33,6 @@ module.exports = {
             timestamp: Date.now()
         })
 
-        await client.economy.saveData()
-
         client.Embed([{
             title: ls["cmds"]["warn"]["title"],
             desc: handlemsg(ls["cmds"]["warn"]["success"], { target: target.user.id, reason: reason, count: profile.warnings.length }),
@@ -42,7 +40,7 @@ module.exports = {
             footer: { text: `Moderator: ${interaction.user.tag}` }
         }], undefined, "reply", false, interaction)
 
-        const { sendModLog } = require(`${process.cwd()}/src/handlers/functions`)
+        const { sendModLog } = require(`${process.cwd()}/src/utils/functions`)
         await sendModLog(client, interaction.guild, {
             title: ls["logs"]["warn_title"],
             desc: handlemsg(ls["logs"]["warn_desc"], {

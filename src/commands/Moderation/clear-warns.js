@@ -15,12 +15,10 @@ module.exports = {
         const target = interaction.options.get("target")
 
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/utils/functions`)
 
         const profile = await getOrCreateProfile(client, target.user.id, interaction.guild.id)
         profile.warnings = []
-
-        await client.economy.saveData()
 
         client.Embed([{
             title: ls["cmds"]["clear-warns"]["title"],
@@ -29,7 +27,7 @@ module.exports = {
             footer: { text: `Moderator: ${interaction.user.tag}` }
         }], undefined, "reply", false, interaction)
 
-        const { sendModLog } = require(`${process.cwd()}/src/handlers/functions`)
+        const { sendModLog } = require(`${process.cwd()}/src/utils/functions`)
         await sendModLog(client, interaction.guild, {
             title: ls["logs"]["clear_warns_title"],
             desc: handlemsg(ls["logs"]["clear_warns_desc"], {

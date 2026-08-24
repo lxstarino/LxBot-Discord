@@ -6,7 +6,7 @@ module.exports = {
     .setDescription("Collect your daily reward"),
     async execute (client, interaction) {
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/utils/functions`)
 
         const profile = await getOrCreateProfile(client, interaction.user.id, interaction.guild.id)
 
@@ -25,7 +25,6 @@ module.exports = {
             profile.wallet += 5000
             profile.daily = new Date(interaction.createdTimestamp)
 
-            await client.economy.saveData()
             client.successEmbed({
                 type: "reply",
                 ephemeral: true,

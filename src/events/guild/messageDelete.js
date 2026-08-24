@@ -1,4 +1,4 @@
-const { sendModLog, handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/handlers/functions`)
+const { sendModLog, handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/utils/functions`)
 
 module.exports = {
     name: "messageDelete",

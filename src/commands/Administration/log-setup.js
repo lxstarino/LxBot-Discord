@@ -24,7 +24,7 @@ module.exports = {
         const subcommand = interaction.options.getSubcommand()
 
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/utils/functions`)
 
         const settings = await getOrCreateSettings(client, interaction.guild.id)
 
@@ -43,23 +43,21 @@ module.exports = {
             }
 
             settings.logchannel = channel.id
-            await client.settings.saveData()
 
             client.Embed([{
                 title: ls["cmds"]["log-setup"]["title"],
                 desc: handlemsg(ls["cmds"]["log-setup"]["set_success"], { channel: channel.id }),
                 timestamp: interaction.createdTimestamp
-            }], undefined, "reply", false, interaction)
+            }], undefined, "reply", true, interaction)
 
         } else if (subcommand === "disable") {
             settings.logchannel = null
-            await client.settings.saveData()
 
             client.Embed([{
                 title: ls["cmds"]["log-setup"]["title"],
                 desc: ls["cmds"]["log-setup"]["disabled"],
                 timestamp: interaction.createdTimestamp
-            }], undefined, "reply", false, interaction)
+            }], undefined, "reply", true, interaction)
         }
     }
 }

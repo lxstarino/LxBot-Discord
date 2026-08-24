@@ -7,12 +7,12 @@ module.exports = {
     .setDescription("Get a random fact"),
     async execute(client, interaction) {
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
 
         try {
             const response = await fetch("https://uselessfacts.jsph.pl/api/v2/facts/random", { signal: AbortSignal.timeout(5000) })
 
-            if (!response.ok) return interaction.reply({ content: ls["cmds"]["fact"]["err_fetch"], ephemeral: true })
+            if (!response.ok) return client.errEmbed({ type: "reply", ephemeral: true, desc: ls["cmds"]["fact"]["err_fetch"] }, interaction)
             const data = await response.json()
 
             client.Embed([{
@@ -22,7 +22,7 @@ module.exports = {
             }], undefined, "reply", false, interaction)
         } catch (err) {
             console.error(err)
-            interaction.reply({ content: ls["cmds"]["fact"]["err_fetch"], ephemeral: true })
+            client.errEmbed({ type: "reply", ephemeral: true, desc: ls["cmds"]["fact"]["err_fetch"] }, interaction)
         }
     }
 }

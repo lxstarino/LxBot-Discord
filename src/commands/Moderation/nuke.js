@@ -8,7 +8,7 @@ module.exports = {
     .setDefaultMemberPermissions(PermissionsBitField.Flags.Administrator),
     async execute(client, interaction){
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
 
         try {
             const originalPosition = interaction.channel.position

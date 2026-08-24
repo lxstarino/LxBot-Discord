@@ -1,101 +1,59 @@
-const fs = require("fs")
+const db = require("./Database")
+const { createAutoSaveProxy } = require("../utils/functions")
 
 module.exports = class StorageManager {
-    constructor(storage) {
-        this.storage = {}
-        this.storage.path = storage
-        this.storage.data = []
-        this.saveTimeout = null
-
-        this._init()
-
-        process.once("beforeExit", () => this.forceSaveSync())
-        process.once("exit", () => this.forceSaveSync())
-        process.once("SIGINT", () => {
-            this.forceSaveSync()
-            process.exit(0)
-        })
-        process.once("SIGTERM", () => {
-            this.forceSaveSync()
-            process.exit(0)
-        })
+    constructor(tableName) {
+        this.tableName = (tableName || "").toLowerCase()
+        this.mapCache = new Map()
     }
 
-    createData(options) {
-        return new Promise(async (resolve, reject) => {
-            if (!this.init) {
-                return reject("Manager is not initialized")
-            }
-            if (typeof options != "object") {
-                return reject("Variable has to be an object")
-            }
-
-            this.storage.data.push(options)
-            await this.saveData()
-            resolve(options)
-        })
+    _getKey(item) {
+        if (!item || typeof item !== "object") return null
+        if (this.tableName.includes("profile") && item.guildId && item.userId) {
+            return `${item.guildId}:${item.userId}`
+        } else if (this.tableName.includes("setting") && item.guildId) {
+            return String(item.guildId)
+        } else if (this.tableName.includes("ticket") && item.guildId && item.panel) {
+            return `${item.guildId}:${item.panel}`
+        } else if (this.tableName.includes("reaction") && item.guildId && item.panel) {
+            return `${item.guildId}:${item.panel}`
+        } else if (this.tableName.includes("poll") && item.pollId) {
+            return String(item.pollId)
+        }
+        return null
     }
 
-    async saveData() {
-        if (this.saveTimeout) {
-            clearTimeout(this.saveTimeout)
+
+
+    saveItem(item) {
+        if (!item) return
+        const raw = item.__raw || item
+
+        if (this.tableName.includes("profile")) {
+            db.saveProfile(raw)
+        } else if (this.tableName.includes("setting")) {
+            db.saveSettings(raw)
+        } else if (this.tableName.includes("ticket")) {
+            db.saveTicket(raw)
+        } else if (this.tableName.includes("poll")) {
+            db.savePoll(raw)
+        } else if (this.tableName.includes("reaction")) {
+            db.saveReactionRole(raw)
+        } else if (this.tableName.includes("free-games") || this.tableName.includes("freegames")) {
+            if (typeof raw === "number" || typeof raw === "string") {
+                db.addAnnouncedGame(raw)
+            }
         }
 
-        this.saveTimeout = setTimeout(async () => {
-            this.saveTimeout = null
-            try {
-                await fs.promises.writeFile(this.storage.path, JSON.stringify(this.storage.data, null, 4), "utf-8")
-            } catch (err) {
-                console.error(`[StorageManager] Failed to write database to ${this.storage.path}:`, err)
-            }
-        }, 1500)
-
-        return Promise.resolve()
-    }
-
-    forceSaveSync() {
-        if (this.saveTimeout) {
-            clearTimeout(this.saveTimeout)
-            this.saveTimeout = null
-        }
-        try {
-            fs.writeFileSync(this.storage.path, JSON.stringify(this.storage.data, null, 4), "utf-8")
-        } catch (err) {
-            console.error(`[StorageManager] Failed to force-save database to ${this.storage.path}:`, err)
+        const key = this._getKey(raw)
+        if (key) {
+            const proxy = item.__isProxy ? item : createAutoSaveProxy(raw, (saved) => {
+                this.saveItem(saved.__raw || saved)
+            })
+            this.mapCache.set(key, proxy)
         }
     }
 
-    getData() {
-        if (!fs.existsSync(this.storage.path)) {
-            fs.writeFileSync(this.storage.path, "[]", "utf-8")
-            return []
-        } else {
-            try {
-                const fileContent = fs.readFileSync(this.storage.path, "utf-8").trim()
-                if (!fileContent) {
-                    fs.writeFileSync(this.storage.path, "[]", "utf-8")
-                    return []
-                }
-                let data = JSON.parse(fileContent)
-                if (Array.isArray(data)) {
-                    return data
-                } else {
-                    throw new Error("StorageManager: Unsupported storage format")
-                }
-            } catch (ex) {
-                if (ex instanceof SyntaxError || (ex.message && ex.message.includes("Unexpected end of JSON input"))) {
-                    console.warn(`[StorageManager] Corrupted or empty JSON in ${this.storage.path}. Resetting to [].`)
-                    fs.writeFileSync(this.storage.path, "[]", "utf-8")
-                    return []
-                } else {
-                    throw ex
-                }
-            }
-        }
-    }
 
-    _init() {
-        this.storage.data = this.getData()
-        this.init = true
-    }
+
 }

@@ -1,71 +1,80 @@
 {
-    "cmds":{
+    "cmds": {
         "balance": {
-            "title": "{target}'s Saldo",
+            "title": "Kontostand von {target}",
             "fields": {
-                "wallet": "Geldbörse",
-                "bank": "Bank",
+                "wallet": "👛 Geldbörse",
+                "bank": "🏦 Bank",
                 "wallet_value": "{wallet} 💰",
                 "bank_value": "{bank} 💰"
             }
         },
+        "economy-manage": {
+            "title": "🏦 Economy-Verwaltung",
+            "add_success": "Erfolgreich **{amount} 💰** zum {type} von <@!{user}> hinzugefügt.",
+            "remove_success": "Erfolgreich **{amount} 💰** vom {type} von <@!{user}> abgezogen.",
+            "set_success": "Das Guthaben im {type} von <@!{user}> wurde erfolgreich auf **{amount} 💰** gesetzt.",
+            "err_invalid_amount": "Der Betrag muss eine positive Zahl sein.",
+            "wallet": "Geldbörse",
+            "bank": "Bankkonto"
+        },
         "daily": {
-            "title": "Tägliche Belohnung",
-            "already_collected": "Du hast bereits deine tägliche Belohnung abgeholt, bitte warte bis zum <t:{time}:f>",
-            "collect": "Du hast heute 5000 💰 abgeholt"
+            "title": "📅 Tägliche Belohnung",
+            "already_collected": "Du hast deine tägliche Belohnung bereits abgeholt! Bitte warte bis <t:{time}:f> (<t:{time}:R>).",
+            "collect": "Du hast deine tägliche Belohnung von **5.000 💰** erfolgreich abgeholt!"
         },
-        "weekly":{
-            "title": "Wöchentliche Belohnung",
-            "already_collected": "Du hast bereits deine wöchentliche Belohnung abgeholt, bitte warte bis zum <t:{time}:f>",
-            "collect": "Du hast heute 10000 💰 abgeholt"
+        "weekly": {
+            "title": "📆 Wöchentliche Belohnung",
+            "already_collected": "Du hast deine wöchentliche Belohnung bereits abgeholt! Bitte warte bis <t:{time}:f> (<t:{time}:R>).",
+            "collect": "Du hast deine wöchentliche Belohnung von **10.000 💰** erfolgreich abgeholt!"
         },
-        "monthly":{
-            "title": "Monatliche Belohnung",
-            "already_collected": "Du hast bereits deine monatliche Belohnung abgeholt, bitte warte bis zum <t:{time}:f>",
-            "collect": "Du hast heute 20000 💰 abgeholt"
+        "monthly": {
+            "title": "🗓️ Monatliche Belohnung",
+            "already_collected": "Du hast deine monatliche Belohnung bereits abgeholt! Bitte warte bis <t:{time}:f> (<t:{time}:R>).",
+            "collect": "Du hast deine monatliche Belohnung von **20.000 💰** erfolgreich abgeholt!"
         },
-        "deposit":{
-            "title": "Bank",
-            "nem": "Du hast nicht genug Geld in deiner Geldbörse um Geld einzuzahlen!",
-            "successful": "Du hast {amount} 💰 in die Bank eingezahlt"
+        "deposit": {
+            "title": "🏦 Bankeinzahlung",
+            "nem": "Du hast nicht genug Geld in deiner Geldbörse, um diesen Betrag einzuzahlen!",
+            "successful": "Du hast erfolgreich **{amount} 💰** auf deine Bank eingezahlt."
         },
-        "withdraw":{
-            "title": "Bank",
-            "nem": "Du hast nicht genügend Geld auf der Bank um diesen Betrag auszuzahlen!",
-            "successful": "Du hast {amount} 💰 von der Bank ausgezahlt"
+        "withdraw": {
+            "title": "🏦 Bankauszahlung",
+            "nem": "Du hast nicht genug Geld auf der Bank, um diesen Betrag auszuzahlen!",
+            "successful": "Du hast erfolgreich **{amount} 💰** von deiner Bank abgehoben."
         },
-        "transfer":{
-            "title": "Bank",
-            "ctys": "Du kannst dir selber kein Geld überweisen..",
-            "nem": "Du hast nicht genug Geld auf der Bank um diesen Betrag an jemanden zu überweisen!",
-            "nem_wallet": "Du hast nicht genug Geld in deiner Geldbörse um diesen Betrag zu überweisen!",
-            "successful": "Du hast {amount} 💰 an <@!{target}> erfolgreich überwiesen",
-            "err_bot": "Du kannst kein Geld an einen Bot überweisen!"
+        "transfer": {
+            "title": "💸 Geldüberweisung",
+            "ctys": "Du kannst dir selbst kein Geld überweisen!",
+            "nem": "Du hast nicht genug Geld auf der Bank, um diesen Betrag zu überweisen!",
+            "nem_wallet": "Du hast nicht genug Geld in deiner Geldbörse, um diesen Betrag zu überweisen!",
+            "successful": "Du hast erfolgreich **{amount} 💰** an <@!{target}> überwiesen.",
+            "err_bot": "Du kannst kein Geld an Bots überweisen!"
         },
-        "rob":{
-            "title": "Rob",
-            "crys": "Du kannst dich nicht selber ausrauben..",
-            "rbl": "Du musst mindestens 5000 💰 bei dir tragen, um jemanden auszurauben",
-            "nts": "<@!{target}> trägt nichts bei sich was gestohlen werden könnte.",
-            "caught": "Du wurdest erwischt..\nDu zahltest {amount} 💰 an <@!{target}>",
-            "success": "Du hast erfolgreich {amount} 💰 ausgeraubt von <@!{target}>",
-            "err_bot": "Du kannst keinen Bot ausrauben!"
+        "rob": {
+            "title": "🦹 Raubüberfall",
+            "crys": "Du kannst dich nicht selbst ausrauben!",
+            "rbl": "Du musst mindestens **5.000 💰** in deiner Geldbörse haben, um jemanden auszurauben!",
+            "nts": "<@!{target}> hat kein Geld in der Geldbörse, das du stehlen könntest.",
+            "caught": "🚨 Du wurdest erwischt! Du musstest **{amount} 💰** Strafe an <@!{target}> zahlen.",
+            "success": "💰 Du hast erfolgreich **{amount} 💰** von <@!{target}> erbeutet!",
+            "err_bot": "Du kannst Bots nicht ausrauben!"
         },
-        "slots":{
-            "title": "Slots",
-            "win": "[{item1} | {item2} | {item3}]\n**- DU HAST GEWONNEN -**",
-            "lost": "[{item1} | {item2} | {item3}]\n**- DU HAST VERLOREN -**",
-            "nem": "Du hast nicht genug Geld um am Automaten zu spielen.",
+        "slots": {
+            "title": "🎰 Spielautomat",
+            "win": "[{item1} | {item2} | {item3}]\n🎉 **GEWONNEN!**",
+            "lost": "[{item1} | {item2} | {item3}]\n💥 **VERLOREN!**",
+            "nem": "Du hast nicht genug Geld in deiner Geldbörse für diesen Einsatz.",
             "fields": {
-                "name1": "Profit",
-                "name2": "Geld",
-                "value1": "-{amount} 💰",
+                "name1": "Gewinn",
+                "name2": "Neuer Kontostand",
+                "value1": "+{amount} 💰",
                 "value2": "{amount} 💰"
             }
         },
         "wheel": {
             "title": "🎡 Glücksrad",
-            "err_bet_min": "Der Mindesteinsatz beträgt 10 💰!",
+            "err_bet_min": "Der Mindesteinsatz beträgt **10 💰**!",
             "err_bet_wallet": "Du hast nicht genug Geld in deiner Geldbörse für diesen Einsatz!",
             "spinning": "🎡 Das Glücksrad dreht sich...",
             "win": "🎉 **JACKPOT!** Das Rad ist auf **{multiplier}x** gelandet! Du hast **+{payout} 💰** gewonnen!",
@@ -73,9 +82,39 @@
             "loss": "💥 Das Rad ist auf **{multiplier}x** gelandet! Du hast **-{loss} 💰** verloren!"
         },
         "restart": {
-            "title": "⚙️ Bot Neustart",
-            "desc": "🔄 **Bot-Prozess wird neu gestartet...** Bitte warte einige Sekunden.",
-            "no_perm": "❌ Nur der Bot-Entwickler darf diesen Befehl ausführen!"
+            "title": "Bot Neustart",
+            "desc": "**Bot-Prozess wird neu gestartet...** Bitte warte einige Sekunden.",
+            "no_perm": "Nur der Bot-Entwickler darf diesen Befehl ausführen!"
+        },
+        "bot-dbview": {
+            "title": "Datenbank-Viewer",
+            "overview_desc": "**Datenbank-Datei:** `{file}`\n**Journal-Modus:** `WAL`\n**Tabellen:** `{tables}`\n**Einträge Gesamt:** `{records}`\n\nWähle unten eine Tabelle aus, um Datensätze einzusehen.",
+            "records_count": "{count} Einträge",
+            "select_placeholder": "Wähle eine Tabelle zum Durchsuchen...",
+            "table_view_desc": "Zeige Einträge **{from} - {to}** von **{total}** (Seite {page}/{maxPage})",
+            "table_empty_title": "Tabelle ist leer",
+            "table_empty_desc": "Keine Einträge in dieser Tabelle gefunden.",
+            "record_title": "Eintrag #{num}",
+            "btn_tables": "Tabellenliste",
+            "btn_prev": "Zurück",
+            "btn_next": "Weiter",
+            "btn_refresh": "Aktualisieren",
+            "err_unauthorized": "Du darfst nicht mit diesem Viewer interagieren."
+        },
+        "db-view": {
+            "title": "Datenbank-Viewer",
+            "overview_desc": "**Datenbank-Datei:** `{file}`\n**Journal-Modus:** `WAL`\n**Tabellen:** `{tables}`\n**Einträge Gesamt:** `{records}`\n\nWähle unten eine Tabelle aus, um Datensätze einzusehen.",
+            "records_count": "{count} Einträge",
+            "select_placeholder": "Wähle eine Tabelle zum Durchsuchen...",
+            "table_view_desc": "Zeige Einträge **{from} - {to}** von **{total}** (Seite {page}/{maxPage})",
+            "table_empty_title": "Tabelle ist leer",
+            "table_empty_desc": "Keine Einträge in dieser Tabelle gefunden.",
+            "record_title": "Eintrag #{num}",
+            "btn_tables": "Tabellenliste",
+            "btn_prev": "Zurück",
+            "btn_next": "Weiter",
+            "btn_refresh": "Aktualisieren",
+            "err_unauthorized": "Du darfst nicht mit diesem Viewer interagieren."
         },
         "hilo": {
             "title": "🌐 Höher oder Niedriger (Wikipedia Leser)",
@@ -163,26 +202,20 @@
             "desc2": "Banner konnte nicht angefordert werden"
         },
         "botinfo": {
-            "createdat": "Erstellt am",
-            "botowner": "Bot-Besitzer",
-            "latency": "Latenz",
-            "startedsince": "Online seit:",
-            "commands": "Befehle ({size})",
-            "name": "Bot-Name",
-            "id": "Bot-ID",
-            "version": "Bot-Version",
-            "djs_version": "Discord.js Version",
-            "node_version": "Node.js Version",
-            "servers": "Server gesamt",
-            "commands_val": "Entwicklerbefehle: **{dev}**\nNutzerbefehle: **{user}**",
-            "ram": "RAM-Nutzung",
-            "os": "System OS",
-            "members": "Mitglieder gesamt",
-            "channels": "Kanäle gesamt"
+            "section_general": "🤖 Allgemein",
+            "section_stats": "📊 Statistiken",
+            "section_system": "⚙️ System & Hardware",
+            "general_val": "> **Besitzer:** <@!399301340326789120>\n> **Erstellt am:** <t:{created}:D>\n> **Online seit:** <t:{start}:R>{shard}",
+            "stats_val": "> **Server:** {guilds} | **Mitglieder:** {members} | **Kanäle:** {channels}\n> **Befehle:** {total} ({user} User | {dev} Dev)\n> **Datenbank:** SQLite 3",
+            "system_val": "> **Ping:** Bot {bot}ms | WS {ws}ms\n> **Hardware:** {hardware}\n> **Speicher:** {ram} (Bot) | {host_ram} (RAM){disk}\n> **Host-System:** {os} | Online seit <t:{host_uptime}:R>\n> **Versionen:** Node.js {node} | Discord.js v{djs}",
+            "shard_info": " (Shard #{shard} von {total})"
         },
         "channelinfo": {
-            "type": "Art",
-            "createdon": "Erstellt am",
+            "section_general": "💬 Allgemein",
+            "section_settings": "⚙️ Einstellungen & Zugriff",
+            "general_val": "> **Art:** {type}\n> **Kategorie:** {category}\n> **Erstellt am:** <t:{created}:D> (<t:{created}:R>)\n> **Position:** #{pos}",
+            "settings_val": "> **Slowmode:** {slowmode}\n> **NSFW:** {nsfw}\n> **Berechtigungs-Overrides:** {overwrites}",
+            "voice_val": "\n> **Bitrate:** {bitrate} kbps | **User-Limit:** {limit}",
             "tnf": "Art nicht gefunden",
             "ntp": "Kein Thema angegeben",
             "tc": "Text-Kanal",
@@ -192,12 +225,14 @@
             "pt": "Öffentlicher Thread",
             "pt2": "Privater Thread",
             "svc": "Bühnensprachkanal",
-            "category": "Kategorie",
-            "slowmode": "Slowmode",
+            "fc": "Forum-Kanal",
             "none": "Keiner",
+            "unlimited": "Unbegrenzt",
             "seconds": "{time} Sekunden",
             "yes": "Ja",
-            "no": "Nein"
+            "no": "Nein",
+            "topic_desc": "<#{channel}>\n*{topic}*",
+            "id_footer": "Kanal-ID: {id}"
         },
         "poll": {
             "title": "📊 Umfrage",
@@ -239,7 +274,8 @@
             "ruined_title": "💥 Ruiniert!",
             "ruined_double": "<@!{user}> hat die Reihe ruiniert, da man nicht zweimal hintereinander zählen darf! Der Zähler wurde auf **0** zurückgesetzt.",
             "ruined_wrong": "<@!{user}> hat die Reihe bei **{wrong}** ruiniert! Erwartet war **{expected}**. Der Zähler wurde auf **0** zurückgesetzt.",
-            "highscore_announce": "🎉 **Neuer Server-Highscore!** Ihr habt **{highscore}** erreicht! Weiter so!"
+            "highscore_announce": "🎉 **Neuer Server-Highscore!** Ihr habt **{highscore}** erreicht! Weiter so!",
+            "set_count_success": "Der aktuelle Zähler wurde erfolgreich auf **{count}** gesetzt."
         },
         "voice-setup": {
             "title": "🎙️ Temp-Voice Setup",
@@ -283,9 +319,11 @@
             "category_desc": "Befehle aus dem Modul {module}",
             "btn_home": "Startseite",
             "btn_cmdlist": "Alle Befehle",
-            "title_home": "📖 Hilfe & Befehlsübersicht",
-            "home_desc": "> 💡 **Tipp:** Wähle unten im Menü ein Modul aus, um alle Befehle & Details zu sehen.\n> ⏱️ *Dieses Menü deaktiviert sich automatisch nach **3 Minuten** Inaktivität.*\n\n[Website](https://lxst.cc) | [GitHub](https://github.com/lxstarino)",
+            "title_home": "Hilfe & Befehlsübersicht",
+            "home_desc": "> 💡 **Tipp:** Wähle unten im Menü ein Modul aus, um alle Befehle & Details zu sehen.\n> ⏱️ *Dieses Menü deaktiviert sich automatisch nach **3 Minuten** Inaktivität.*\n\n[Website](https://lxst.cc) | [Bot Invite](https://discord.com/oauth2/authorize?client_id=1338080989775265792&permissions=8&integration_type=0&scope=bot) | [GitHub](https://github.com/lxstarino)",
             "categories_title": "Verfügbare Kategorien",
+            "commands_label": "Befehle",
+            "category_item": "> {emoji} **{folder}:** `{count}` {label}",
             "footer_home": "Insgesamt {totalCmdCount} Befehle in {categoryCount} Kategorien",
             "title_all": "📋 Übersicht aller Befehle",
             "desc_all": "Hier ist eine schnelle Übersicht aller Befehle nach Kategorien gruppiert:",
@@ -293,43 +331,48 @@
             "no_commands": "Keine Befehle in dieser Kategorie gefunden."
         },
         "serverinfo": {
-            "createdon": "Erstellt am",
-            "ndp": "Kein Beschreibung angegeben",
-            "serverowner": "Server Besitzer",
-            "membercount": "Mitglieder Anzahl",
-            "invitecount": "Einladungscodes",
-            "rescount": "Rollen/Emoji/Sticker Anzahl",
-            "channelcount": "Kanäle ({size})",
-            "lvl_title": "Server Level ({level})",
-            "lvl_val": "Boosts: {boosts}",
-            "member_val": "**{count}** Mitglied(er)",
-            "invite_val": "**{count}** Code(s)",
-            "res_val": "**{roles}** Rolle(n) | **{emojis}** Emoji(s) | **{stickers}** Sticker",
-            "channel_val": "Kategorien: **{categories}** | Textkanäle: **{text}** | Sprachkanäle: **{vc}**",
+            "title": "Serverinformationen",
+            "section_general": "⛃ Allgemein",
+            "section_features": "🚀 Server-Status",
+            "general_val": "> **Server-Besitzer:** <@!{owner}>\n> **Erstellt am:** <t:{created}:D> (<t:{created}:R>)\n> **Mitglieder:** **{count}** ({humans} User • {bots} Bots)\n> **Sicherheitsstufe:** {security}",
+            "afk_val": "\n> **AFK-Kanal:** <#{channel}> ({time} Min.)",
+            "features_val": "> **Boost-Level:** Level **{level}** ({count} Boosts) {emoji}\n> **Kanäle:** **{channels}** gesamt ({text} Text • {vc} Voice • {cats} Kategorien)\n> **Ressourcen:** {roles} Rollen • {emojis} Emojis • {stickers} Sticker",
+            "icon_link": "Icon",
+            "banner_link": "Banner",
+            "splash_link": "Splash",
+            "sec_none": "Keine",
+            "sec_low": "Niedrig",
+            "sec_medium": "Mittel",
+            "sec_high": "Hoch",
+            "sec_very_high": "Höchste",
             "id_footer": "Server ID: {id}"
         },
         "userinfo": {
-            "joinedon": "Server beigetreten",
-            "registeredon": "Konto erstellt",
+            "title": "Benutzerinformationen",
+            "section_general": "👤 Allgemein",
+            "section_server": "🛡️ Server-Status",
+            "section_eco": "💰 Wirtschaft & Level",
+            "general_val": "> **Konto erstellt:** <t:{created}:D>\n> **Server beigetreten:** <t:{joined}:D>\n> **Server-Spitzname:** {nickname}\n> **Bot:** {bot}",
+            "server_val": "> **Höchste Rolle:** {highest}\n> **Berechtigungen:** {perms}\n> **Sprachkanal:** {voice}\n> **Verwarnungen:** `{warnings}`",
+            "booster_val": "\n> **Server-Booster:** <t:{time}:R>",
+            "eco_val": "> **Kontostand:** 👛 **{wallet} 💰** | 🏦 **{bank} 💰**\n> **Level & Rang:** Level **{level}** • `{xp} / {needed} XP`",
             "roles": "Rollen ({size})",
-            "avatar": "Profilbild",
-            "highest_role": "Höchste Rolle",
-            "balance": "Kontostand",
-            "leveling": "Level & XP",
-            "warnings": "Verwarnungen",
-            "key_perms": "Berechtigungen",
+            "no_roles": "Keine Rollen zugewiesen",
+            "more_roles": "... und {count} weitere",
+            "avatar_link": "Avatar",
+            "banner_link": "Banner",
             "yes": "Ja",
             "no": "Nein",
+            "none": "Keiner",
             "admin": "Administrator 👑",
             "moderator": "Moderator 🛡️",
-            "member": "Mitglied 👤",
-            "no_roles": "Keine Rollen"
+            "member": "Mitglied 👤"
         },
         "add/remrole": {
             "edesc1": "Die Aktion für <@!{target}> konnte nicht bearbeitet werden da der Bot fehlende Rechte hat",
             "edesc2": "Die Aktion für <@!{target}> konnte nicht bearbeitet werden da der Benutzer nicht gefunden werden konnte",
             "edesc3": "Die Aktion für <@!{target}> konnte nicht bearbeitet werden da die Rolle ungültig ist",
-            "edesc4":  "Die Rolle ist entweder über mir oder mir fehlen die benötigen Rechte zu sie hinzuzufügen/entfernen",
+            "edesc4": "Die Rolle ist entweder über mir oder mir fehlen die benötigen Rechte zu sie hinzuzufügen/entfernen",
             "desc": "Fügte <@&{role}> zu <@!{target}> hinzu",
             "desc2": "Entfernte <@&{role}> von <@!{target}>"
         },
@@ -363,31 +406,10 @@
             "created": "Willkommensnachricht wurde erfolgreich erstellt"
         },
         "autorole-setup": {
-            "title": "🤖 Auto-Rollen Setup",
+            "title": "Auto-Rollen Setup",
             "set_success": "Auto-Rolle erfolgreich auf <@&{role}> gesetzt!",
             "disabled": "Auto-Rolle erfolgreich deaktiviert.",
             "err_bot_hierarchy": "Ich kann die Rolle <@&{role}> nicht zuweisen, da sie höher oder gleich meiner höchsten Rolle ist!"
-        },
-        "verify-setup": {
-            "title": "🔒 Verifikations-Setup",
-            "set_success": "Verifikations-Panel erfolgreich an <#{channel}> gesendet mit Rolle <@&{role}>!",
-            "disabled": "Verifikations-System wurde deaktiviert.",
-            "panel_title": "🛡️ Mitglieder-Verifikation",
-            "panel_desc": "Willkommen auf **{guildname}**!\nUm Zugriff auf alle Server-Kanäle zu erhalten, klicke unten auf den Button **Verifizieren** und löse das Captcha.",
-            "btn_verify": "Verifizieren",
-            "err_bot_hierarchy": "Ich kann die Rolle <@&{role}> nicht zuweisen, da sie höher oder gleich meiner höchsten Rolle ist!"
-        },
-        "verify": {
-            "title": "🔐 Captcha-Verifikation",
-            "already_verified": "Du bist auf diesem Server bereits verifiziert!",
-            "captcha_desc": "Bitte löse das Captcha aus dem untenstehenden Bild, um deine Verifikation abzuschließen.\n\n> ⏱️ *Dieses Captcha läuft in **5 Minuten** ab.*",
-            "btn_enter_code": "Code eingeben",
-            "btn_refresh": "Neues Captcha",
-            "modal_title": "Captcha-Code eingeben",
-            "modal_label": "5-Stelliger Code (Groß-/Kleinschreibung egal)",
-            "success": "🎉 **Verifikation erfolgreich!** Du hast vollen Zugriff auf den Server erhalten.",
-            "err_invalid_code": "❌ **Falscher Code!** Bitte überprüfe das Bild und versuche es erneut.",
-            "err_expired": "⏰ **Captcha abgelaufen!** Klicke erneut auf **Verifizieren**, um ein neues Captcha zu generieren."
         },
         "bot-embed": {
             "title": "Embed",
@@ -395,21 +417,26 @@
             "invalid": "Bitte gebe eine gültige Hex-Farbe an!"
         },
         "bot-language": {
-            "placeholder": "Wähle eine Sprache",
-            "desc": "Benutze das Auswahlmenü unten, um eine Sprache auszuwählen!\nHinweis: Interaktive Elemente werden in 2 Minuten deaktiviert",
-            "success": "Bot-Sprache wurde erfolgreich auf `{language}` geändert!\nHinweis: Die Übersetzung ist noch nicht zu 100% abgeschlossen"
+            "title": "🌐 Spracheinstellungen",
+            "placeholder": "Wähle eine Sprache...",
+            "desc": "Verwalte die Sprache für **{guild}**.\n\n> **Aktuelle Sprache:** {current_flag} **{current_name}**\n\nWähle unten eine neue Sprache aus dem Menü:",
+            "success": "Server-Sprache wurde erfolgreich auf {flag} **{language}** geändert!",
+            "lang_de": "Deutsch",
+            "lang_de_desc": "Setze die Bot-Sprache auf Deutsch",
+            "lang_en": "English",
+            "lang_en_desc": "Set the bot language to English"
         },
         "bot-modules": {
-            "title": "Bot-Module",
-            "placeholder_enable": "Aktiviere ein Modul",
-            "placeholder_disable": "Deaktiviere ein Modul",
-            "desc": "Benutze das Auswahlmenü unten, um ein Modul zu aktivieren/deaktivieren!\nHinweis: Interaktive Elemente werden in 2 Minuten deaktiviert",
-            "desc_enable": "Aktiviere {module}",
-            "desc_disable": "Deaktiviere {module}",
-            "not_found": "`{module}` wurde in der Liste der deaktivierten Module nicht gefunden!",
-            "enabled": "`{module}` wurde erfolgreich aktiviert!",
-            "disabled": "`{module}` wurde erfolgreich deaktiviert!",
-            "already_disabled": "`{module}` ist bereits deaktiviert!"
+            "title": "📦 Bot-Module",
+            "desc": "Konfiguriere, welche Befehlsmodule auf **{guild}** aktiv sind.\nDeaktivierte Module und deren Befehle können von Mitgliedern nicht genutzt werden.\n\n### Modul-Status\n{status_list}\n\n*Wähle unten ein Modul aus, um den Status umzuschalten.*",
+            "placeholder": "Wähle ein Modul zum Umschalten...",
+            "status_enabled": "Aktiviert",
+            "status_disabled": "Deaktiviert",
+            "opt_desc_enabled": "Aktuell aktiv • Klicke zum Deaktivieren",
+            "opt_desc_disabled": "Aktuell deaktiviert • Klicke zum Aktivieren",
+            "btn_enable_all": "Alle aktivieren",
+            "btn_disable_all": "Alle deaktivieren",
+            "timeout": "Das Modul-Konfigurationsmenü ist abgelaufen."
         },
         "t-setup": {
             "err_title": "Ticket",
@@ -447,7 +474,8 @@
             "category_updated": "Kategorie-Berechtigungen wurden für die Rollen aktualisiert! | <#{channel}>",
             "err_max_roles": "Du kannst maximal 5 Support-Rollen hinzufügen!",
             "no_roles_found": "Keine zuweisbaren Rollen gefunden",
-            "warning_limit": "\n\n⚠️ **Hinweis:** Da dein Server mehr als 75 zuweisbare Rollen hat, wurden die restlichen Rollen abgeschnitten (Discord erlaubt maximal 5 Zeilen an Menüs/Knöpfen)."
+            "warning_limit": "\n\n⚠️ **Hinweis:** Da dein Server mehr als 75 zuweisbare Rollen hat, wurden die restlichen Rollen abgeschnitten (Discord erlaubt maximal 5 Zeilen an Menüs/Knöpfen).",
+            "err_role_limit": "Einige Rollen konnten nicht verarbeitet werden (fehlende Berechtigung, oder Limit von 5 erreicht)."
         },
         "role-setup": {
             "first_layer_title": "Rollen-Einrichtung",
@@ -467,9 +495,13 @@
             "no_roles_added": "❌ *Keine Rollen*",
             "select_channel": "Ziel-Kanal auswählen...",
             "select_role_add": "Rolle hinzufügen...",
+            "btn_desc": "Beschreibung setzen",
             "btn_send": "Rollen-System senden",
             "btn_reset": "Panel zurücksetzen",
             "btn_cancel": "Abbrechen",
+            "modal_desc_title": "Rollen-Panel Beschreibung",
+            "modal_desc_label": "Embed-Beschreibung",
+            "modal_desc_placeholder": "Gib eine benutzerdefinierte Beschreibung für das Embed ein...",
             "err_no_roles": "Bitte füge zuerst mindestens eine Rolle hinzu!",
             "err_no_channel": "Ziel-Kanal nicht gefunden oder nicht konfiguriert!",
             "err_max_roles": "Du kannst maximal 5 Rollen zu einem Panel hinzufügen!",
@@ -479,7 +511,8 @@
             "hierarchy_error": "Ich kann dir die Rolle **{roleName}** nicht geben, da sie über oder gleichauf mit meiner höchsten Rolle steht!",
             "added": "Die Rolle **{roleName}** wurde dir erfolgreich zugewiesen.",
             "removed": "Die Rolle **{roleName}** wurde erfolgreich von dir entfernt.",
-            "error": "Beim Ändern deiner Rollen ist ein Fehler aufgetreten."
+            "error": "Beim Ändern deiner Rollen ist ein Fehler aufgetreten.",
+            "err_role_limit": "Einige Rollen konnten nicht verarbeitet werden (Bot-Rolle, Admin-Rolle, zu hohe Hierarchie oder Limit von 25 Rollen erreicht)."
         },
         "bot-presence": {
             "title": "Bot-Präsenz",
@@ -491,6 +524,11 @@
         "bot-restart": {
             "title": "Bot wird neu gestartet",
             "desc": "Der Bot wird <t:{time}:R> neu gestartet..."
+        },
+        "bot-reload": {
+            "success": "`{command}` erfolgreich neu geladen!",
+            "invalid_title": "Befehl nicht gefunden",
+            "invalid_desc": "Gebe einen gültigen Befehl an!\n\nGültige Befehle:\n{commands}"
         },
         "bot-reloadcmd": {
             "success": "`{command}` erfolgreich neu geladen!",
@@ -504,9 +542,9 @@
             "err_no_results_seconds": "Keine Videos für **{tag}** mit mindestens **{seconds}s** Länge gefunden."
         },
         "work": {
-            "title": "Arbeit",
+            "title": "💼 Arbeit",
             "success": "Du hast als **{job}** gearbeitet und **{amount} 💰** verdient!",
-            "already_worked": "Du hast bereits gearbeitet, bitte warte bis <t:{time}:f>",
+            "already_worked": "Du hast bereits gearbeitet! Bitte erhole dich bis <t:{time}:f> (<t:{time}:R>).",
             "list": [
                 "professioneller Schläfer",
                 "Discord-Moderator",
@@ -518,11 +556,11 @@
             ]
         },
         "crime": {
-            "title": "Verbrechen",
-            "success": "Du hast erfolgreich **{crime}** und **{amount} 💰** erbeutet!",
-            "caught": "Du wurdest erwischt als du **{crime}** und hast **{amount} 💰** Strafe gezahlt!",
-            "nem": "Du brauchst mindestens 1.000 💰 in deiner Geldbörse, um eine eventuelle Strafe zu zahlen!",
-            "already_crimed": "Du hast bereits ein Verbrechen begangen, bitte warte bis <t:{time}:f>",
+            "title": "🦹 Kriminalität",
+            "success": "Du hast erfolgreich **{crime}** und **{amount} 💰** Beute gemacht!",
+            "caught": "🚨 Du wurdest erwischt, als du **{crime}** und musstest **{amount} 💰** Strafe zahlen!",
+            "nem": "Du benötigst mindestens **1.000 💰** in deiner Geldbörse, um eine eventuelle Strafe zu zahlen!",
+            "already_crimed": "Die Polizei sucht noch nach dir! Bitte warte bis <t:{time}:f> (<t:{time}:R>).",
             "list": [
                 "einem Baby Süßigkeiten gestohlen",
                 "ein Auto privat kopiert",
@@ -533,19 +571,19 @@
             ]
         },
         "eco-lb": {
-            "title": "Server-Bestenliste",
-            "format": "**{rank}.** <@!{user}> • Gesamt: **{total} 💰**\n> Geldbörse: *{wallet}* | Bank: *{bank}*",
-            "empty": "Keine Profile auf diesem Server gefunden."
+            "title": "🏆 Server-Wirtschaftsbestenliste",
+            "format": "**{rank}.** <@!{user}> • Gesamt: **{total} 💰**\n> 👛 Geldbörse: *{wallet}* | 🏦 Bank: *{bank}*",
+            "empty": "Auf diesem Server wurden noch keine Wirtschaftsprofile gefunden."
         },
         "rps": {
-            "title": "Schere Stein Papier",
-            "win": "Gewonnen! Der Bot hat {botChoice} gewählt. Du gewinnst **{amount} 💰**!",
-            "lost": "Verloren! Der Bot hat {botChoice} gewählt. Du verlierst **{amount} 💰**!",
-            "draw": "Unentschieden! Beide haben {choice} gewählt. Es wurde kein Geld verloren.",
+            "title": "✂️ Schere, Stein, Papier",
+            "win": "🎉 **Gewonnen!** Der Bot hat **{botChoice}** gewählt. Du gewinnst **+{amount} 💰**!",
+            "lost": "💥 **Verloren!** Der Bot hat **{botChoice}** gewählt. Du verlierst **-{amount} 💰**!",
+            "draw": "🤝 **Unentschieden!** Beide haben **{choice}** gewählt. Dein Einsatz wurde erstattet.",
             "nem": "Du hast nicht genug Geld in deiner Geldbörse für diesen Einsatz!",
-            "rock": "Stein",
-            "paper": "Papier",
-            "scissors": "Schere"
+            "rock": "Stein 🪨",
+            "paper": "Papier 📄",
+            "scissors": "Schere ✂️"
         },
         "ship": {
             "title": "❤️ Liebestest",
@@ -560,7 +598,18 @@
         "level": {
             "title": "Level-Rang",
             "desc": "Rang von <@!{user}>:\n> **Level**: {level}\n> **XP**: {xp} / {needed} XP",
+            "next_reward": "> 🎁 **Nächste Belohnung (Level {level}):** <@&{role}>",
             "footer": "Rang-Status"
+        },
+        "level-manage": {
+            "title": "🏆 Level-Verwaltung",
+            "add_success": "Erfolgreich **+{amount}** Level zu <@!{user}> hinzugefügt! Neuer Rang: **Level {level}**.",
+            "remove_success": "Erfolgreich **-{amount}** Level von <@!{user}> abgezogen! Neuer Rang: **Level {level}**.",
+            "set_success": "Das Level von <@!{user}> wurde erfolgreich auf **Level {level}** gesetzt.",
+            "reset_success": "Das Level und die XP von <@!{user}> wurden erfolgreich auf **Level 1** (0 XP) zurückgesetzt.",
+            "awarded_roles": "🏆 **Neue Rollen vergeben:** {roles}",
+            "err_min_level": "Das Level muss mindestens 1 betragen!",
+            "err_bot": "Du kannst das Level von Bots nicht verwalten!"
         },
         "lvl-lb": {
             "title": "XP-Bestenliste",
@@ -581,12 +630,12 @@
             "success": "Erfolgreich alle Verwarnungen für <@!{target}> gelöscht."
         },
         "shop-setup": {
-            "title": "Shop-Einrichtung",
+            "title": "🏪 Shop-Einrichtung",
             "added": "Rolle <@&{role}> erfolgreich für **{price} 💰** zum Shop hinzugefügt!",
             "removed": "Rolle <@&{role}> erfolgreich aus dem Shop entfernt.",
-            "not_in_shop": "Diese Rolle ist nicht im Shop!",
-            "already_added": "Diese Rolle ist bereits im Shop!",
-            "invalid_price": "Der Preis muss mindestens 1 💰 betragen!"
+            "not_in_shop": "Diese Rolle befindet sich nicht im Shop!",
+            "already_added": "Diese Rolle ist bereits im Shop verfügbar!",
+            "invalid_price": "Der Preis muss mindestens **1 💰** betragen!"
         },
         "log-setup": {
             "title": "Log-System Setup",
@@ -607,31 +656,31 @@
         },
         "shop": {
             "title": "🏪 Server-Shop",
-            "desc": "Willkommen im Server-Shop! Benutze `/buy <rolle>`, um eine Rolle zu kaufen.\n\n**Verfügbare Items:**\n\n{items}",
+            "desc": "Willkommen im Server-Shop! Nutze `/buy <rolle>`, um eine Rolle zu kaufen.\n\n**Verfügbare Rollen:**\n\n{items}",
             "empty": "Der Shop ist aktuell leer! Ein Administrator kann Rollen mit `/shop-setup add` hinzufügen."
         },
         "buy": {
-            "title": "Rolle kaufen",
+            "title": "🛍️ Rollenkauf",
             "success": "Erfolgreich die Rolle <@&{role}> für **{price} 💰** gekauft!",
-            "already_has": "Du hast die Rolle <@&{role}> bereits!",
-            "nem": "Du hast nicht genug Geld in deiner Geldbörse, um <@&{role}> zu kaufen (Benötigt {price} 💰)!",
-            "not_for_sale": "Diese Rolle steht im Shop nicht zum Verkauf!"
+            "already_has": "Du besitzt die Rolle <@&{role}> bereits!",
+            "nem": "Du hast nicht genug Geld in deiner Geldbörse, um <@&{role}> zu kaufen (Benötigt: **{price} 💰**)! ",
+            "not_for_sale": "Diese Rolle steht im Shop aktuell nicht zum Verkauf!"
         },
         "fish": {
             "title": "🎣 Angelausflug",
-            "caught": "Du hast deine Angel ausgeworfen und einen **{fish}** {emoji} gefangen!\n> Seltenheit: **{rarity}**\n> Wert: **{value} 💰**\n> Er wurde zu deinem Inventar hinzugefügt.",
-            "cooldown": "Du bist zu müde zum Angeln! Bitte warte bis <t:{time}:f>"
+            "caught": "Du hast deine Angel ausgeworfen und einen **{fish}** {emoji} gefangen!\n> 🌟 Seltenheit: **{rarity}**\n> 💰 Wert: **{value} 💰**\n> Er wurde zu deinem Inventar hinzugefügt.",
+            "cooldown": "Du bist noch zu erschöpft vom Angeln! Bitte warte bis <t:{time}:f> (<t:{time}:R>)."
         },
         "sell": {
-            "title": "🏪 Marktplatz",
-            "success_all": "Erfolgreich alle Gegenstände aus deinem Inventar für insgesamt **{amount} 💰** verkauft!",
+            "title": "🏪 Marktplatz-Verkauf",
+            "success_all": "Du hast alle Gegenstände aus deinem Inventar erfolgreich für insgesamt **{amount} 💰** verkauft!",
             "empty": "Du hast keine Gegenstände in deinem Inventar zum Verkaufen!"
         },
         "inventory": {
             "title": "🎒 Inventar von {user}",
-            "desc": "**Fischbestand:**\n\n{items}\n\nGeschätzter Wert: **{total} 💰**",
-            "empty_self": "Dein Inventar ist aktuell leer! Benutze `/fish`, um Fische zu fangen.",
-            "empty_other": "Das Inventar von <@!{user}> ist leer!"
+            "desc": "**Gegenstände im Besitz:**\n\n{items}\n\n💵 **Geschätzter Gesamtwert:** **{total} 💰**",
+            "empty_self": "Dein Inventar ist aktuell leer! Nutze `/fish` oder `/mine`, um Beute zu sammeln.",
+            "empty_other": "Das Inventar von <@!{user}> ist aktuell leer!"
         },
         "fish_rarities": {
             "common": "Gewöhnlich",
@@ -650,8 +699,8 @@
         },
         "mine": {
             "title": "⛏️ Bergbau-Ausflug",
-            "mined": "Du hast deine Spitzhacke geschwungen und etwas **{ore}** {emoji} abgebaut!\n> Seltenheit: **{rarity}**\n> Wert: **{value} 💰**\n> Es wurde zu deinem Inventar hinzugefügt.",
-            "cooldown": "Deine Muskeln sind zu müde zum Minen! Bitte warte bis <t:{time}:f>"
+            "mined": "Du hast deine Spitzhacke geschwungen und **{ore}** {emoji} abgebaut!\n> 🌟 Seltenheit: **{rarity}**\n> 💰 Wert: **{value} 💰**\n> Es wurde zu deinem Inventar hinzugefügt.",
+            "cooldown": "Deine Muskeln brennen noch vom Minen! Bitte warte bis <t:{time}:f> (<t:{time}:R>)."
         },
         "ore_rarities": {
             "common": "Gewöhnlich",
@@ -731,6 +780,13 @@
             "list_field_name": "Level {level}",
             "list_field_value": "Rolle: <@&{role}>",
             "err_bot_hierarchy": "Ich kann die Rolle <@&{role}> nicht zuweisen, da sie höher oder gleich meiner höchsten Rolle ist!"
+        },
+        "bot-avatar": {
+            "title": "Bot Avatar",
+            "desc": "Avatar successfully updated for this server.",
+            "error_url": "Please provide a valid image URL.",
+            "error_title": "Fehler",
+            "error": "Es gab einen Fehler beim Aktualisieren des server-spezifischen Avatars.\n**Grund:** {error}"
         }
     },
     "events": {

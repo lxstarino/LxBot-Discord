@@ -15,7 +15,7 @@ module.exports = (client) => {
         components: components,
         ephemeral: ephemeral
     }, interaction) {
-        const emoji = client.emojis.cache.find(emoji => emoji.id === "1194545522967597086") ? "<:check:1194545522967597086>" : "✅"
+        const emoji = "✅"
         if (title) {
             embed.setDescription(`${emoji} **${title}**\n${desc ? desc : ""}`)
         } else {
@@ -40,7 +40,7 @@ module.exports = (client) => {
         components: components,
         ephemeral: ephemeral
     }, interaction) {
-        const emoji = client.emojis.cache.find(emoji => emoji.id === "1194542111056474154") ? "<:error:1194542111056474154>" : "❌"
+        const emoji = "❌"
         if (title) {
             embed.setDescription(`${emoji} **${title}**\n${desc ? desc : ""}`)
         } else {
@@ -57,21 +57,29 @@ module.exports = (client) => {
 
     client.Embed = function (embedList, componentList, msgType, ephemeral, interaction, fileList = [], content) {
         const embeds = [];
-        for (const {
-            embed = client.tempEmbed(),
-            title,
-            desc,
-            color,
-            image,
-            url,
-            author,
-            thumbnail,
-            footer,
-            fields,
-            timestamp,
-        } of embedList) {
+        for (const item of embedList) {
+            let embed;
+            let title, desc, color, image, url, author, thumbnail, footer, fields, timestamp;
+
+            if (item && typeof item === "object" && typeof item.setTitle === "function") {
+                embed = item;
+            } else if (item && typeof item === "object") {
+                embed = item.embed || client.tempEmbed();
+                title = item.title;
+                desc = item.desc || item.description;
+                color = item.color;
+                image = item.image;
+                url = item.url;
+                author = item.author;
+                thumbnail = item.thumbnail;
+                footer = item.footer;
+                fields = item.fields;
+                timestamp = item.timestamp;
+            } else {
+                embed = client.tempEmbed();
+            }
             if (interaction && interaction.guild) {
-                let hex = client.settings.mapCache?.get(interaction.guild.id)
+                const hex = client.settings?.mapCache?.get(interaction.guild.id) || (client.db ? client.db.getSettings(interaction.guild.id) : null);
                 if (hex && hex.embed_color) {
                     embed.setColor(hex.embed_color);
                 }
@@ -123,6 +131,14 @@ module.exports = (client) => {
         files: files,
         ephemeral: ephemeral
     }, interaction) {
+        if (type === "reply" && interaction && typeof interaction.isRepliable === "function" && interaction.isRepliable()) {
+            if (interaction.deferred && !interaction.replied) {
+                type = "editReply";
+            } else if (interaction.replied) {
+                type = "followUp";
+            }
+        }
+
         switch (type) {
             case "reply":
                 return await interaction.reply({

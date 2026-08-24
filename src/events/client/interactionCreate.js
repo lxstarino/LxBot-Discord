@@ -1,5 +1,5 @@
 const { Collection } = require("discord.js")
-const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
 
 const developers = process.env.developers
     ? process.env.developers.split(",").map(id => id.trim())
@@ -15,10 +15,15 @@ module.exports = {
             }
         }, 15000)
 
-        const settings = interaction.guild ? client.settings.mapCache?.get(interaction.guild.id) : null
+        const settings = interaction.guild
+            ? (client.settings?.mapCache?.get(interaction.guild.id) || (client.db ? client.db.getSettings(interaction.guild.id) : null))
+            : null
         let ls = client.getLanguage(interaction.guild?.id)
 
         const handleExecutionError = async (err, interaction) => {
+            if (err.code === 10062 || err.message?.includes("Unknown interaction")) {
+                return
+            }
             console.error(err)
 
             let title = err.title ? err.title : (ls["errors"]["error"] || "Error")

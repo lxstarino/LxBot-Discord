@@ -28,7 +28,7 @@ module.exports = {
         ),
     async execute(client, interaction) {
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/utils/functions`)
 
         const targetUser = interaction.options.getUser("user") || interaction.user
         const isSelf = targetUser.id === interaction.user.id

@@ -1,9 +1,9 @@
 require("dotenv").config()
 const fs = require("fs")
-const { REST, Routes, Collection } = require("discord.js")
+const { REST, Routes } = require("discord.js")
 
-const commands = []
 module.exports = (client) => {
+    const commands = []
     const commandFolders = fs.readdirSync("./src/commands")
 
     commandFolders.forEach(Folder => {
@@ -11,7 +11,7 @@ module.exports = (client) => {
 
         commandFiles.forEach(commandFile => {
             try {
-                const command = require(`../../commands/${Folder}/${commandFile}`)
+                const command = require(`../commands/${Folder}/${commandFile}`)
 
                 if (!command || !command.data || !command.execute) {
                     console.warn(`[WARN] Command file "${commandFile}" in "${Folder}" is missing "data" or "execute" properties. Skipping.`);
@@ -27,11 +27,15 @@ module.exports = (client) => {
         })
     })
 
-    const restClient = new REST({ version: "10" }).setToken(process.env.token)
+    const isFirstShard = !client.shard || (client.shard.ids && client.shard.ids.includes(0))
 
-    restClient.put(Routes.applicationCommands(process.env.appid), {
-        body: commands
-    })
-        .then(() => console.log("> Commands successfully registered!"))
-        .catch(console.error)
+    if (isFirstShard) {
+        const restClient = new REST({ version: "10" }).setToken(process.env.token)
+
+        restClient.put(Routes.applicationCommands(process.env.appid), {
+            body: commands
+        })
+            .then(() => console.log("> Commands successfully registered!"))
+            .catch(console.error)
+    }
 }

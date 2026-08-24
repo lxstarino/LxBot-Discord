@@ -23,4 +23,8 @@ Desktop.ini
 dist/
 build/
 coverage/
-
+src/database/*.db*
+*.sqlite*
+*.db
+*.db-wal
+*.db-shm

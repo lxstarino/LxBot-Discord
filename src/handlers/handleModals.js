@@ -8,7 +8,7 @@ module.exports = (client) => {
 
     const modalFiles = fs.readdirSync("./src/modals").filter(file => file.endsWith(".js"))
     for (const file of modalFiles) {
-        const modal = require(`../../modals/${file}`)
+        const modal = require(`../modals/${file}`)
         client.modals.set(modal.customId, modal)
     }
 }

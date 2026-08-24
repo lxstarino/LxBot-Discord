@@ -6,7 +6,7 @@ module.exports = {
         .setDescription("Shows the help menu and command overview"),
     async execute(client, interaction) {
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/utils/functions`)
         const settings = await getOrCreateSettings(client, interaction.guild.id)
 
         const folders = [...new Set(client.commands.map(cmd => cmd.Folder))]
@@ -115,7 +115,12 @@ module.exports = {
             const categoriesText = filtered_modules.map(mod => {
                 const count = mod.commands.length
                 totalCmdCount += count
-                return `${getEmoji(mod.folder)} **${mod.folder}** • \`${count} command${count === 1 ? "" : "s"}\``
+                return handlemsg(ls["cmds"]["help"]["category_item"], {
+                    emoji: getEmoji(mod.folder),
+                    folder: mod.folder,
+                    count: String(count),
+                    label: ls["cmds"]["help"]["commands_label"]
+                })
             }).join("\n")
 
             return [
@@ -123,9 +128,10 @@ module.exports = {
                     image: BANNER_IMAGE
                 },
                 {
-                    author: { name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL() },
+                    author: { name: `${client.user.username} | ${ls["cmds"]["help"]["title_home"]}`, iconURL: client.user.displayAvatarURL({ dynamic: true }) },
                     desc: `${ls["cmds"]["help"]["home_desc"]}\n\n**${ls["cmds"]["help"]["categories_title"]}:**\n${categoriesText}`,
-                    image: FOOTER_IMAGE
+                    image: FOOTER_IMAGE,
+                    footer: { text: handlemsg(ls["cmds"]["help"]["requested_by"], { user: interaction.user.tag }) }
                 }
             ]
         }
@@ -151,25 +157,26 @@ module.exports = {
                 const selectedModule = filtered_modules.find(x => x.folder === selectedFolder)
 
                 if (!selectedModule) {
-                    await i.deferUpdate().catch(() => {})
+                    await i.deferUpdate().catch(err => console.error("[help] Failed to defer update:", err.message))
                     return
                 }
 
                 const folderEmoji = getEmoji(selectedModule.folder)
 
                 const cmdFormattedList = selectedModule.commands.map(cmd => {
-                    return `• \`/${cmd.name}\`\n  └ *${cmd.description}*`
-                }).join("\n\n")
+                    return `> \`/${cmd.name}\` — *${cmd.description}*`
+                }).join("\n")
 
                 await client.Embed([
                     {
                         image: BANNER_IMAGE
                     },
                     {
-                        author: { name: `${interaction.user.tag} - ${selectedModule.folder}`, iconURL: interaction.user.displayAvatarURL() },
+                        author: { name: `${client.user.username} | ${selectedModule.folder}`, iconURL: client.user.displayAvatarURL({ dynamic: true }) },
                         title: `${folderEmoji} ${selectedModule.folder} (${selectedModule.commands.length})`,
                         desc: cmdFormattedList || `*${ls["cmds"]["help"]["no_commands"]}*`,
-                        image: FOOTER_IMAGE
+                        image: FOOTER_IMAGE,
+                        footer: { text: handlemsg(ls["cmds"]["help"]["requested_by"], { user: interaction.user.tag }) }
                     }
                 ], buildComponents("category"), "update", true, i)
 
@@ -179,14 +186,15 @@ module.exports = {
                         image: BANNER_IMAGE
                     },
                     {
-                        author: { name: interaction.user.tag, iconURL: interaction.user.displayAvatarURL() },
+                        author: { name: `${client.user.username} | ${ls["cmds"]["help"]["title_all"]}`, iconURL: client.user.displayAvatarURL({ dynamic: true }) },
                         title: ls["cmds"]["help"]["title_all"],
                         desc: ls["cmds"]["help"]["desc_all"],
                         fields: filtered_modules.map(mod => ({
                             name: `${getEmoji(mod.folder)} ${mod.folder} (${mod.commands.length})`,
                             value: mod.commands.map(c => `\`/${c.name}\``).join(", ") || "*None*"
                         })),
-                        image: FOOTER_IMAGE
+                        image: FOOTER_IMAGE,
+                        footer: { text: handlemsg(ls["cmds"]["help"]["requested_by"], { user: interaction.user.tag }) }
                     }
                 ], buildComponents("cmdlist"), "update", true, i)
 
@@ -205,7 +213,7 @@ module.exports = {
             const disabledComponents = buildComponents("none", true)
             await replyMsg.edit({
                 components: disabledComponents
-            }).catch(() => {})
+            }).catch(err => console.error("[help] Failed to disable components on timeout:", err.message))
         })
     }
 }

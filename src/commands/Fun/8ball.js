@@ -14,7 +14,7 @@ module.exports = {
         const question = interaction.options.get("question").value
 
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
 
         client.Embed([{
             title: ls["cmds"]["8ball"]["title"],

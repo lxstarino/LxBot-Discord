@@ -22,7 +22,7 @@ module.exports = {
         const reason = interaction.options.getString("reason") || "No reason provided"
 
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
 
         const member = await interaction.guild.members.fetch(target.user.id).catch(() => null)
         if (!member) {
@@ -51,7 +51,7 @@ module.exports = {
             footer: { text: `Moderator: ${interaction.user.tag}` }
         }], undefined, "reply", false, interaction)
 
-        const { sendModLog } = require(`${process.cwd()}/src/handlers/functions`)
+        const { sendModLog } = require(`${process.cwd()}/src/utils/functions`)
         await sendModLog(client, interaction.guild, {
             title: ls["logs"]["untimeout_title"],
             desc: handlemsg(ls["logs"]["untimeout_desc"], {

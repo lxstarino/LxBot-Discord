@@ -5,7 +5,7 @@ async function generateWelcomeCard(avatarUrl, username, memberCount) {
     const canvas = createCanvas(700, 250);
     const ctx = canvas.getContext("2d");
 
-    const backgroundUrl = "https://cdn.discordapp.com/attachments/1517162401357627463/1528077451811361010/image.png?ex=6a5cfc86&is=6a5bab06&hm=925855c1a3fb2c8e3fc7a04e1550416547ccf9a17c6d406b800ff3ac06964de1&";
+    const backgroundUrl = "https://cdn.discordapp.com/attachments/1280995343567294514/1541395305998712892/image.png?ex=6a8d6fbe&is=6a8c1e3e&hm=228164fb811231a5fd406ff9e9c296be2155a54e703dcb3ffa5dd16a6884db09&";
     const background = await loadImage(backgroundUrl);
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
@@ -50,7 +50,7 @@ module.exports = {
     name: "guildMemberAdd",
     async execute(member, client) {
 
-        const { getOrCreateSettings, handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+        const { getOrCreateSettings, handlemsg } = require(`${process.cwd()}/src/utils/functions`)
         const settings = client.settings.mapCache?.get(member.guild.id) || await getOrCreateSettings(client, member.guild.id)
         let ls = client.getLanguage(member.guild?.id)
 

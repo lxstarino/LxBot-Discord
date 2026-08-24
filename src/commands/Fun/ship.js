@@ -29,7 +29,7 @@ module.exports = {
         const u2 = interaction.options.getUser("user2") || interaction.user
 
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
 
         const percentage = getShipPercentage(u1.id, u2.id)
 

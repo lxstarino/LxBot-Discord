@@ -1,37 +1,83 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+const { SlashCommandBuilder } = require("discord.js")
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("serverinfo")
-        .setDescription("Displays Information about the current Server"),
+        .setDescription("Displays information about the current server"),
     async execute(client, interaction) {
-        const guild_invites = await interaction.guild.invites.fetch()
-        const description = interaction.guild.description
+        const { guild } = interaction
+        let ls = client.getLanguage(guild?.id)
+        const boostEmoji = client.emojis.cache.find(e => e.id === "1541468285671972995")?.toString() || "🚀"
 
-        let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+        const allMembers = await guild.members.fetch().catch(() => guild.members.cache)
+        const bots = allMembers.filter(m => m.user.bot).size
+        const humans = guild.memberCount - bots
 
-        const BoostLevel = {
-            "0": `${interaction.guild.premiumSubscriptionCount}/2`,
-            "1": `${interaction.guild.premiumSubscriptionCount}/7`,
-            "2": `${interaction.guild.premiumSubscriptionCount}/14`,
+        const text = guild.channels.cache.filter(c => c.type === 0 || c.type === 5).size
+        const vc = guild.channels.cache.filter(c => c.type === 2 || c.type === 13).size
+        const cats = guild.channels.cache.filter(c => c.type === 4).size
+
+        const created = Math.round(guild.createdTimestamp / 1000)
+
+        const secLevels = [
+            ls["cmds"]["serverinfo"]["sec_none"],
+            ls["cmds"]["serverinfo"]["sec_low"],
+            ls["cmds"]["serverinfo"]["sec_medium"],
+            ls["cmds"]["serverinfo"]["sec_high"],
+            ls["cmds"]["serverinfo"]["sec_very_high"]
+        ]
+        const security = secLevels[guild.verificationLevel] || ls["cmds"]["serverinfo"]["sec_none"]
+
+        const assets = []
+        if (guild.iconURL()) assets.push(`[${ls["cmds"]["serverinfo"]["icon_link"]}](${guild.iconURL({ size: 1024 })})`)
+        if (guild.bannerURL()) assets.push(`[${ls["cmds"]["serverinfo"]["banner_link"]}](${guild.bannerURL({ size: 1024 })})`)
+        if (guild.splashURL()) assets.push(`[${ls["cmds"]["serverinfo"]["splash_link"]}](${guild.splashURL({ size: 1024 })})`)
+
+        let descParts = []
+        if (guild.description) descParts.push(`*${guild.description}*`)
+        if (guild.vanityURLCode) descParts.push(`🔗 **discord.gg/${guild.vanityURLCode}**`)
+        if (assets.length) descParts.push(assets.join(" • "))
+
+        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
+
+        let generalInfo = handlemsg(ls["cmds"]["serverinfo"]["general_val"], {
+            owner: guild.ownerId,
+            created: String(created),
+            count: guild.memberCount.toLocaleString(),
+            humans: String(humans),
+            bots: String(bots),
+            security: security
+        })
+        if (guild.afkChannelId) {
+            generalInfo += handlemsg(ls["cmds"]["serverinfo"]["afk_val"], {
+                channel: guild.afkChannelId,
+                time: String(Math.round(guild.afkTimeout / 60))
+            })
         }
 
+        let featuresInfo = handlemsg(ls["cmds"]["serverinfo"]["features_val"], {
+            level: String(guild.premiumTier),
+            count: String(guild.premiumSubscriptionCount),
+            emoji: boostEmoji,
+            channels: String(guild.channels.cache.size),
+            text: String(text),
+            vc: String(vc),
+            cats: String(cats),
+            roles: String(guild.roles.cache.size),
+            emojis: String(guild.emojis.cache.size),
+            stickers: String(guild.stickers.cache.size)
+        })
+
         client.Embed([{
-            thumbnail: `${interaction.guild.iconURL() || interaction.user.defaultAvatarURL}`,
+            author: { name: guild.name, iconURL: guild.iconURL({ dynamic: true }) },
+            thumbnail: guild.iconURL({ dynamic: true, size: 512 }),
+            desc: descParts.length ? descParts.join("\n") : undefined,
             fields: [
-                { name: `${interaction.guild.name}`, value: `${description ? description : ls["cmds"]["serverinfo"]["ndp"]}`, inline: false },
-                { name: `${ls["cmds"]["serverinfo"]["serverowner"]}`, value: `<@!${interaction.guild.ownerId}>`, inline: false },
-                { name: `${handlemsg(ls["cmds"]["serverinfo"]["lvl_title"], { level: interaction.guild.premiumTier })}`, value: `${handlemsg(ls["cmds"]["serverinfo"]["lvl_val"], { boosts: BoostLevel[interaction.guild.premiumTier] })}`, inline: true },
-                { name: `${ls["cmds"]["serverinfo"]["createdon"]}`, value: `🗓️ <t:${Math.round(interaction.guild.createdTimestamp / 1000)}:d>`, inline: true },
-                { name: `${ls["cmds"]["serverinfo"]["membercount"]}`, value: `${handlemsg(ls["cmds"]["serverinfo"]["member_val"], { count: interaction.guild.memberCount })}`, inline: true },
-                { name: `${ls["cmds"]["serverinfo"]["invitecount"]}`, value: `${handlemsg(ls["cmds"]["serverinfo"]["invite_val"], { count: guild_invites.size })}`, inline: true },
-                { name: "\u200b", value: `\u200b`, inline: true },
-                { name: `${ls["cmds"]["serverinfo"]["rescount"]}`, value: `${handlemsg(ls["cmds"]["serverinfo"]["res_val"], { roles: interaction.guild.roles.cache.size, emojis: interaction.guild.emojis.cache.size, stickers: interaction.guild.stickers.cache.size })}`, inline: false },
-                { name: `${handlemsg(ls["cmds"]["serverinfo"]["channelcount"], { size: interaction.guild.channels.cache.size })}`, value: `${handlemsg(ls["cmds"]["serverinfo"]["channel_val"], { categories: interaction.guild.channels.cache.filter(c => c.type === 4).size, text: interaction.guild.channels.cache.filter(c => c.type === 0).size, vc: interaction.guild.channels.cache.filter(c => c.type === 2).size })}`, inline: false },
+                { name: ls["cmds"]["serverinfo"]["section_general"], value: generalInfo, inline: false },
+                { name: ls["cmds"]["serverinfo"]["section_features"], value: featuresInfo, inline: false }
             ],
             timestamp: interaction.createdTimestamp,
-            footer: { text: `${handlemsg(ls["cmds"]["serverinfo"]["id_footer"], { id: interaction.guild.id })}` }
+            footer: { text: `Server ID: ${guild.id}` }
         }], undefined, "reply", false, interaction)
     }
 }

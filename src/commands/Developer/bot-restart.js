@@ -4,7 +4,7 @@ module.exports = {
     devOnly: true,
     data: new SlashCommandBuilder()
         .setName("bot-restart")
-        .setDescription("Restarts the bot process"),
+        .setDescription("Safely restart all bot processes and shards"),
     async execute(client, interaction) {
         const ls = client.getLanguage(interaction.guild?.id)
         const restartLs = ls?.cmds?.["bot-restart"] || ls?.cmds?.["restart"] || {
@@ -25,7 +25,7 @@ module.exports = {
             if (baseDesc.includes("{seconds}")) {
                 return baseDesc.replace("{seconds}", seconds)
             }
-            return `${baseDesc}\n\n⏱️ Restarting in **${seconds}s**...`
+            return `${baseDesc}\n\nRestarting in **${seconds}s**...`
         }
 
         try {
@@ -49,6 +49,7 @@ module.exports = {
                         desc: getDesc(remainingSeconds)
                     }], [], "editReply", true, interaction)
                 } catch (err) {
+                    console.error("[bot-restart] Failed to edit countdown embed:", err.message)
                 }
             } else {
                 clearInterval(interval)
@@ -56,9 +57,10 @@ module.exports = {
                     await client.Embed([{
                         title: restartLs.title || "Bot Restarting",
                         color: "#E74C3C",
-                        desc: "🔄 **Bot-Prozess wird jetzt neu gestartet...**"
+                        desc: "**Bot-Prozess wird jetzt neu gestartet...**"
                     }], [], "editReply", true, interaction)
                 } catch (err) {
+                    console.error("[bot-restart] Failed to edit final restart embed:", err.message)
                 }
 
                 setTimeout(() => {
@@ -67,6 +69,11 @@ module.exports = {
                             client.destroy()
                         }
                     } catch (err) {
+                        console.error("[bot-restart] Failed to destroy client:", err.message)
+                    }
+
+                    if (process.send) {
+                        process.send({ type: "SHARD_RESTART_ALL" })
                     }
 
                     process.exit(42)

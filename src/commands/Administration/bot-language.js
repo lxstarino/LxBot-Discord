@@ -1,50 +1,108 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
 const { PermissionsBitField, ActionRowBuilder, StringSelectMenuBuilder } = require("discord.js")
 
+const LANGUAGES = {
+    de: { name: "Deutsch", flag: "🇩🇪" },
+    en: { name: "English", flag: "🇬🇧" }
+}
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("bot-language")
-        .setDescription("Set the language of the bot")
+        .setDescription("Configure the bot language for this server")
         .setDefaultMemberPermissions(PermissionsBitField.Flags.Administrator),
-        async execute(client, interaction){
-            let ls = client.getLanguage(interaction.guild?.id)
-            const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/handlers/functions`)
 
-            const settings = await getOrCreateSettings(client, interaction.guild.id)
+    async execute(client, interaction) {
+        const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/utils/functions`)
+        const settings = await getOrCreateSettings(client, interaction.guild.id)
 
-            const language_select = new ActionRowBuilder().addComponents(
-                new StringSelectMenuBuilder()
-                .setCustomId("module-select-enable")
-                .setPlaceholder(ls["cmds"]["bot-language"]["placeholder"])
+        function buildView(currentLang) {
+            const ls = client.getLanguage(interaction.guild?.id)
+            const tLs = ls["cmds"]?.["bot-language"] || {}
+            const curInfo = LANGUAGES[currentLang] || LANGUAGES.en
+
+            const embed = client.tempEmbed()
+                .setTitle(tLs["title"] || "🌐 Language Settings")
+                .setDescription(handlemsg(tLs["desc"] || "Manage the language for **{guild}**.\n\n> **Current Language:** {current_flag} **{current_name}**\n\nSelect a new language from the dropdown menu below:", {
+                    guild: interaction.guild?.name || "Server",
+                    current_flag: curInfo.flag,
+                    current_name: curInfo.name
+                }))
+
+            if (interaction.guild?.iconURL()) {
+                embed.setThumbnail(interaction.guild.iconURL({ dynamic: true }))
+            }
+
+            const menu = new StringSelectMenuBuilder()
+                .setCustomId("bot-language-select")
+                .setPlaceholder(tLs["placeholder"] || "Select a language...")
                 .addOptions(
                     {
-                        label: "Deutsch",
+                        label: tLs["lang_de"] || "Deutsch",
                         value: "de",
+                        description: tLs["lang_de_desc"] || "Setze die Bot-Sprache auf Deutsch",
+                        emoji: "🇩🇪",
+                        default: currentLang === "de"
                     },
                     {
-                        label: "English",
-                        value: "en"
+                        label: tLs["lang_en"] || "English",
+                        value: "en",
+                        description: tLs["lang_en_desc"] || "Set the bot language to English",
+                        emoji: "🇬🇧",
+                        default: currentLang === "en"
                     }
                 )
-            )
 
-            const msg = await client.Embed([{
-                type: "reply",
-                image: "https://cdn.discordapp.com/attachments/1394394240242684106/1394395050645000263/page1.png?ex=6876a716&is=68755596&hm=3c60de0ae038a40be6211907ce24e21f47b4f72dc96e58be87f087a851f47169&"
-            },{
-                type: "reply",
-                thumbnail: interaction.user.displayAvatarURL(),
-                desc: ls["cmds"]["bot-language"]["desc"],
-                image: "https://cdn.discordapp.com/attachments/1394394240242684106/1394410565446795295/underline_.png?ex=6876b589&is=68756409&hm=c182bae67eb7fc5a3530b4df68c22120e02dc84970d51ee4b7051855d2a5b4f1&",
-            }], [language_select], "reply", true, interaction)
-
-            if (!msg) return;
-            const col = msg.createMessageComponentCollector({filter: i => i.user.id === interaction.user.id, time: 120000})
-            col.on("collect", async(i) => {
-                const innerSettings = await getOrCreateSettings(client, interaction.guild.id)
-                innerSettings.language = i.values.toString()
-                await client.settings.saveData()
-                client.successEmbed({type: "reply", ephemeral: true, desc: handlemsg(ls["cmds"]["bot-language"]["success"], {language: i.values.toString()})}, i)
-            })
+            const row = new ActionRowBuilder().addComponents(menu)
+            return { embed, components: [row] }
         }
+
+        const initialView = buildView(settings.language || "en")
+        const msg = await client.Embed([initialView.embed], initialView.components, "reply", true, interaction)
+
+        if (!msg) return
+
+        const collector = msg.createMessageComponentCollector({
+            filter: i => i.user.id === interaction.user.id,
+            time: 120000
+        })
+
+        collector.on("collect", async (i) => {
+            const selectedLang = i.values[0]
+            settings.language = selectedLang
+
+            const updatedView = buildView(selectedLang)
+            const updatedLs = client.getLanguage(interaction.guild?.id)
+            const updatedTLs = updatedLs["cmds"]?.["bot-language"] || {}
+            const selInfo = LANGUAGES[selectedLang] || LANGUAGES.en
+
+            await i.update({
+                embeds: [updatedView.embed],
+                components: updatedView.components
+            }).catch(() => {})
+
+            client.successEmbed({
+                type: "reply",
+                ephemeral: true,
+                desc: handlemsg(updatedTLs["success"] || "Server language has been updated to {flag} **{language}**!", {
+                    flag: selInfo.flag,
+                    language: selInfo.name
+                })
+            }, i).catch(() => {})
+        })
+
+        collector.on("end", async () => {
+            try {
+                const disabledMenu = new StringSelectMenuBuilder()
+                    .setCustomId("bot-language-select-disabled")
+                    .setPlaceholder("Selection expired")
+                    .setDisabled(true)
+                    .addOptions({ label: "Expired", value: "expired" })
+
+                await interaction.editReply({
+                    components: [new ActionRowBuilder().addComponents(disabledMenu)]
+                })
+            } catch {}
+        })
+    }
 }

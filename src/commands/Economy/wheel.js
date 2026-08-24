@@ -12,7 +12,7 @@ module.exports = {
         ),
     async execute(client, interaction) {
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/utils/functions`)
 
         const bet = interaction.options.getInteger("bet")
 
@@ -90,7 +90,6 @@ module.exports = {
         const netChange = payout - bet
 
         profile.wallet += netChange
-        await client.economy.saveData()
 
         let resultText = ""
         let embedColor = "#95A5A6"

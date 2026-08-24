@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
-const { PermissionsBitField, ActionRowBuilder, ButtonBuilder, StringSelectMenuBuilder, ChannelSelectMenuBuilder, RoleSelectMenuBuilder, ButtonStyle, ChannelType } = require("discord.js")
+const { PermissionsBitField, ActionRowBuilder, ButtonBuilder, StringSelectMenuBuilder, ChannelSelectMenuBuilder, RoleSelectMenuBuilder, ButtonStyle, ChannelType, ModalBuilder, TextInputBuilder, TextInputStyle } = require("discord.js")
 
 const emojis = {
     "1": "1️⃣",
@@ -21,12 +21,7 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionsBitField.Flags.Administrator),
     async execute(client, interaction) {
         let ls = client.getLanguage(interaction.guild?.id)
-        const settings = client.settings.mapCache ? client.settings.mapCache.get(interaction.guild?.id) : client.settings.storage.data.find(x => x.guildId === interaction.guild?.id);
-        const lang = settings?.language === "de" ? "de" : "en";
-        const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
-        const getTranslation = (key, replaceObj = {}) => {
-            return handlemsg(ls["cmds"]["role-setup"][key] || "", replaceObj)
-        };
+        const { handlemsg, getSetupControls, getOrCreateReactionRolePanel } = require(`${process.cwd()}/src/utils/functions`)
 
         try {
             let SetupNumber = null;
@@ -37,7 +32,7 @@ module.exports = {
                 for (let i = 1; i <= 10; i++) {
                     menuoptions.push({
                         value: `${i} Role Panel`,
-                        description: getTranslation("panel_option_desc", { panel: i }),
+                        description: handlemsg(ls["cmds"]["role-setup"]["panel_option_desc"], { panel: i }),
                         emoji: emojis[i]
                     });
                 }
@@ -47,7 +42,7 @@ module.exports = {
                         .setCustomId('MenuSelection1')
                         .setMaxValues(1)
                         .setMinValues(1)
-                        .setPlaceholder(getTranslation("placeholder"))
+                        .setPlaceholder(ls["cmds"]["role-setup"]["placeholder"])
                         .addOptions(
                             menuoptions.slice(0, 5).map(option => ({
                                 label: option.value.substring(0, 50),
@@ -63,7 +58,7 @@ module.exports = {
                         .setCustomId('MenuSelection2')
                         .setMaxValues(1)
                         .setMinValues(1)
-                        .setPlaceholder(getTranslation("placeholder"))
+                        .setPlaceholder(ls["cmds"]["role-setup"]["placeholder"])
                         .addOptions(
                             menuoptions.slice(5, 10).map(option => ({
                                 label: option.value.substring(0, 50),
@@ -76,8 +71,8 @@ module.exports = {
 
                 let MenuEmbed = await client.Embed([{
                     thumbnail: "https://cdn.discordapp.com/emojis/1121671709473382420.png",
-                    title: getTranslation("first_layer_title"),
-                    desc: getTranslation("first_layer_desc"),
+                    title: ls["cmds"]["role-setup"]["first_layer_title"],
+                    desc: ls["cmds"]["role-setup"]["first_layer_desc"],
                     footer: { text: `${interaction.user.tag}` }
                 }], [row1, row2], "reply", true, interaction);
 
@@ -92,22 +87,19 @@ module.exports = {
                     await menu.deferUpdate();
                     SetupNumber = menu.values[0].split(" ")[0];
 
-                    if (!client.reactionRoles.storage.data.find(x => x.panel === SetupNumber && x.guildId === interaction.guild.id)) {
-                        await client.reactionRoles.createData({ guildId: interaction.guild.id, panel: SetupNumber, roles: [], channel: 0 });
-                    }
+                    let existingPanel = await getOrCreateReactionRolePanel(client, interaction.guild.id, SetupNumber);
 
-                    start_second_layer();
+                    start_second_layer(existingPanel);
                 });
 
                 col.on('end', (c, reason) => {
                     if (reason === "time" && c.size === 0) {
-                        client.errEmbed({ type: "editReply", title: getTranslation("timeout_title"), desc: getTranslation("timeout_desc"), components: [] }, interaction);
+                        client.errEmbed({ type: "editReply", title: ls["cmds"]["role-setup"]["timeout_title"], desc: ls["cmds"]["role-setup"]["timeout_desc"], components: [] }, interaction);
                     }
                 });
             }
 
-            async function start_second_layer() {
-                const panel = client.reactionRoles.storage.data.find(x => x.panel === SetupNumber && x.guildId === interaction.guild.id);
+            async function start_second_layer(panel) {
                 if (!panel) return;
 
                 const botMember = interaction.guild.members.me;
@@ -122,88 +114,63 @@ module.exports = {
                     )
                     .sort((a, b) => b.position - a.position);
 
-                const rolesArray = Array.from(assignableRoles.values());
-                const chunks = [];
-                for (let j = 0; j < rolesArray.length; j += 25) {
-                    chunks.push(rolesArray.slice(j, j + 25));
-                }
+                const assignableRoleIds = new Set(assignableRoles.map(r => r.id));
 
                 async function getComponents() {
                     const row1 = new ActionRowBuilder().addComponents(
                         new ChannelSelectMenuBuilder()
                             .setCustomId("channel-select")
-                            .setPlaceholder(getTranslation("select_channel"))
+                            .setPlaceholder(ls["cmds"]["role-setup"]["select_channel"])
                             .addChannelTypes(ChannelType.GuildText)
                     );
 
                     const comp = [row1];
 
-                    if (chunks.length === 0) {
+                    if (assignableRoleIds.size === 0) {
                         const disabledRow = new ActionRowBuilder().addComponents(
-                            new StringSelectMenuBuilder()
-                                .setCustomId("role-toggle-disabled")
-                                .setPlaceholder(getTranslation("no_roles_found"))
+                            new RoleSelectMenuBuilder()
+                                .setCustomId("role-select-disabled")
+                                .setPlaceholder(ls["cmds"]["role-setup"]["no_roles_found"])
                                 .setDisabled(true)
-                                .addOptions({ label: "None", value: "none" })
                         );
                         comp.push(disabledRow);
                     } else {
-                        const maxChunks = Math.min(chunks.length, 3);
-                        for (let c = 0; c < maxChunks; c++) {
-                            const chunk = chunks[c];
-                            const options = chunk.map(role => {
-                                const isAdded = panel.roles.includes(role.id);
-                                return {
-                                    label: role.name.substring(0, 50),
-                                    value: role.id,
-                                    description: isAdded
-                                        ? (lang === "de" ? "Klicken zum Entfernen" : "Click to remove")
-                                        : (lang === "de" ? "Klicken zum Hinzufügen" : "Click to add"),
-                                    emoji: isAdded ? "✅" : "➕"
-                                };
-                            });
-
-                            const selectMenu = new StringSelectMenuBuilder()
-                                .setCustomId(`role-toggle-${c}`)
-                                .setPlaceholder(getTranslation("select_role_add") + (chunks.length > 1 ? ` (${c + 1}/${chunks.length})` : ""))
-                                .addOptions(options);
-
-                            comp.push(new ActionRowBuilder().addComponents(selectMenu));
+                        const roleMenu = new RoleSelectMenuBuilder()
+                            .setCustomId("role-select")
+                            .setPlaceholder(ls["cmds"]["role-setup"]["select_role_add"])
+                            .setMinValues(0)
+                            .setMaxValues(25);
+                            
+                        if (panel.roles && panel.roles.length > 0) {
+                            roleMenu.addDefaultRoles(panel.roles);
                         }
+                            
+                        comp.push(new ActionRowBuilder().addComponents(roleMenu));
                     }
+                    const extraDescButton = new ButtonBuilder()
+                        .setCustomId("btn-desc")
+                        .setLabel(ls["cmds"]["role-setup"]["btn_desc"])
+                        .setStyle(ButtonStyle.Primary)
+                        .setEmoji("📝");
 
-                    const buttonsRow = new ActionRowBuilder().addComponents(
-                        new ButtonBuilder()
-                            .setCustomId("btn-send")
-                            .setLabel(getTranslation("btn_send"))
-                            .setStyle(ButtonStyle.Success)
-                            .setEmoji("📨"),
-                        new ButtonBuilder()
-                            .setCustomId("btn-reset")
-                            .setLabel(getTranslation("btn_reset"))
-                            .setStyle(ButtonStyle.Danger)
-                            .setEmoji("🔄"),
-                        new ButtonBuilder()
-                            .setCustomId("btn-cancel")
-                            .setLabel(getTranslation("btn_cancel"))
-                            .setStyle(ButtonStyle.Danger)
-                            .setEmoji("❌")
-                    );
+                    const buttonsRow = getSetupControls({
+                        btn_send: ls["cmds"]["role-setup"]["btn_send"],
+                        btn_reset: ls["cmds"]["role-setup"]["btn_reset"],
+                        btn_cancel: ls["cmds"]["role-setup"]["btn_cancel"],
+                        extra: [extraDescButton]
+                    });
+
                     comp.push(buttonsRow);
                     return comp;
                 }
 
                 async function render_panel(i) {
-                    const statusTitle = getTranslation("status_title", { panel: SetupNumber });
-                    let statusDesc = getTranslation("status_desc", {
+                    const statusTitle = handlemsg(ls["cmds"]["role-setup"]["status_title"], { panel: SetupNumber });
+                    let statusDesc = handlemsg(ls["cmds"]["role-setup"]["status_desc"], {
                         panel: SetupNumber,
-                        channel: panel.channel && panel.channel !== '0' ? `<#${panel.channel}>` : getTranslation("not_set"),
-                        roles: panel.roles.length > 0 ? panel.roles.map(r => `<@&${r}>`).join(", ") : getTranslation("no_roles_added")
+                        channel: panel.channel && interaction.guild.channels.cache.get(panel.channel) ? `<#${panel.channel}>` : (ls["cmds"]["role-setup"]["not_set"] || "*Not set*"),
+                        roles: panel.roles && panel.roles.length > 0 ? panel.roles.map(r => `<@&${r}>`).join(", ") : (ls["cmds"]["role-setup"]["no_roles_added"] || "*No roles*")
                     });
-
-                    if (chunks.length > 3) {
-                        statusDesc += getTranslation("warning_limit");
-                    }
 
                     const comps = await getComponents();
 
@@ -236,27 +203,69 @@ module.exports = {
                 collector.on("collect", async (i) => {
                     if (i.customId === "channel-select") {
                         panel.channel = i.values[0];
-                        await client.reactionRoles.saveData();
+
                         await render_panel(i);
-                    } else if (i.customId.startsWith("role-toggle-")) {
-                        const roleId = i.values[0];
-                        if (panel.roles.includes(roleId)) {
-                            panel.roles = panel.roles.filter(r => r !== roleId);
-                        } else {
-                            if (panel.roles.length >= 10) {
-                                return i.reply({
-                                    content: lang === "de" ? "Du kannst maximal 10 Rollen zu einem Panel hinzufügen!" : "You can add a maximum of 5 roles to a single panel!",
-                                    ephemeral: true
-                                });
+                    } else if (i.customId === "role-select") {
+                        const selectedRoleIds = i.values;
+                        const validRoles = [];
+                        let limitReached = false;
+                        
+                        for (const roleId of selectedRoleIds) {
+                            if (assignableRoleIds.has(roleId)) {
+                                if (validRoles.length < 25) {
+                                    validRoles.push(roleId);
+                                } else {
+                                    limitReached = true;
+                                }
                             }
-                            panel.roles.push(roleId);
                         }
-                        await client.reactionRoles.saveData();
-                        await render_panel(i);
+                        
+                        panel.roles = validRoles;
+                        
+                        if (validRoles.length < selectedRoleIds.length || limitReached) {
+                            await i.deferUpdate();
+                            await interaction.followUp({
+                                content: ls["cmds"]["role-setup"]["err_max_roles"] || "Maximum roles reached",
+                                ephemeral: true
+                            });
+                            await render_panel();
+                        } else {
+                            await render_panel(i);
+                        }
+                    } else if (i.customId === "btn-desc") {
+                        const modal = new ModalBuilder()
+                            .setCustomId(`modal-role-desc-${SetupNumber}`)
+                            .setTitle(ls["cmds"]["role-setup"]["modal_desc_title"]);
+
+                        const textInput = new TextInputBuilder()
+                            .setCustomId("input-role-desc")
+                            .setLabel(ls["cmds"]["role-setup"]["modal_desc_label"])
+                            .setStyle(TextInputStyle.Paragraph)
+                            .setPlaceholder(ls["cmds"]["role-setup"]["modal_desc_placeholder"])
+                            .setValue(panel.description || ls["cmds"]["role-setup"]["panel_desc"])
+                            .setMaxLength(2000)
+                            .setRequired(true);
+
+                        modal.addComponents(new ActionRowBuilder().addComponents(textInput));
+                        await i.showModal(modal);
+
+                        try {
+                            const modalSubmit = await i.awaitModalSubmit({
+                                filter: m => m.customId === `modal-role-desc-${SetupNumber}` && m.user.id === interaction.user.id,
+                                time: 120000
+                            });
+                            panel.description = modalSubmit.fields.getTextInputValue("input-role-desc");
+
+                            await render_panel(modalSubmit);
+                        } catch (err) {
+                            if (err.code !== "InteractionCollectorError") {
+                                console.error("[role-setup] Modal submit handling error:", err.message);
+                            }
+                        }
                     } else if (i.customId === "btn-send") {
                         if (panel.roles.length === 0) {
                             return i.reply({
-                                content: getTranslation("err_no_roles"),
+                                content: ls["cmds"]["role-setup"]["err_no_roles"],
                                 ephemeral: true
                             });
                         }
@@ -264,55 +273,51 @@ module.exports = {
                         const channel = interaction.guild.channels.cache.get(panel.channel);
                         if (!channel) {
                             return i.reply({
-                                content: getTranslation("err_no_channel"),
+                                content: ls["cmds"]["role-setup"]["err_no_channel"],
                                 ephemeral: true
                             });
                         }
 
-                        const rows = [];
-                        let currentRow = new ActionRowBuilder();
-
-                        for (let index = 0; index < panel.roles.length; index++) {
-                            const roleId = panel.roles[index];
-                            const role = interaction.guild.roles.cache.get(roleId);
-                            if (!role) continue;
-
-                            const button = new ButtonBuilder()
-                                .setCustomId(`toggle-role-${roleId}`)
+                        const roleButtons = panel.roles
+                            .map(id => interaction.guild.roles.cache.get(id))
+                            .filter(Boolean)
+                            .map(role => new ButtonBuilder()
+                                .setCustomId(`toggle-role-${role.id}`)
                                 .setLabel(role.name)
-                                .setStyle(ButtonStyle.Primary);
+                                .setStyle(ButtonStyle.Primary)
+                            );
 
-                            currentRow.addComponents(button);
-
-                            if (currentRow.components.length === 5 || index === panel.roles.length - 1) {
-                                rows.push(currentRow);
-                                currentRow = new ActionRowBuilder();
-                            }
+                        const rows = [];
+                        for (let i = 0; i < roleButtons.length; i += 5) {
+                            rows.push(new ActionRowBuilder().addComponents(roleButtons.slice(i, i + 5)));
                         }
 
+                        const finalDesc = panel.description || ls["cmds"]["role-setup"]["panel_desc"];
+
                         await client.Embed([{
-                            title: getTranslation("panel_title"),
-                            desc: getTranslation("panel_desc")
+                            title: ls["cmds"]["role-setup"]["panel_title"],
+                            desc: finalDesc
                         }], rows, undefined, undefined, channel);
 
                         collector.stop("sent");
                         client.successEmbed({
                             type: "update",
-                            title: getTranslation("first_layer_title"),
-                            desc: getTranslation("success_desc", { channel: channel.id }),
+                            title: ls["cmds"]["role-setup"]["first_layer_title"],
+                            desc: handlemsg(ls["cmds"]["role-setup"]["success_desc"], { channel: channel.id }),
                             components: []
                         }, i);
                     } else if (i.customId === "btn-reset") {
                         panel.roles = [];
                         panel.channel = 0;
-                        await client.reactionRoles.saveData();
+                        panel.description = null;
+
                         await render_panel(i);
                     } else if (i.customId === "btn-cancel") {
                         collector.stop("canceled");
                         client.errEmbed({
                             type: "update",
-                            title: getTranslation("canceled_title"),
-                            desc: getTranslation("canceled_desc"),
+                            title: ls["cmds"]["role-setup"]["canceled_title"],
+                            desc: ls["cmds"]["role-setup"]["canceled_desc"],
                             components: []
                         }, i);
                     }
@@ -322,8 +327,8 @@ module.exports = {
                     if (reason === "time") {
                         client.errEmbed({
                             type: "editReply",
-                            title: getTranslation("timeout_title"),
-                            desc: getTranslation("timeout_desc"),
+                            title: ls["cmds"]["role-setup"]["timeout_title"],
+                            desc: ls["cmds"]["role-setup"]["timeout_desc"],
                             components: []
                         }, interaction);
                     }

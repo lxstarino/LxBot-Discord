@@ -1,71 +1,80 @@
 {
     "cmds": {
         "balance": {
-            "title": "{target}'s balance",
+            "title": "{target}'s Balance",
             "fields": {
-                "wallet": "Wallet",
-                "bank": "Bank",
+                "wallet": "👛 Wallet",
+                "bank": "🏦 Bank",
                 "wallet_value": "{wallet} 💰",
                 "bank_value": "{bank} 💰"
             }
         },
+        "economy-manage": {
+            "title": "🏦 Economy Manager",
+            "add_success": "Successfully added **{amount} 💰** to <@!{user}>'s {type}.",
+            "remove_success": "Successfully removed **{amount} 💰** from <@!{user}>'s {type}.",
+            "set_success": "Successfully set <@!{user}>'s {type} balance to **{amount} 💰**.",
+            "err_invalid_amount": "Amount must be a positive number.",
+            "wallet": "Wallet",
+            "bank": "Bank account"
+        },
         "daily": {
-            "title": "Daily Reward",
-            "already_collected": "You already collected your daily reward, please wait till <t:{time}:f>",
-            "collect": "You have collected today's earnings: 5000 💰"
+            "title": "📅 Daily Reward",
+            "already_collected": "You already collected your daily reward! Please wait until <t:{time}:f> (<t:{time}:R>).",
+            "collect": "You have successfully collected your daily reward of **5,000 💰**!"
         },
         "weekly": {
-            "title": "Weekly Reward",
-            "already_collected": "You already collected your weekly reward, please wait till <t:{time}:f>",
-            "collect": "You have collected weeklys's earnings: 10000 💰"
+            "title": "📆 Weekly Reward",
+            "already_collected": "You already collected your weekly reward! Please wait until <t:{time}:f> (<t:{time}:R>).",
+            "collect": "You have successfully collected your weekly reward of **10,000 💰**!"
         },
         "monthly": {
-            "title": "Monthly Reward",
-            "already_collected": "You already collected your monthly reward, please wait till <t:{time}:f>",
-            "collect": "You have collected monthly's earnings: 20000 💰"
+            "title": "🗓️ Monthly Reward",
+            "already_collected": "You already collected your monthly reward! Please wait until <t:{time}:f> (<t:{time}:R>).",
+            "collect": "You have successfully collected your monthly reward of **20,000 💰**!"
         },
         "deposit": {
-            "title": "Bank",
-            "nem": "You dont have enough money in you're wallet to deposit!",
-            "successful": "Deposited {amount} 💰 to bank"
+            "title": "🏦 Bank Deposit",
+            "nem": "You don't have enough money in your wallet to deposit this amount!",
+            "successful": "Successfully deposited **{amount} 💰** into your bank account."
         },
         "withdraw": {
-            "title": "Bank",
-            "nem": "You dont have enough money in you're bank to withdraw!",
-            "successful": "Withdrew {amount} 💰 from bank"
+            "title": "🏦 Bank Withdrawal",
+            "nem": "You don't have enough money in your bank account to withdraw this amount!",
+            "successful": "Successfully withdrew **{amount} 💰** from your bank account."
         },
         "transfer": {
-            "title": "Bank",
-            "ctys": "You're not able to transfer money to yourself..",
-            "nem": "You dont have enough money in you're bank to transfer!",
+            "title": "💸 Money Transfer",
+            "ctys": "You cannot transfer money to yourself!",
+            "nem": "You don't have enough money in your bank account to transfer this amount!",
             "nem_wallet": "You don't have enough money in your wallet to transfer this amount!",
-            "successful": "You transfered {amount} 💰 successfully to <@!{target}>",
-            "err_bot": "You cannot transfer money to a bot!"
+            "successful": "You have successfully transferred **{amount} 💰** to <@!{target}>.",
+            "err_bot": "You cannot transfer money to bots!"
         },
         "rob": {
-            "title": "Rob",
-            "crys": "You're not able to rob yourself..",
-            "rbl": "You have to carry atleast 5000 💰 to rob someone",
-            "nts": "<@!{target}> doesn't carry anything that could be stolen.",
-            "caught": "You were caught..\nYou paid {amount} 💰 to <@!{target}>",
-            "success": "You robbed {amount} 💰 from <@!{target}>",
-            "err_bot": "You cannot rob a bot!"
+            "title": "🦹 Robbery",
+            "crys": "You cannot rob yourself!",
+            "rbl": "You must have at least **5,000 💰** in your wallet to attempt a robbery!",
+            "nts": "<@!{target}> doesn't carry any money in their wallet to steal.",
+            "caught": "🚨 You were caught! You had to pay a fine of **{amount} 💰** to <@!{target}>.",
+            "success": "💰 You successfully stole **{amount} 💰** from <@!{target}>!",
+            "err_bot": "You cannot rob bots!"
         },
         "slots": {
-            "title": "Slots",
-            "win": "[{item1} | {item2} | {item3}]\n**- YOU WON -**",
-            "lost": "[{item1} | {item2} | {item3}]\n**- YOU LOST -**",
-            "nem": "You dont have enough money in you're wallet to play slots!",
+            "title": "🎰 Slot Machine",
+            "win": "[{item1} | {item2} | {item3}]\n🎉 **YOU WON!**",
+            "lost": "[{item1} | {item2} | {item3}]\n💥 **YOU LOST!**",
+            "nem": "You don't have enough money in your wallet for this bet.",
             "fields": {
-                "name1": "Profit",
-                "name2": "Money",
-                "value1": "-{amount} 💰",
+                "name1": "Payout",
+                "name2": "New Balance",
+                "value1": "+{amount} 💰",
                 "value2": "{amount} 💰"
             }
         },
         "wheel": {
             "title": "🎡 Wheel of Fortune",
-            "err_bet_min": "The minimum bet is 10 💰!",
+            "err_bet_min": "The minimum bet is **10 💰**!",
             "err_bet_wallet": "You don't have enough money in your wallet for this bet!",
             "spinning": "🎡 Spinning the wheel...",
             "win": "🎉 **JACKPOT!** The wheel landed on **{multiplier}x**! You won **+{payout} 💰**!",
@@ -73,9 +82,39 @@
             "loss": "💥 The wheel landed on **{multiplier}x**! You lost **-{loss} 💰**!"
         },
         "restart": {
-            "title": "⚙️ Bot Restart",
-            "desc": "🔄 **Restarting bot process...** Please wait a few seconds.",
-            "no_perm": "❌ Only the bot developer can execute this command!"
+            "title": "Bot Restart",
+            "desc": "**Restarting bot process...** Please wait a few seconds.",
+            "no_perm": "Only the bot developer can execute this command!"
+        },
+        "bot-dbview": {
+            "title": "Database Viewer",
+            "overview_desc": "**Database File:** `{file}`\n**Journal Mode:** `WAL`\n**Tables:** `{tables}`\n**Total Records:** `{records}`\n\nSelect a table from the menu below to browse records.",
+            "records_count": "{count} records",
+            "select_placeholder": "Select a table to browse...",
+            "table_view_desc": "Showing records **{from} - {to}** of **{total}** (Page {page}/{maxPage})",
+            "table_empty_title": "Table is Empty",
+            "table_empty_desc": "No records found in this table.",
+            "record_title": "Record #{num}",
+            "btn_tables": "Tables List",
+            "btn_prev": "Previous",
+            "btn_next": "Next",
+            "btn_refresh": "Refresh",
+            "err_unauthorized": "You cannot interact with this viewer."
+        },
+        "db-view": {
+            "title": "Database Viewer",
+            "overview_desc": "**Database File:** `{file}`\n**Journal Mode:** `WAL`\n**Tables:** `{tables}`\n**Total Records:** `{records}`\n\nSelect a table from the menu below to browse records.",
+            "records_count": "{count} records",
+            "select_placeholder": "Select a table to browse...",
+            "table_view_desc": "Showing records **{from} - {to}** of **{total}** (Page {page}/{maxPage})",
+            "table_empty_title": "Table is Empty",
+            "table_empty_desc": "No records found in this table.",
+            "record_title": "Record #{num}",
+            "btn_tables": "Tables List",
+            "btn_prev": "Previous",
+            "btn_next": "Next",
+            "btn_refresh": "Refresh",
+            "err_unauthorized": "You cannot interact with this viewer."
         },
         "hilo": {
             "title": "🌐 Higher or Lower (Wikipedia Readers)",
@@ -166,41 +205,37 @@
             "desc2": "Failed to request banner"
         },
         "botinfo": {
-            "createdat": "Created at",
-            "botowner": "Bot Owner",
-            "latency": "Latency",
-            "startedsince": "Started since:",
-            "commands": "Commands ({size})",
-            "name": "Bot Name",
-            "id": "Bot ID",
-            "version": "Bot Version",
-            "djs_version": "Discord.js Version",
-            "node_version": "Node.js Version",
-            "servers": "Servers",
-            "commands_val": "Dev Commands: **{dev}**\nUser Commands: **{user}**",
-            "ram": "RAM Usage",
-            "os": "System",
-            "members": "Total Members",
-            "channels": "Total Channels"
+            "section_general": "🤖 General",
+            "section_stats": "📊 Statistics",
+            "section_system": "⚙️ System & Hardware",
+            "general_val": "> **Owner:** <@!399301340326789120>\n> **Created on:** <t:{created}:D>\n> **Online since:** <t:{start}:R>{shard}",
+            "stats_val": "> **Servers:** {guilds} | **Members:** {members} | **Channels:** {channels}\n> **Commands:** {total} ({user} User | {dev} Dev)\n> **Database:** SQLite 3",
+            "system_val": "> **Ping:** Bot {bot}ms | WS {ws}ms\n> **Hardware:** {hardware}\n> **Memory:** {ram} (Bot) | {host_ram} (RAM){disk}\n> **Host System:** {os} | Uptime <t:{host_uptime}:R>\n> **Versions:** Node.js {node} | Discord.js v{djs}",
+            "shard_info": " (Shard #{shard} of {total})"
         },
         "channelinfo": {
-            "type": "Type",
-            "createdon": "Created on",
+            "section_general": "💬 General",
+            "section_settings": "⚙️ Settings & Access",
+            "general_val": "> **Type:** {type}\n> **Category:** {category}\n> **Created on:** <t:{created}:D> (<t:{created}:R>)\n> **Position:** #{pos}",
+            "settings_val": "> **Slowmode:** {slowmode}\n> **NSFW:** {nsfw}\n> **Permission Overwrites:** {overwrites}",
+            "voice_val": "\n> **Bitrate:** {bitrate} kbps | **User Limit:** {limit}",
             "tnf": "Type not found",
             "ntp": "No topic provided",
             "tc": "Text Channel",
-            "vc": "Voice Chat",
+            "vc": "Voice Channel",
             "ac": "Announcement Channel",
             "at": "Announcement Thread",
             "pt": "Public Thread",
             "pt2": "Private Thread",
             "svc": "Stage Voice Channel",
-            "category": "Category",
-            "slowmode": "Slowmode",
+            "fc": "Forum Channel",
             "none": "None",
+            "unlimited": "Unlimited",
             "seconds": "{time} seconds",
             "yes": "Yes",
-            "no": "No"
+            "no": "No",
+            "topic_desc": "<#{channel}>\n*{topic}*",
+            "id_footer": "Channel ID: {id}"
         },
         "poll": {
             "title": "📊 Poll",
@@ -242,7 +277,8 @@
             "ruined_title": "💥 Ruined!",
             "ruined_double": "<@!{user}> ruined the count by counting twice in a row! The count has been reset to **0**.",
             "ruined_wrong": "<@!{user}> ruined the count by typing **{wrong}** instead of **{expected}**! The count has been reset to **0**.",
-            "highscore_announce": "🎉 **New Server Highscore!** You reached **{highscore}**! Keep going!"
+            "highscore_announce": "🎉 **New Server Highscore!** You reached **{highscore}**! Keep going!",
+            "set_count_success": "The current count has been successfully set to **{count}**."
         },
         "voice-setup": {
             "title": "🎙️ Temp-Voice Setup",
@@ -286,9 +322,11 @@
             "category_desc": "Commands from {module} module",
             "btn_home": "Home",
             "btn_cmdlist": "All Commands",
-            "title_home": "📖 Help & Command Overview",
-            "home_desc": "> 💡 **Tip:** Select a module from the dropdown menu below to view all commands & details.\n> ⏱️ *This interactive menu automatically deactivates after **3 minutes** of inactivity.*\n\n[Website](https://lxst.cc) | [GitHub](https://github.com/lxstarino)",
+            "title_home": "Help & Command Overview",
+            "home_desc": "> 💡 **Tip:** Select a module from the dropdown menu below to view all commands & details.\n> ⏱️ *This interactive menu automatically deactivates after **3 minutes** of inactivity.*\n\n[Website](https://lxst.cc) | [Bot Invite](https://discord.com/oauth2/authorize?client_id=1338080989775265792&permissions=8&integration_type=0&scope=bot) | [GitHub](https://github.com/lxstarino)",
             "categories_title": "Categories Available",
+            "commands_label": "commands",
+            "category_item": "> {emoji} **{folder}:** `{count}` {label}",
             "footer_home": "{totalCmdCount} Commands total across {categoryCount} Categories",
             "title_all": "📋 All Commands Overview",
             "desc_all": "Here is a quick overview of all commands grouped by category:",
@@ -296,37 +334,42 @@
             "no_commands": "No commands found in this category."
         },
         "serverinfo": {
-            "createdon": "Created on",
-            "ndp": "No description provided",
-            "serverowner": "Server Owner",
-            "membercount": "Member Count",
-            "invitecount": "Invite Codes",
-            "rescount": "Role/Emoji/Sticker count",
-            "channelcount": "Channels ({size})",
-            "lvl_title": "Server Level ({level})",
-            "lvl_val": "Boosts: {boosts}",
-            "member_val": "**{count}** member(s)",
-            "invite_val": "**{count}** code(s)",
-            "res_val": "**{roles}** role(s) | **{emojis}** emoji(s) | **{stickers}** sticker(s)",
-            "channel_val": "Categories: **{categories}** | Text Channels: **{text}** | VC Channels: **{vc}**",
+            "title": "Server Information",
+            "section_general": "⛃ General",
+            "section_features": "🚀 Server Status",
+            "general_val": "> **Server Owner:** <@!{owner}>\n> **Created on:** <t:{created}:D> (<t:{created}:R>)\n> **Members:** **{count}** ({humans} Users • {bots} Bots)\n> **Verification Level:** {security}",
+            "afk_val": "\n> **AFK Channel:** <#{channel}> ({time} min)",
+            "features_val": "> **Boost Level:** Level **{level}** ({count} Boosts) {emoji}\n> **Channels:** **{channels}** total ({text} Text • {vc} Voice • {cats} Categories)\n> **Resources:** {roles} Roles • {emojis} Emojis • {stickers} Stickers",
+            "icon_link": "Icon",
+            "banner_link": "Banner",
+            "splash_link": "Splash",
+            "sec_none": "None",
+            "sec_low": "Low",
+            "sec_medium": "Medium",
+            "sec_high": "High",
+            "sec_very_high": "Highest",
             "id_footer": "Server ID: {id}"
         },
         "userinfo": {
-            "joinedon": "Joined Server",
-            "registeredon": "Account Created",
+            "title": "User Information",
+            "section_general": "👤 General",
+            "section_server": "🛡️ Server Status",
+            "section_eco": "💰 Economy & Level",
+            "general_val": "> **Account Created:** <t:{created}:D>\n> **Joined Server:** <t:{joined}:D>\n> **Server Nickname:** {nickname}\n> **Bot:** {bot}",
+            "server_val": "> **Highest Role:** {highest}\n> **Permissions:** {perms}\n> **Voice Channel:** {voice}\n> **Warnings:** `{warnings}`",
+            "booster_val": "\n> **Server Booster:** <t:{time}:R>",
+            "eco_val": "> **Balance:** 👛 **{wallet} 💰** | 🏦 **{bank} 💰**\n> **Level & Rank:** Level **{level}** • `{xp} / {needed} XP`",
             "roles": "Roles ({size})",
-            "avatar": "Avatar",
-            "highest_role": "Highest Role",
-            "balance": "Balance",
-            "leveling": "Leveling",
-            "warnings": "Warnings",
-            "key_perms": "Key Permissions",
+            "no_roles": "No roles assigned",
+            "more_roles": "... and {count} more",
+            "avatar_link": "Avatar",
+            "banner_link": "Banner",
             "yes": "Yes",
             "no": "No",
+            "none": "None",
             "admin": "Administrator 👑",
             "moderator": "Moderator 🛡️",
-            "member": "Member 👤",
-            "no_roles": "No roles"
+            "member": "Member 👤"
         },
         "add/remrole": {
             "edesc1": "The action for <@!{target}> can't be processed because the bot is lacking permissions",
@@ -366,31 +409,10 @@
             "created": "Welcome Message was successfully created"
         },
         "autorole-setup": {
-            "title": "🤖 Auto-Role Setup",
+            "title": "Auto-Role Setup",
             "set_success": "Auto-Role has been successfully set to <@&{role}>!",
             "disabled": "Auto-Role has been successfully disabled.",
             "err_bot_hierarchy": "I cannot assign the role <@&{role}> because it is higher than or equal to my highest role!"
-        },
-        "verify-setup": {
-            "title": "🔒 Verification Setup",
-            "set_success": "Verification panel successfully sent to <#{channel}> with role <@&{role}>!",
-            "disabled": "Verification system has been disabled.",
-            "panel_title": "🛡️ Member Verification",
-            "panel_desc": "Welcome to **{guildname}**!\nTo gain access to the rest of the server channels, please click the **Verify** button below and solve the Captcha challenge.",
-            "btn_verify": "Verify",
-            "err_bot_hierarchy": "I cannot assign the role <@&{role}> because it is higher than or equal to my highest role!"
-        },
-        "verify": {
-            "title": "🔐 Captcha Verification",
-            "already_verified": "You are already verified on this server!",
-            "captcha_desc": "Please solve the Captcha shown in the image below to complete your verification.\n\n> ⏱️ *This Captcha expires in **5 minutes**.*",
-            "btn_enter_code": "Enter Code",
-            "btn_refresh": "New Captcha",
-            "modal_title": "Enter Captcha Code",
-            "modal_label": "5-Character Code (Case-Insensitive)",
-            "success": "🎉 **Verification Successful!** You have been granted access to the server.",
-            "err_invalid_code": "❌ **Incorrect Code!** Please check the Captcha image and try again.",
-            "err_expired": "⏰ **Captcha Expired!** Click **Verify** again to generate a new Captcha image."
         },
         "bot-embed": {
             "title": "Embed",
@@ -398,21 +420,26 @@
             "invalid": "Provide a valid Hex Color!"
         },
         "bot-language": {
-            "placeholder": "Select a language",
-            "desc": "Use the select menu below to select a language!\nNote: Interactables will disable in 2 minutes",
-            "success": "Bot language was successfully changed to `{language}`!\nNote: The translation is not 100% completed"
+            "title": "🌐 Language Settings",
+            "placeholder": "Select a language...",
+            "desc": "Manage the language for **{guild}**.\n\n> **Current Language:** {current_flag} **{current_name}**\n\nSelect a new language from the dropdown menu below:",
+            "success": "Server language has been updated to {flag} **{language}**!",
+            "lang_de": "Deutsch",
+            "lang_de_desc": "Setze die Bot-Sprache auf Deutsch",
+            "lang_en": "English",
+            "lang_en_desc": "Set the bot language to English"
         },
         "bot-modules": {
-            "title": "Bot Modules",
-            "placeholder_enable": "Enable a module",
-            "placeholder_disable": "Disable a module",
-            "desc": "Use the select menu below to disable/enable a module!\nNote: Interactables will disable in 2 minutes",
-            "desc_enable": "Enable {module}",
-            "desc_disable": "Disable {module}",
-            "not_found": "`{module}` not found in disabled list!",
-            "enabled": "`{module}` was successfully enabled!",
-            "disabled": "`{module}` was successfully disabled!",
-            "already_disabled": "`{module}` is already disabled!"
+            "title": "📦 Bot Modules",
+            "desc": "Configure which command modules are active on **{guild}**.\nDisabled modules and their commands cannot be used by members.\n\n### Module Status\n{status_list}\n\n*Select a module below to toggle its status.*",
+            "placeholder": "Select a module to toggle...",
+            "status_enabled": "Enabled",
+            "status_disabled": "Disabled",
+            "opt_desc_enabled": "Currently active • Click to disable",
+            "opt_desc_disabled": "Currently disabled • Click to enable",
+            "btn_enable_all": "Enable All",
+            "btn_disable_all": "Disable All",
+            "timeout": "Module configuration menu has expired."
         },
         "t-setup": {
             "err_title": "Ticket",
@@ -450,7 +477,8 @@
             "category_updated": "Category permissions updated for the configured roles! | <#{channel}>",
             "err_max_roles": "You can add a maximum of 5 support roles!",
             "no_roles_found": "No assignable roles found",
-            "warning_limit": "\n\n⚠️ **Note:** Because your server has more than 75 assignable roles, the remaining roles have been cut off (Discord allows a maximum of 5 rows of menus/buttons)."
+            "warning_limit": "\n\n⚠️ **Note:** Because your server has more than 75 assignable roles, the remaining roles have been cut off (Discord allows a maximum of 5 rows of menus/buttons).",
+            "err_role_limit": "Some roles could not be processed (missing permissions, or limit of 5 reached)."
         },
         "role-setup": {
             "first_layer_title": "Role Setup",
@@ -470,9 +498,13 @@
             "no_roles_added": "❌ *No roles*",
             "select_channel": "Select target channel...",
             "select_role_add": "Add a role...",
+            "btn_desc": "Set Description",
             "btn_send": "Send Role Panel",
             "btn_reset": "Reset Panel",
             "btn_cancel": "Cancel",
+            "modal_desc_title": "Role Panel Description",
+            "modal_desc_label": "Embed Description",
+            "modal_desc_placeholder": "Enter custom description for the role panel embed...",
             "err_no_roles": "Please add at least one role first!",
             "err_no_channel": "Target channel not found or not configured!",
             "err_max_roles": "You can add a maximum of 5 roles to a single panel!",
@@ -482,7 +514,8 @@
             "hierarchy_error": "I cannot give you the role **{roleName}** because it is positioned higher than or equal to my highest role!",
             "added": "Role **{roleName}** has been successfully assigned to you.",
             "removed": "Role **{roleName}** has been successfully removed from you.",
-            "error": "An error occurred while modifying your roles."
+            "error": "An error occurred while modifying your roles.",
+            "err_role_limit": "Some roles could not be processed (Bot role, Admin role, too high hierarchy, or limit of 25 roles reached)."
         },
         "bot-presence": {
             "title": "Bot Presence",
@@ -494,6 +527,11 @@
         "bot-restart": {
             "title": "Bot Restarting",
             "desc": "The bot will restart <t:{time}:R>..."
+        },
+        "bot-reload": {
+            "success": "`{command}` successfully reloaded!",
+            "invalid_title": "Command not found",
+            "invalid_desc": "Provide a valid command!\n\nValid Commands:\n{commands}"
         },
         "bot-reloadcmd": {
             "success": "`{command}` successfully reloaded!",
@@ -507,9 +545,9 @@
             "err_no_results_seconds": "No videos found for **{tag}** with at least **{seconds}s** duration."
         },
         "work": {
-            "title": "Work",
+            "title": "💼 Work",
             "success": "You worked as a **{job}** and earned **{amount} 💰**!",
-            "already_worked": "You already worked, please wait until <t:{time}:f>",
+            "already_worked": "You already worked! Please rest until <t:{time}:f> (<t:{time}:R>).",
             "list": [
                 "professional sleeper",
                 "Discord Moderator",
@@ -521,11 +559,11 @@
             ]
         },
         "crime": {
-            "title": "Crime",
-            "success": "You successfully **{crime}** and made **{amount} 💰**!",
-            "caught": "You were caught **{crime}** and fined **{amount} 💰**!",
-            "nem": "You need at least 1,000 💰 in your wallet to cover a potential fine!",
-            "already_crimed": "You already committed a crime, please wait until <t:{time}:f>",
+            "title": "🦹 Crime",
+            "success": "You successfully **{crime}** and made **{amount} 💰** in loot!",
+            "caught": "🚨 You were caught while you **{crime}** and paid a **{amount} 💰** fine!",
+            "nem": "You need at least **1,000 💰** in your wallet to cover a potential fine!",
+            "already_crimed": "The police are still searching for you! Please wait until <t:{time}:f> (<t:{time}:R>).",
             "list": [
                 "stole candy from a baby",
                 "downloaded a car",
@@ -536,19 +574,19 @@
             ]
         },
         "eco-lb": {
-            "title": "Server Leaderboard",
-            "format": "**{rank}.** <@!{user}> • Total: **{total} 💰**\n> Wallet: *{wallet}* | Bank: *{bank}*",
-            "empty": "No user profiles found in this server."
+            "title": "🏆 Server Economy Leaderboard",
+            "format": "**{rank}.** <@!{user}> • Total: **{total} 💰**\n> 👛 Wallet: *{wallet}* | 🏦 Bank: *{bank}*",
+            "empty": "No economy profiles found in this server."
         },
         "rps": {
-            "title": "Rock Paper Scissors",
-            "win": "You won! The bot chose {botChoice}. You won **{amount} 💰**!",
-            "lost": "You lost! The bot chose {botChoice}. You lost **{amount} 💰**!",
-            "draw": "It's a tie! Both chose {choice}. No money was lost.",
-            "nem": "You don't have enough money in your wallet to bet that much!",
-            "rock": "Rock",
-            "paper": "Paper",
-            "scissors": "Scissors"
+            "title": "✂️ Rock Paper Scissors",
+            "win": "🎉 **You won!** The bot chose **{botChoice}**. You won **+{amount} 💰**!",
+            "lost": "💥 **You lost!** The bot chose **{botChoice}**. You lost **-{amount} 💰**!",
+            "draw": "🤝 **It's a tie!** Both chose **{choice}**. Your bet was refunded.",
+            "nem": "You don't have enough money in your wallet for this bet!",
+            "rock": "Rock 🪨",
+            "paper": "Paper 📄",
+            "scissors": "Scissors ✂️"
         },
         "ship": {
             "title": "❤️ Matchmaking",
@@ -563,7 +601,18 @@
         "level": {
             "title": "Level Rank",
             "desc": "Rank of <@!{user}>:\n> **Level**: {level}\n> **XP**: {xp} / {needed} XP",
+            "next_reward": "> 🎁 **Next Reward (Level {level}):** <@&{role}>",
             "footer": "Rank status"
+        },
+        "level-manage": {
+            "title": "🏆 Level Manager",
+            "add_success": "Successfully added **+{amount}** level(s) to <@!{user}>! User is now **Level {level}**.",
+            "remove_success": "Successfully removed **-{amount}** level(s) from <@!{user}>! User is now **Level {level}**.",
+            "set_success": "Successfully set <@!{user}>'s level to **Level {level}**.",
+            "reset_success": "Successfully reset <@!{user}>'s level and XP back to **Level 1** (0 XP).",
+            "awarded_roles": "🏆 **New Roles Awarded:** {roles}",
+            "err_min_level": "Level must be at least 1!",
+            "err_bot": "You cannot manage levels for a bot!"
         },
         "lvl-lb": {
             "title": "XP Leaderboard",
@@ -584,12 +633,12 @@
             "success": "Successfully cleared all warnings for <@!{target}>."
         },
         "shop-setup": {
-            "title": "Shop Setup",
+            "title": "🏪 Shop Setup",
             "added": "Successfully added <@&{role}> to the shop for **{price} 💰**!",
             "removed": "Successfully removed <@&{role}> from the shop.",
             "not_in_shop": "That role is not in the shop!",
             "already_added": "That role is already in the shop!",
-            "invalid_price": "Price must be at least 1 💰!"
+            "invalid_price": "Price must be at least **1 💰**!"
         },
         "log-setup": {
             "title": "Logs Setup",
@@ -610,30 +659,30 @@
         },
         "shop": {
             "title": "🏪 Server Shop",
-            "desc": "Welcome to the server shop! Use `/buy <role>` to purchase a role.\n\n**Items Available:**\n\n{items}",
+            "desc": "Welcome to the server shop! Use `/buy <role>` to purchase a role.\n\n**Available Roles:**\n\n{items}",
             "empty": "The shop is currently empty! An administrator can add roles using `/shop-setup add`."
         },
         "buy": {
-            "title": "Purchase Role",
+            "title": "🛍️ Purchase Role",
             "success": "Successfully purchased the role <@&{role}> for **{price} 💰**!",
             "already_has": "You already have the role <@&{role}>!",
-            "nem": "You don't have enough money in your wallet to buy <@&{role}> (Requires {price} 💰)!",
+            "nem": "You don't have enough money in your wallet to buy <@&{role}> (Requires **{price} 💰**)! ",
             "not_for_sale": "That role is not for sale in the shop!"
         },
         "fish": {
             "title": "🎣 Fishing Trip",
-            "caught": "You cast your line and caught a **{fish}** {emoji}!\n> Rarity: **{rarity}**\n> Value: **{value} 💰**\n> It has been added to your inventory.",
-            "cooldown": "You're too tired to fish! Please wait until <t:{time}:f>"
+            "caught": "You cast your line and caught a **{fish}** {emoji}!\n> 🌟 Rarity: **{rarity}**\n> 💰 Value: **{value} 💰**\n> It has been added to your inventory.",
+            "cooldown": "You're too tired to fish! Please wait until <t:{time}:f> (<t:{time}:R>)."
         },
         "sell": {
-            "title": "🏪 Market",
+            "title": "🏪 Marketplace Sale",
             "success_all": "Successfully sold all items in your inventory for a total of **{amount} 💰**!",
             "empty": "You don't have any items in your inventory to sell!"
         },
         "inventory": {
             "title": "🎒 {user}'s Inventory",
-            "desc": "**Fish inventory:**\n\n{items}\n\nEstimated value: **{total} 💰**",
-            "empty_self": "Your inventory is currently empty! Use `/fish` to catch some fish.",
+            "desc": "**Items in Possession:**\n\n{items}\n\n💵 **Estimated Total Value:** **{total} 💰**",
+            "empty_self": "Your inventory is currently empty! Use `/fish` or `/mine` to collect items.",
             "empty_other": "<@!{user}>'s inventory is empty!"
         },
         "fish_rarities": {
@@ -653,8 +702,8 @@
         },
         "mine": {
             "title": "⛏️ Mining Trip",
-            "mined": "You swung your pickaxe and mined some **{ore}** {emoji}!\n> Rarity: **{rarity}**\n> Value: **{value} 💰**\n> It has been added to your inventory.",
-            "cooldown": "Your muscles are too sore to mine! Please wait until <t:{time}:f>"
+            "mined": "You swung your pickaxe and mined **{ore}** {emoji}!\n> 🌟 Rarity: **{rarity}**\n> 💰 Value: **{value} 💰**\n> It has been added to your inventory.",
+            "cooldown": "Your muscles are sore from mining! Please wait until <t:{time}:f> (<t:{time}:R>)."
         },
         "ore_rarities": {
             "common": "Common",
@@ -734,6 +783,13 @@
             "list_field_name": "Level {level}",
             "list_field_value": "Role: <@&{role}>",
             "err_bot_hierarchy": "I cannot assign the role <@&{role}> because it is higher than or equal to my highest role!"
+        },
+        "bot-avatar": {
+            "title": "Bot Avatar",
+            "desc": "Avatar successfully updated for this server.",
+            "error_url": "Please provide a valid image URL.",
+            "error_title": "Error",
+            "error": "There was an error updating the server-specific avatar.\n**Reason:** {error}"
         }
     },
     "events": {

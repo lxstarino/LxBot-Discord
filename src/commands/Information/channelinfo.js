@@ -1,46 +1,72 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+const { SlashCommandBuilder, ChannelType } = require("discord.js")
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("channelinfo")
-        .setDescription("Displays information about the current channel"),
+        .setDescription("Displays information about a channel")
+        .addChannelOption(opt => opt
+            .setName("channel")
+            .setDescription("The channel you want to view")),
     async execute(client, interaction) {
-        let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+        const ls = client.getLanguage(interaction.guild?.id)
+        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
 
-        const types = {
-            0: `${ls["cmds"]["channelinfo"]["tc"]}`,
-            2: `${ls["cmds"]["channelinfo"]["vc"]}`,
-            5: `${ls["cmds"]["channelinfo"]["ac"]}`,
-            10: `${ls["cmds"]["channelinfo"]["at"]}`,
-            11: `${ls["cmds"]["channelinfo"]["pt"]}`,
-            12: `${ls["cmds"]["channelinfo"]["pt2"]}`,
-            13: `${ls["cmds"]["channelinfo"]["svc"]}`
+        const targetChannel = interaction.options.getChannel("channel") || interaction.channel
+        const channel = await interaction.guild.channels.fetch(targetChannel.id).catch(() => targetChannel)
+
+        const typeLabels = {
+            [ChannelType.GuildText]: ls["cmds"]["channelinfo"]["tc"],
+            [ChannelType.GuildVoice]: ls["cmds"]["channelinfo"]["vc"],
+            [ChannelType.GuildAnnouncement]: ls["cmds"]["channelinfo"]["ac"],
+            [ChannelType.AnnouncementThread]: ls["cmds"]["channelinfo"]["at"],
+            [ChannelType.PublicThread]: ls["cmds"]["channelinfo"]["pt"],
+            [ChannelType.PrivateThread]: ls["cmds"]["channelinfo"]["pt2"],
+            [ChannelType.GuildStageVoice]: ls["cmds"]["channelinfo"]["svc"],
+            [ChannelType.GuildForum]: ls["cmds"]["channelinfo"]["fc"]
         }
 
-        const channel = interaction.channel
-        const parentName = channel.parent ? channel.parent.name : ls["cmds"]["channelinfo"]["none"]
+        const parentCategory = channel.parent ? channel.parent.name : ls["cmds"]["channelinfo"]["none"]
+        const createdTimestamp = Math.round(channel.createdTimestamp / 1000)
 
-        let slowmode = ls["cmds"]["channelinfo"]["none"]
-        if (channel.rateLimitPerUser !== undefined && channel.rateLimitPerUser > 0) {
-            slowmode = handlemsg(ls["cmds"]["channelinfo"]["seconds"], { time: channel.rateLimitPerUser })
+        const generalSection = handlemsg(ls["cmds"]["channelinfo"]["general_val"], {
+            type: typeLabels[channel.type] || ls["cmds"]["channelinfo"]["tnf"],
+            category: parentCategory,
+            created: String(createdTimestamp),
+            pos: String(channel.rawPosition ?? channel.position ?? 0)
+        })
+
+        const slowmodeText = channel.rateLimitPerUser > 0
+            ? handlemsg(ls["cmds"]["channelinfo"]["seconds"], { time: String(channel.rateLimitPerUser) })
+            : ls["cmds"]["channelinfo"]["none"]
+
+        let settingsSection = handlemsg(ls["cmds"]["channelinfo"]["settings_val"], {
+            slowmode: slowmodeText,
+            nsfw: channel.nsfw ? ls["cmds"]["channelinfo"]["yes"] : ls["cmds"]["channelinfo"]["no"],
+            overwrites: String(channel.permissionOverwrites?.cache?.size || 0)
+        })
+
+        if (channel.type === ChannelType.GuildVoice || channel.type === ChannelType.GuildStageVoice) {
+            settingsSection += handlemsg(ls["cmds"]["channelinfo"]["voice_val"], {
+                bitrate: String(Math.round((channel.bitrate || 64000) / 1000)),
+                limit: channel.userLimit > 0 ? String(channel.userLimit) : ls["cmds"]["channelinfo"]["unlimited"]
+            })
         }
 
-        const isNsfw = channel.nsfw ? ls["cmds"]["channelinfo"]["yes"] : ls["cmds"]["channelinfo"]["no"]
+        const channelTopic = channel.topic || ls["cmds"]["channelinfo"]["ntp"]
+        const descText = handlemsg(ls["cmds"]["channelinfo"]["topic_desc"], {
+            channel: channel.id,
+            topic: channelTopic
+        })
 
         client.Embed([{
+            author: { name: channel.name, iconURL: interaction.guild.iconURL({ dynamic: true }) },
+            desc: descText,
             fields: [
-                { name: `${channel.name}`, value: `${channel.topic ? channel.topic : ls["cmds"]["channelinfo"]["ntp"]}`, inline: false },
-                { name: `Id`, value: `${channel.id}`, inline: true },
-                { name: `${ls["cmds"]["channelinfo"]["type"]}`, value: `${types[channel.type] || ls["cmds"]["channelinfo"]["tnf"]}`, inline: true },
-                { name: `${ls["cmds"]["channelinfo"]["category"]}`, value: `${parentName}`, inline: true },
-                { name: `${ls["cmds"]["channelinfo"]["createdon"]}`, value: `<t:${Math.round(channel.createdAt / 1000)}:f> (<t:${Math.round(channel.createdAt / 1000)}:R>)`, inline: false },
-                { name: `${ls["cmds"]["channelinfo"]["slowmode"]}`, value: `${slowmode}`, inline: true },
-                { name: `Nsfw`, value: `${isNsfw}`, inline: true },
-                { name: "\u200b", value: `\u200b`, inline: true }
+                { name: ls["cmds"]["channelinfo"]["section_general"], value: generalSection, inline: false },
+                { name: ls["cmds"]["channelinfo"]["section_settings"], value: settingsSection, inline: false }
             ],
             timestamp: interaction.createdTimestamp,
-            footer: { text: `Server ID: ${interaction.guild.id}` }
+            footer: { text: handlemsg(ls["cmds"]["channelinfo"]["id_footer"], { id: channel.id }) }
         }], undefined, "reply", false, interaction)
     }
 }

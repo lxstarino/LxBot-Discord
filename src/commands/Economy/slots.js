@@ -16,7 +16,7 @@ module.exports = {
         let amount = interaction.options.getInteger("amount")
 
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/utils/functions`)
 
         if (!Number.isInteger(amount)) {
             return client.errEmbed({
@@ -80,7 +80,6 @@ module.exports = {
 
         if (win) {
             profile.wallet += payout
-            await client.economy.saveData()
 
             const winDesc = handlemsg(ls["cmds"]["slots"]["win"], {
                 item1: slotItemList[slotItems[0]],
@@ -99,7 +98,6 @@ module.exports = {
             }], [], "editReply", true, interaction)
         } else {
             profile.wallet -= amount
-            await client.economy.saveData()
 
             const lostDesc = handlemsg(ls["cmds"]["slots"]["lost"], {
                 item1: slotItemList[slotItems[0]],

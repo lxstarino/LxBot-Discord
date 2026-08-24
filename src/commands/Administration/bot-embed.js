@@ -16,14 +16,14 @@ module.exports = {
             const hex = interaction.options.get("hex-color").value
 
             let ls = client.getLanguage(interaction.guild?.id)
-            const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/handlers/functions`)
+            const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/utils/functions`)
 
             const settings = await getOrCreateSettings(client, interaction.guild.id)
 
             let reg = /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i;
             if(reg.test(`${hex}`)){
                 settings.embed_color = `${hex}`
-                await client.settings.saveData()
+
                 client.successEmbed({type: "reply", ephemeral: true, title: ls["cmds"]["bot-embed"]["title"], desc: handlemsg(ls["cmds"]["bot-embed"]["success"], {hex: hex})}, interaction)
             } else {
                 throw({title: ls["cmds"]["bot-embed"]["title"], desc: ls["cmds"]["bot-embed"]["invalid"]})

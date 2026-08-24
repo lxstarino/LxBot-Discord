@@ -13,7 +13,7 @@ module.exports = {
         const user = interaction.options.getUser("target") || interaction.user
 
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/utils/functions`)
 
         const profile = await getOrCreateProfile(client, user.id, interaction.guild.id)
         const warnings = profile ? (profile.warnings || []) : []

@@ -44,12 +44,10 @@ module.exports = {
         const subcommand = interaction.options.getSubcommand()
 
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/utils/functions`)
 
         const settings = await getOrCreateSettings(client, interaction.guild.id)
         if (!settings.level_roles) settings.level_roles = []
-
-        const langDict = ls["cmds"]["level-reward-setup"] || {}
 
         if (subcommand === "add") {
             const level = interaction.options.getInteger("level")
@@ -60,8 +58,8 @@ module.exports = {
                 return client.errEmbed({
                     type: "reply",
                     ephemeral: true,
-                    title: langDict["title"] || "🎁 Level Role Rewards",
-                    desc: handlemsg(langDict["err_bot_hierarchy"] || "I cannot assign the role <@&{role}> because it is higher than or equal to my highest role!", { role: role.id })
+                    title: ls["cmds"]["level-reward-setup"]["title"],
+                    desc: handlemsg(ls["cmds"]["level-reward-setup"]["err_bot_hierarchy"], { role: role.id })
                 }, interaction)
             }
 
@@ -73,9 +71,8 @@ module.exports = {
             }
 
             settings.level_roles.sort((a, b) => a.level - b.level)
-            await client.settings.saveData()
 
-            const profiles = client.economy.storage?.data?.filter(x => x.guildId === interaction.guild.id) || []
+            const profiles = client.db ? client.db.getAllProfiles(interaction.guild.id) : []
             for (const p of profiles) {
                 const userLevel = p.level || 1
                 if (userLevel >= level) {
@@ -87,10 +84,10 @@ module.exports = {
             }
 
             return client.Embed([{
-                title: langDict["title"] || "🎁 Level Role Rewards",
-                desc: handlemsg(langDict["add_success"] || "Successfully set **Level {level}** reward to role <@&{role}>!", { level, role: role.id }),
+                title: ls["cmds"]["level-reward-setup"]["title"],
+                desc: handlemsg(ls["cmds"]["level-reward-setup"]["add_success"], { level, role: role.id }),
                 timestamp: interaction.createdTimestamp
-            }], undefined, "reply", false, interaction)
+            }], undefined, "reply", true, interaction)
 
         } else if (subcommand === "remove") {
             const level = interaction.options.getInteger("level")
@@ -100,50 +97,48 @@ module.exports = {
                 return client.errEmbed({
                     type: "reply",
                     ephemeral: true,
-                    title: langDict["title"] || "🎁 Level Role Rewards",
-                    desc: handlemsg(langDict["remove_not_found"] || "No level role reward is configured for **Level {level}**.", { level })
+                    title: ls["cmds"]["level-reward-setup"]["title"],
+                    desc: handlemsg(ls["cmds"]["level-reward-setup"]["remove_not_found"], { level })
                 }, interaction)
             }
 
             settings.level_roles.splice(existingIndex, 1)
-            await client.settings.saveData()
 
             return client.Embed([{
-                title: langDict["title"] || "🎁 Level Role Rewards",
-                desc: handlemsg(langDict["remove_success"] || "Successfully removed role reward for **Level {level}**.", { level }),
+                title: ls["cmds"]["level-reward-setup"]["title"],
+                desc: handlemsg(ls["cmds"]["level-reward-setup"]["remove_success"], { level }),
                 timestamp: interaction.createdTimestamp
-            }], undefined, "reply", false, interaction)
+            }], undefined, "reply", true, interaction)
 
         } else if (subcommand === "list") {
             if (settings.level_roles.length === 0) {
                 return client.Embed([{
-                    title: langDict["list_title"] || "📜 Configured Level Role Rewards",
-                    desc: langDict["list_empty"] || "No level role rewards are configured for this server yet.",
+                    title: ls["cmds"]["level-reward-setup"]["list_title"],
+                    desc: ls["cmds"]["level-reward-setup"]["list_empty"],
                     timestamp: interaction.createdTimestamp
-                }], undefined, "reply", false, interaction)
+                }], undefined, "reply", true, interaction)
             }
 
             const fields = settings.level_roles.map(item => ({
-                name: handlemsg(langDict["list_field_name"] || "Level {level}", { level: item.level }),
-                value: handlemsg(langDict["list_field_value"] || "Role: <@&{role}>", { role: item.roleId }),
+                name: handlemsg(ls["cmds"]["level-reward-setup"]["list_field_name"], { level: item.level }),
+                value: handlemsg(ls["cmds"]["level-reward-setup"]["list_field_value"], { role: item.roleId }),
                 inline: true
             }))
 
             return client.Embed([{
-                title: langDict["list_title"] || "📜 Configured Level Role Rewards",
+                title: ls["cmds"]["level-reward-setup"]["list_title"],
                 fields: fields,
                 timestamp: interaction.createdTimestamp
-            }], undefined, "reply", false, interaction)
+            }], undefined, "reply", true, interaction)
 
         } else if (subcommand === "clear") {
             settings.level_roles = []
-            await client.settings.saveData()
 
             return client.Embed([{
-                title: langDict["title"] || "🎁 Level Role Rewards",
-                desc: langDict["clear_success"] || "Successfully cleared all level role rewards.",
+                title: ls["cmds"]["level-reward-setup"]["title"],
+                desc: ls["cmds"]["level-reward-setup"]["clear_success"],
                 timestamp: interaction.createdTimestamp
-            }], undefined, "reply", false, interaction)
+            }], undefined, "reply", true, interaction)
         }
     }
 }

@@ -33,7 +33,7 @@ module.exports = {
         const betAmount = interaction.options.getInteger("amount")
 
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/utils/functions`)
 
         const profile = await getOrCreateProfile(client, interaction.user.id, interaction.guild.id)
 
@@ -63,7 +63,6 @@ module.exports = {
             (userChoice === "scissors" && botChoice === "paper")
         ) {
             profile.wallet += betAmount
-            await client.economy.saveData()
 
             client.successEmbed({
                 type: "reply",
@@ -73,7 +72,6 @@ module.exports = {
             }, interaction)
         } else {
             profile.wallet -= betAmount
-            await client.economy.saveData()
 
             client.errEmbed({
                 type: "reply",

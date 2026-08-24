@@ -1,4 +1,4 @@
-const { getOrCreateProfile, getOrCreateSettings, handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+const { getOrCreateProfile, getOrCreateSettings, handlemsg } = require(`${process.cwd()}/src/utils/functions`)
 
 module.exports = {
     name: "messageCreate",
@@ -15,12 +15,11 @@ module.exports = {
             if (isNaN(num) || message.content.trim() !== String(num)) {
                 settings.counting_current = 0
                 settings.counting_last_user = null
-                await client.settings.saveData()
 
                 await message.react("💥").catch(() => {})
                 const embed = {
                     title: ls["cmds"]["counting"]["ruined_title"],
-                    description: handlemsg(ls["cmds"]["counting"]["ruined_wrong"], {
+                    desc: handlemsg(ls["cmds"]["counting"]["ruined_wrong"], {
                         user: message.author.id,
                         wrong: message.content,
                         expected: String(expected)
@@ -36,12 +35,11 @@ module.exports = {
             if (settings.counting_last_user === message.author.id) {
                 settings.counting_current = 0
                 settings.counting_last_user = null
-                await client.settings.saveData()
 
                 await message.react("💥").catch(() => {})
                 const embed = {
                     title: ls["cmds"]["counting"]["ruined_title"],
-                    description: handlemsg(ls["cmds"]["counting"]["ruined_double"], {
+                    desc: handlemsg(ls["cmds"]["counting"]["ruined_double"], {
                         user: message.author.id
                     }),
                     color: 0xff0000,
@@ -55,12 +53,11 @@ module.exports = {
             if (num !== expected) {
                 settings.counting_current = 0
                 settings.counting_last_user = null
-                await client.settings.saveData()
 
                 await message.react("💥").catch(() => {})
                 const embed = {
                     title: ls["cmds"]["counting"]["ruined_title"],
-                    description: handlemsg(ls["cmds"]["counting"]["ruined_wrong"], {
+                    desc: handlemsg(ls["cmds"]["counting"]["ruined_wrong"], {
                         user: message.author.id,
                         wrong: String(num),
                         expected: String(expected)
@@ -82,7 +79,6 @@ module.exports = {
                 await message.react("👑").catch(() => {})
             }
 
-            await client.settings.saveData()
         }
 
         if (settings.disabled_modules && settings.disabled_modules.includes("Leveling")) return
@@ -150,6 +146,5 @@ module.exports = {
             client.Embed([levelUpEmbed], undefined, undefined, undefined, message.channel, undefined, `<@${message.author.id}>`)
         }
 
-        await client.economy.saveData()
     }
 }

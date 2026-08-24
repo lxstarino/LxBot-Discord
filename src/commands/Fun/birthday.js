@@ -10,16 +10,13 @@ function isValidDate(day, month) {
 }
 
 RestoreManager.register("Birthday Checker", async (client) => {
-    const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/handlers/functions`)
+    const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/utils/functions`)
 
     async function checkBirthdays() {
         const now = new Date()
         const today = { day: now.getDate(), month: now.getMonth() + 1 }
 
-        const birthdayProfiles = client.economy.storage.data.filter(profile => {
-            if (!profile.birthday) return false
-            return profile.birthday.day === today.day && profile.birthday.month === today.month
-        })
+        const birthdayProfiles = client.db.getTodayBirthdays(today.day, today.month)
 
         const byGuild = {}
         for (const profile of birthdayProfiles) {
@@ -32,7 +29,7 @@ RestoreManager.register("Birthday Checker", async (client) => {
                 const guild = client.guilds.cache.get(guildId)
                 if (!guild) continue
 
-                const settings = client.settings.mapCache?.get(guildId)
+                const settings = client.db ? client.db.getSettings(guildId) : client.settings.mapCache?.get(guildId)
                 if (!settings?.birthdaychannel) continue
 
                 const channel = guild.channels.cache.get(settings.birthdaychannel)
@@ -41,7 +38,7 @@ RestoreManager.register("Birthday Checker", async (client) => {
                 const ls = client.getLanguage(guildId)
 
                 for (const userId of userIds) {
-                    const profile = client.economy.mapCache?.get(`${guildId}:${userId}`)
+                    const profile = (client.db ? client.db.getProfile(guildId, userId) : null) || client.economy.mapCache?.get(`${guildId}:${userId}`)
                     if (!profile) continue
 
                     const lastWished = profile.lastBirthdayWish || 0
@@ -55,9 +52,10 @@ RestoreManager.register("Birthday Checker", async (client) => {
                     }], undefined, "send", false, channel)
 
                     profile.lastBirthdayWish = Date.now()
+                    if (client.db) client.db.saveProfile(profile)
                 }
 
-                await client.economy.saveData()
+
             } catch (err) {
                 console.error(`[Birthday] Failed for guild ${guildId}:`, err.message)
             }
@@ -103,7 +101,7 @@ module.exports = {
     async execute(client, interaction) {
         const subcommand = interaction.options.getSubcommand()
         const ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/utils/functions`)
 
         if (subcommand === "set") {
             const day = interaction.options.getInteger("day")
@@ -121,7 +119,6 @@ module.exports = {
             const profile = await getOrCreateProfile(client, interaction.user.id, interaction.guild.id)
             profile.birthday = { day, month }
             profile.lastBirthdayWish = 0
-            await client.economy.saveData()
 
             client.Embed([{
                 title: ls["cmds"]["birthday"]["title"],

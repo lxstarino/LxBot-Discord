@@ -23,10 +23,8 @@ module.exports = {
     async execute(client, interaction) {
         const subcommand = interaction.options.getSubcommand()
         const ls = client.getLanguage(interaction.guild?.id)
-        const { getOrCreateSettings, handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+        const { getOrCreateSettings, handlemsg } = require(`${process.cwd()}/src/utils/functions`)
         const settings = await getOrCreateSettings(client, interaction.guild.id)
-
-        const langDict = ls["cmds"]["autorole-setup"] || {}
 
         if (subcommand === "set") {
             const role = interaction.options.getRole("role")
@@ -36,30 +34,28 @@ module.exports = {
                 return client.errEmbed({
                     type: "reply",
                     ephemeral: true,
-                    title: langDict["title"] || "🤖 Auto-Role Setup",
-                    desc: handlemsg(langDict["err_bot_hierarchy"] || "I cannot assign the role <@&{role}> because it is higher than or equal to my highest role!", { role: role.id })
+                    title: ls["cmds"]["autorole-setup"]["title"],
+                    desc: handlemsg(ls["cmds"]["autorole-setup"]["err_bot_hierarchy"], { role: role.id })
                 }, interaction)
             }
 
             settings.autorole = role.id
-            await client.settings.saveData()
 
             client.successEmbed({
                 type: "reply",
                 ephemeral: true,
-                title: langDict["title"] || "🤖 Auto-Role Setup",
-                desc: handlemsg(langDict["set_success"] || "Auto-Role has been successfully set to <@&{role}>!", { role: role.id })
+                title: ls["cmds"]["autorole-setup"]["title"],
+                desc: handlemsg(ls["cmds"]["autorole-setup"]["set_success"], { role: role.id })
             }, interaction)
 
         } else if (subcommand === "disable") {
             settings.autorole = null
-            await client.settings.saveData()
 
             client.successEmbed({
                 type: "reply",
                 ephemeral: true,
-                title: langDict["title"] || "🤖 Auto-Role Setup",
-                desc: langDict["disabled"] || "Auto-Role has been successfully disabled."
+                title: ls["cmds"]["autorole-setup"]["title"],
+                desc: ls["cmds"]["autorole-setup"]["disabled"]
             }, interaction)
         }
     }

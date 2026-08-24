@@ -24,7 +24,7 @@ function buildComponents(options, disabled = false) {
 }
 
 function getColor(client, guildId) {
-    const settings = client.settings.mapCache?.get(guildId)
+    const settings = client.settings?.mapCache?.get(guildId) || (client.db ? client.db.getSettings(guildId) : null)
     const hex = settings?.embed_color?.replace("#", "") || "5865F2"
     return parseInt(hex, 16)
 }
@@ -69,10 +69,9 @@ function attachCollector(client, pollMsg, pollData, handlemsg) {
         const optionIdx = parseInt(i.customId.replace("poll_vote_", ""))
 
         pollData.voterMap[i.user.id] = optionIdx
-        const record = client.polls.storage.data.find(p => p.pollId === pollId)
+        const record = client.polls.mapCache?.get(String(pollId))
         if (record) {
             record.voterMap = pollData.voterMap
-            await client.polls.saveData()
         }
 
         await i.update({
@@ -102,16 +101,18 @@ async function finalisePoll(client, pollMsg, pollData, handlemsg) {
         components: buildComponents(options, true)
     }).catch(() => { })
 
-    const idx = client.polls.storage.data.findIndex(p => p.pollId === pollId)
-    if (idx !== -1) {
-        client.polls.storage.data.splice(idx, 1)
-        await client.polls.saveData()
+    if (client.db) {
+        client.db.deletePoll(pollId)
+    }
+    
+    if (client.polls && client.polls.mapCache) {
+        client.polls.mapCache.delete(pollId)
     }
 }
 
 RestoreManager.register("Polls", async (client) => {
-    const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
-    const activePolls = [...(client.polls?.storage?.data || [])]
+    const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
+    const activePolls = client.db ? client.db.getAllPolls() : []
     if (activePolls.length === 0) return
 
     for (const pollData of activePolls) {
@@ -121,8 +122,19 @@ RestoreManager.register("Polls", async (client) => {
             const channel = guild.channels.cache.get(pollData.channelId)
             if (!channel) continue
             const message = await channel.messages.fetch(pollData.messageId).catch(() => null)
-            if (!message) continue
-            attachCollector(client, message, pollData, handlemsg)
+            if (!message) {
+                if (client.db) client.db.deletePoll(pollData.pollId)
+                continue
+            }
+
+            const proxy = require(`${process.cwd()}/src/utils/functions`).createAutoSaveProxy(pollData, (p) => {
+                if (client.db) client.db.savePoll(p.__raw || p)
+            })
+            if (client.polls && client.polls.mapCache) {
+                client.polls.mapCache.set(String(pollData.pollId), proxy)
+            }
+
+            attachCollector(client, message, proxy, handlemsg)
         } catch (err) {
             console.error(`  > [Poll Restore] Failed for poll ${pollData.pollId}: ${err.message}`)
         }
@@ -190,7 +202,7 @@ module.exports = {
         const durationMs = (interaction.options.getInteger("duration") || 60) * 60 * 1000
 
         const ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg, createPoll } = require(`${process.cwd()}/src/utils/functions`)
 
         const options = ["option1", "option2", "option3", "option4", "option5"]
             .map(name => interaction.options.getString(name))
@@ -224,7 +236,7 @@ module.exports = {
 
         pollData.pollId = pollMsg.id
         pollData.messageId = pollMsg.id
-        await client.polls.createData(pollData)
+        await createPoll(client, pollData)
 
         attachCollector(client, pollMsg, pollData, handlemsg)
 

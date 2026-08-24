@@ -21,7 +21,7 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionsBitField.Flags.Administrator),
     async execute(client, interaction) {
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/handlers/functions`)
+        const { handlemsg, getSetupControls, getOrCreateTicketPanel } = require(`${process.cwd()}/src/utils/functions`)
 
         try {
             let SetupNumber = null
@@ -93,11 +93,9 @@ module.exports = {
                     await menu.deferUpdate()
                     SetupNumber = menu.values[0].split(" ")[0]
 
-                    if (!client.ticket.storage.data.find(x => x.panel === SetupNumber && x.guildId === interaction.guild.id)) {
-                        await client.ticket.createData({ guildId: interaction.guild.id, panel: SetupNumber, roles: [], channel: 0, category: 0, })
-                    }
+                    let panel = await getOrCreateTicketPanel(client, interaction.guild.id, SetupNumber);
 
-                    start_second_layer()
+                    start_second_layer(panel);
                 })
 
                 col.on('end', (c, reason) => {
@@ -106,9 +104,8 @@ module.exports = {
                 })
             }
 
-            async function start_second_layer() {
-                const panel = client.ticket.storage.data.find(x => x.panel === SetupNumber && x.guildId === interaction.guild.id)
-                if (!panel) return
+            async function start_second_layer(panel) {
+                if (!panel) return;
 
                 const botMember = interaction.guild.members.me;
                 const adminMember = interaction.member;
@@ -122,11 +119,7 @@ module.exports = {
                     )
                     .sort((a, b) => b.position - a.position);
 
-                const rolesArray = Array.from(assignableRoles.values());
-                const chunks = [];
-                for (let j = 0; j < rolesArray.length; j += 25) {
-                    chunks.push(rolesArray.slice(j, j + 25));
-                }
+                const assignableRoleIds = new Set(assignableRoles.map(r => r.id));
 
                 async function getComponents() {
                     const row1 = new ActionRowBuilder().addComponents(
@@ -138,66 +131,42 @@ module.exports = {
 
                     const comp = [row1]
 
-                    const isDe = client.getLanguage(interaction.guild?.id)?.language === "de";
-
-                    if (chunks.length === 0) {
+                    if (assignableRoleIds.size === 0) {
                         const disabledRow = new ActionRowBuilder().addComponents(
-                            new StringSelectMenuBuilder()
-                                .setCustomId("ticket-role-toggle-disabled")
+                            new RoleSelectMenuBuilder()
+                                .setCustomId("ticket-role-select-disabled")
                                 .setPlaceholder(ls["cmds"]["t-setup"]["no_roles_found"])
                                 .setDisabled(true)
-                                .addOptions({ label: "None", value: "none" })
                         );
                         comp.push(disabledRow);
                     } else {
-                        const maxChunks = Math.min(chunks.length, 3);
-                        for (let c = 0; c < maxChunks; c++) {
-                            const chunk = chunks[c];
-                            const options = chunk.map(role => {
-                                const isAdded = panel.roles.includes(role.id);
-                                return {
-                                    label: role.name.substring(0, 50),
-                                    value: role.id,
-                                    description: isAdded
-                                        ? (isDe ? "Klicken zum Entfernen" : "Click to remove")
-                                        : (isDe ? "Klicken zum Hinzufügen" : "Click to add"),
-                                    emoji: isAdded ? "✅" : "➕"
-                                };
-                            });
-
-                            const selectMenu = new StringSelectMenuBuilder()
-                                .setCustomId(`ticket-role-toggle-${c}`)
-                                .setPlaceholder(ls["cmds"]["t-setup"]["select_role_add"] + (chunks.length > 1 ? ` (${c + 1}/${chunks.length})` : ""))
-                                .addOptions(options);
-
-                            comp.push(new ActionRowBuilder().addComponents(selectMenu));
+                        const roleMenu = new RoleSelectMenuBuilder()
+                            .setCustomId("ticket-role-select")
+                            .setPlaceholder(ls["cmds"]["t-setup"]["select_role_add"] || "Search and select roles")
+                            .setMinValues(0)
+                            .setMaxValues(5);
+                            
+                        if (panel.roles && panel.roles.length > 0) {
+                            roleMenu.addDefaultRoles(panel.roles);
                         }
+                            
+                        comp.push(new ActionRowBuilder().addComponents(roleMenu));
                     }
 
                     const categoryExists = panel.category && interaction.guild.channels.cache.has(panel.category)
+                    const extraCategoryButton = new ButtonBuilder()
+                        .setCustomId("btn-category")
+                        .setLabel(categoryExists ? ls["cmds"]["t-setup"]["btn_category_update"] : ls["cmds"]["t-setup"]["btn_category"])
+                        .setStyle(ButtonStyle.Secondary)
+                        .setEmoji("📋");
 
-                    const buttonsRow = new ActionRowBuilder().addComponents(
-                        new ButtonBuilder()
-                            .setCustomId("btn-category")
-                            .setLabel(categoryExists ? ls["cmds"]["t-setup"]["btn_category_update"] : ls["cmds"]["t-setup"]["btn_category"])
-                            .setStyle(ButtonStyle.Secondary)
-                            .setEmoji("📋"),
-                        new ButtonBuilder()
-                            .setCustomId("btn-send")
-                            .setLabel(ls["cmds"]["t-setup"]["btn_send"])
-                            .setStyle(ButtonStyle.Success)
-                            .setEmoji("📨"),
-                        new ButtonBuilder()
-                            .setCustomId("btn-reset")
-                            .setLabel(ls["cmds"]["t-setup"]["btn_reset"])
-                            .setStyle(ButtonStyle.Danger)
-                            .setEmoji("🔄"),
-                        new ButtonBuilder()
-                            .setCustomId("btn-cancel")
-                            .setLabel(ls["cmds"]["t-setup"]["btn_cancel"])
-                            .setStyle(ButtonStyle.Danger)
-                            .setEmoji("❌")
-                    )
+                    const buttonsRow = getSetupControls({
+                        btn_send: ls["cmds"]["t-setup"]["btn_send"],
+                        btn_reset: ls["cmds"]["t-setup"]["btn_reset"],
+                        btn_cancel: ls["cmds"]["t-setup"]["btn_cancel"],
+                        extra: [extraCategoryButton]
+                    });
+
                     comp.push(buttonsRow)
                     return comp
                 }
@@ -210,13 +179,6 @@ module.exports = {
                         category: panel.category && panel.category !== '0' ? `<#${panel.category}>` : ls["cmds"]["t-setup"]["not_set"],
                         roles: panel.roles.length > 0 ? panel.roles.map(r => `<@&${r}>`).join(", ") : ls["cmds"]["t-setup"]["no_roles_added"]
                     })
-
-                    const isDe = client.getLanguage(interaction.guild?.id)?.language === "de";
-
-                    if (chunks.length > 3) {
-                        statusDesc += ls["cmds"]["t-setup"]["warning_limit"];
-                    }
-
                     const comps = await getComponents()
 
                     if (i) {
@@ -246,26 +208,38 @@ module.exports = {
                 })
 
                 collector.on("collect", async (i) => {
-                    const isDe = client.getLanguage(interaction.guild?.id)?.language === "de";
                     if (i.customId === "channel-select") {
                         panel.channel = i.values[0]
-                        await client.ticket.saveData()
+
                         await render_panel(i)
-                    } else if (i.customId.startsWith("ticket-role-toggle-")) {
-                        const roleId = i.values[0]
-                        if (panel.roles.includes(roleId)) {
-                            panel.roles = panel.roles.filter(r => r !== roleId)
-                        } else {
-                            if (panel.roles.length >= 5) {
-                                return i.reply({
-                                    content: ls["cmds"]["t-setup"]["err_max_roles"],
-                                    ephemeral: true
-                                })
+                    } else if (i.customId === "ticket-role-select") {
+                        const selectedRoleIds = i.values;
+                        const validRoles = [];
+                        let limitReached = false;
+                        
+                        for (const roleId of selectedRoleIds) {
+                            if (assignableRoleIds.has(roleId)) {
+                                if (validRoles.length < 5) {
+                                    validRoles.push(roleId);
+                                } else {
+                                    limitReached = true;
+                                }
                             }
-                            panel.roles.push(roleId)
                         }
-                        await client.ticket.saveData()
-                        await render_panel(i)
+                        
+                        panel.roles = validRoles;
+
+                        
+                        if (validRoles.length < selectedRoleIds.length || limitReached) {
+                            await i.deferUpdate();
+                            await interaction.followUp({
+                                content: ls["cmds"]["t-setup"]["err_role_limit"],
+                                ephemeral: true
+                            });
+                            await render_panel();
+                        } else {
+                            await render_panel(i);
+                        }
                     } else if (i.customId === "btn-category") {
                         if (panel.roles.length === 0) {
                             return i.reply({
@@ -323,7 +297,7 @@ module.exports = {
                             }
 
                             panel.category = category.id
-                            await client.ticket.saveData()
+
                             await render_panel(i)
                         }
                     } else if (i.customId === "btn-send") {
@@ -371,7 +345,7 @@ module.exports = {
                         panel.roles = []
                         panel.channel = 0
                         panel.category = 0
-                        await client.ticket.saveData()
+
                         await render_panel(i)
                     } else if (i.customId === "btn-cancel") {
                         collector.stop("canceled")
@@ -396,7 +370,7 @@ module.exports = {
                 })
             }
         } catch (err) {
-            console.log(err)
+            console.error("[ticket-setup] Execution error:", err)
         }
     }
 }
