@@ -1,5 +1,4 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { PermissionsBitField, ActionRowBuilder, ButtonBuilder, StringSelectMenuBuilder, ChannelSelectMenuBuilder, RoleSelectMenuBuilder, ButtonStyle, ChannelType, ModalBuilder, TextInputBuilder, TextInputStyle } = require("discord.js")
+const { SlashCommandBuilder, PermissionsBitField, ActionRowBuilder, ButtonBuilder, StringSelectMenuBuilder, ChannelSelectMenuBuilder, RoleSelectMenuBuilder, ButtonStyle, ChannelType, ModalBuilder, TextInputBuilder, TextInputStyle } = require("discord.js")
 
 const emojis = {
     "1": "1️⃣",
@@ -21,7 +20,8 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionsBitField.Flags.Administrator),
     async execute(client, interaction) {
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getSetupControls, getOrCreateReactionRolePanel } = require(`${process.cwd()}/src/utils/functions`)
+        const { handlemsg, getSetupControls } = require("../../utils/stringUtils")
+        const defaultDb = require("../../database/Database")
 
         try {
             let SetupNumber = null;
@@ -87,7 +87,14 @@ module.exports = {
                     await menu.deferUpdate();
                     SetupNumber = menu.values[0].split(" ")[0];
 
-                    let existingPanel = await getOrCreateReactionRolePanel(client, interaction.guild.id, SetupNumber);
+                    const database = client.db || defaultDb;
+                    let existingPanel = database.getReactionRole(interaction.guild.id, SetupNumber) || {
+                        guildId: String(interaction.guild.id),
+                        panel: SetupNumber,
+                        roles: [],
+                        channel: 0,
+                        description: null
+                    };
 
                     start_second_layer(existingPanel);
                 });
@@ -140,11 +147,11 @@ module.exports = {
                             .setPlaceholder(ls["cmds"]["role-setup"]["select_role_add"])
                             .setMinValues(0)
                             .setMaxValues(25);
-                            
+
                         if (panel.roles && panel.roles.length > 0) {
                             roleMenu.addDefaultRoles(panel.roles);
                         }
-                            
+
                         comp.push(new ActionRowBuilder().addComponents(roleMenu));
                     }
                     const extraDescButton = new ButtonBuilder()
@@ -165,6 +172,9 @@ module.exports = {
                 }
 
                 async function render_panel(i) {
+                    const database = client.db || defaultDb;
+                    database.saveReactionRole(panel);
+
                     const statusTitle = handlemsg(ls["cmds"]["role-setup"]["status_title"], { panel: SetupNumber });
                     let statusDesc = handlemsg(ls["cmds"]["role-setup"]["status_desc"], {
                         panel: SetupNumber,
@@ -209,7 +219,7 @@ module.exports = {
                         const selectedRoleIds = i.values;
                         const validRoles = [];
                         let limitReached = false;
-                        
+
                         for (const roleId of selectedRoleIds) {
                             if (assignableRoleIds.has(roleId)) {
                                 if (validRoles.length < 25) {
@@ -219,9 +229,9 @@ module.exports = {
                                 }
                             }
                         }
-                        
+
                         panel.roles = validRoles;
-                        
+
                         if (validRoles.length < selectedRoleIds.length || limitReached) {
                             await i.deferUpdate();
                             await interaction.followUp({
@@ -293,6 +303,8 @@ module.exports = {
                         }
 
                         const finalDesc = panel.description || ls["cmds"]["role-setup"]["panel_desc"];
+                        const database = client.db || defaultDb;
+                        database.saveReactionRole(panel);
 
                         await client.Embed([{
                             title: ls["cmds"]["role-setup"]["panel_title"],

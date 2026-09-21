@@ -1,7 +1,10 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { PermissionsBitField } = require("discord.js")
+
+const { PermissionsBitField, SlashCommandBuilder } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
+const { getOrCreateSettings } = require("../../repositories/SettingsRepository")
 
 module.exports = {
+    guildOnly: true,
     data: new SlashCommandBuilder()
         .setName("bot-embed")
         .setDescription("Change the color of the bot's embed")
@@ -15,8 +18,7 @@ module.exports = {
         async execute(client, interaction){
             const hex = interaction.options.get("hex-color").value
 
-            let ls = client.getLanguage(interaction.guild?.id)
-            const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/utils/functions`)
+            const ls = client.getLanguage(interaction.guild?.id)
 
             const settings = await getOrCreateSettings(client, interaction.guild.id)
 

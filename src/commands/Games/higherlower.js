@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
 
 let topArticlesPool = []
 let lastFetchedMonth = ""
@@ -36,6 +37,7 @@ const fetchTopWikipediaArticles = async () => {
         }
         return topArticlesPool
     } catch (err) {
+        console.error("[higherlower] Failed to fetch top Wikipedia articles:", err.message)
         return topArticlesPool
     }
 }
@@ -51,6 +53,7 @@ const fetchArticleThumbnail = async (wikiTitle) => {
         summaryCache.set(wikiTitle, thumb)
         return thumb
     } catch (err) {
+        console.error(`[higherlower] Failed to fetch thumbnail for ${wikiTitle}:`, err.message)
         return null
     }
 }
@@ -83,16 +86,17 @@ const getNextTopic = async (usedSet, excludeWiki = "") => {
 }
 
 module.exports = {
+    guildOnly: false,
+    cooldown: 5,
     data: new SlashCommandBuilder()
         .setName("higherlower")
         .setDescription("Play Higher or Lower with live Wikipedia Top 1,000 Most Read topics"),
     async execute(client, interaction) {
-        let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
+        const ls = client.getLanguage(interaction.guild?.id)
 
         const usedTopics = new Set()
 
-        await interaction.deferReply({ ephemeral: true }).catch(() => {})
+        await interaction.deferReply({ ephemeral: true }).catch((err) => console.error("[higherlower] Failed to defer reply:", err.message))
 
         let itemA = await getNextTopic(usedTopics)
         let itemB = await getNextTopic(usedTopics, itemA.wiki)
@@ -292,7 +296,7 @@ module.exports = {
             if (reason === "time") {
                 await replyMsg.edit({
                     components: buildDisabledComponents()
-                }).catch(() => {})
+                }).catch((err) => console.error("[higherlower] Failed to disable components on collector end:", err.message))
             }
         })
     }

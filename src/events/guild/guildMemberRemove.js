@@ -1,11 +1,12 @@
-const { sendModLog, handlemsg } = require(`${process.cwd()}/src/utils/functions`)
+const { sendModLog } = require("../../services/SecurityService")
+const { handlemsg } = require("../../utils/stringUtils")
 
 module.exports = {
     name: "guildMemberRemove",
     async execute(member, client) {
         if (!member.guild) return
 
-        let ls = client.getLanguage(member.guild.id)
+        const ls = client.getLanguage(member.guild.id)
 
         const roles = member.roles.cache
             .filter(r => r.id !== member.guild.id)

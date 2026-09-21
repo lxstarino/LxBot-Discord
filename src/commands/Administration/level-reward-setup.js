@@ -1,7 +1,9 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { PermissionsBitField } = require("discord.js")
+const { SlashCommandBuilder, PermissionsBitField } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
+const { getOrCreateSettings } = require("../../repositories/SettingsRepository")
 
 module.exports = {
+    guildOnly: true,
     data: new SlashCommandBuilder()
         .setName("level-reward-setup")
         .setDescription("Configure level role rewards for your server")
@@ -44,7 +46,6 @@ module.exports = {
         const subcommand = interaction.options.getSubcommand()
 
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/utils/functions`)
 
         const settings = await getOrCreateSettings(client, interaction.guild.id)
         if (!settings.level_roles) settings.level_roles = []
@@ -58,7 +59,6 @@ module.exports = {
                 return client.errEmbed({
                     type: "reply",
                     ephemeral: true,
-                    title: ls["cmds"]["level-reward-setup"]["title"],
                     desc: handlemsg(ls["cmds"]["level-reward-setup"]["err_bot_hierarchy"], { role: role.id })
                 }, interaction)
             }
@@ -78,7 +78,7 @@ module.exports = {
                 if (userLevel >= level) {
                     const member = interaction.guild.members.cache.get(p.userId) || await interaction.guild.members.fetch(p.userId).catch(() => null)
                     if (member && !member.roles.cache.has(role.id)) {
-                        await member.roles.add(role.id).catch(() => {})
+                        await member.roles.add(role.id).catch((err) => console.error(`[level-reward-setup] Failed to add role ${role.id} to member ${member.id}:`, err.message))
                     }
                 }
             }
@@ -97,7 +97,6 @@ module.exports = {
                 return client.errEmbed({
                     type: "reply",
                     ephemeral: true,
-                    title: ls["cmds"]["level-reward-setup"]["title"],
                     desc: handlemsg(ls["cmds"]["level-reward-setup"]["remove_not_found"], { level })
                 }, interaction)
             }

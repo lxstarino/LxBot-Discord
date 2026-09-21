@@ -1,6 +1,11 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+const { SlashCommandBuilder } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
+const { getOrCreateProfile } = require("../../repositories/ProfileRepository")
+const { getOrCreateSettings } = require("../../repositories/SettingsRepository")
+const EconomyService = require("../../services/EconomyService")
 
 module.exports = {
+    guildOnly: true,
     data: new SlashCommandBuilder()
         .setName("buy")
         .setDescription("Purchase a role from the server shop")
@@ -12,24 +17,16 @@ module.exports = {
     async execute(client, interaction) {
         const role = interaction.options.getRole("role")
 
-        let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateProfile, getOrCreateSettings } = require(`${process.cwd()}/src/utils/functions`)
+        const ls = client.getLanguage(interaction.guild?.id)
 
         const settings = await getOrCreateSettings(client, interaction.guild.id)
-        settings.shop_items = settings.shop_items || []
-
-        const initialCount = settings.shop_items.length
-        settings.shop_items = settings.shop_items.filter(item => interaction.guild.roles.cache.has(item.roleId))
-        if (settings.shop_items.length !== initialCount) {
-
-        }
+        settings.shop_items = (settings.shop_items || []).filter(item => interaction.guild.roles.cache.has(item.roleId))
 
         const shopItem = settings.shop_items.find(item => item.roleId === role.id)
         if (!shopItem) {
             return client.errEmbed({
                 type: "reply",
                 ephemeral: true,
-                title: ls["cmds"]["buy"]["title"],
                 desc: handlemsg(ls["cmds"]["buy"]["not_for_sale"], { role: role.id })
             }, interaction)
         }
@@ -40,29 +37,26 @@ module.exports = {
             return client.errEmbed({
                 type: "reply",
                 ephemeral: true,
-                title: ls["cmds"]["buy"]["title"],
                 desc: handlemsg(ls["cmds"]["buy"]["nem"], { role: role.id, price: shopItem.price.toLocaleString() })
             }, interaction)
         }
 
         const member = interaction.member
         if (member.roles.cache.has(role.id)) {
-
             return client.errEmbed({
                 type: "reply",
                 ephemeral: true,
-                title: ls["cmds"]["buy"]["title"],
                 desc: handlemsg(ls["cmds"]["buy"]["already_has"], { role: role.id })
             }, interaction)
         }
 
-        profile.wallet -= shopItem.price
+        EconomyService.removeWallet(profile, shopItem.price)
 
         try {
             await member.roles.add(role)
         } catch (err) {
             console.error("Failed to add role:", err)
-            profile.wallet += shopItem.price
+            EconomyService.addWallet(profile, shopItem.price)
 
             throw ({
                 title: ls["cmds"]["buy"]["title"],

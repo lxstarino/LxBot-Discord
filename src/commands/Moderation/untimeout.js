@@ -1,7 +1,9 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { PermissionsBitField } = require("discord.js")
+const { PermissionsBitField, SlashCommandBuilder } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
+const { sendModLog } = require("../../services/SecurityService")
 
 module.exports = {
+    guildOnly: true,
     data: new SlashCommandBuilder()
         .setName("untimeout")
         .setDescription("Remove timeout/mute from a member on the server")
@@ -18,13 +20,12 @@ module.exports = {
             .setRequired(false)
         ),
     async execute(client, interaction) {
-        const target = interaction.options.get("target")
+        const targetUser = interaction.options.getUser("target")
         const reason = interaction.options.getString("reason") || "No reason provided"
 
-        let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
+        const ls = client.getLanguage(interaction.guild?.id)
 
-        const member = await interaction.guild.members.fetch(target.user.id).catch(() => null)
+        const member = await interaction.guild.members.fetch(targetUser.id).catch(() => null)
         if (!member) {
             throw ({ title: ls["cmds"]["untimeout"]["title"], desc: ls["errors"]["unf"] })
         }
@@ -44,19 +45,18 @@ module.exports = {
         client.Embed([{
             title: ls["cmds"]["untimeout"]["title"],
             desc: handlemsg(ls["cmds"]["untimeout"]["success"], {
-                target: target.user.id,
+                target: targetUser.id,
                 reason: reason
             }),
             timestamp: interaction.createdTimestamp,
             footer: { text: `Moderator: ${interaction.user.tag}` }
         }], undefined, "reply", false, interaction)
 
-        const { sendModLog } = require(`${process.cwd()}/src/utils/functions`)
         await sendModLog(client, interaction.guild, {
             title: ls["logs"]["untimeout_title"],
             desc: handlemsg(ls["logs"]["untimeout_desc"], {
-                target: target.user.id,
-                tag: target.user.tag,
+                target: targetUser.id,
+                tag: targetUser.tag,
                 moderator: interaction.user.id,
                 reason: reason
             }),

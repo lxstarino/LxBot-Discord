@@ -1,8 +1,13 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+const { SlashCommandBuilder } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
+const { getOrCreateProfile } = require("../../repositories/ProfileRepository")
+const EconomyService = require("../../services/EconomyService")
 
 const slotItemList = ["🍇", "🍉", "🍊", "🍎", "🍓", "🍒", "🥕", "🍋", "🍏", "🍅"]
 
 module.exports = {
+    guildOnly: true,
+    cooldown: 4,
     data: new SlashCommandBuilder()
         .setName("slots")
         .setDescription("Try your luck in slots")
@@ -15,14 +20,12 @@ module.exports = {
     async execute(client, interaction) {
         let amount = interaction.options.getInteger("amount")
 
-        let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/utils/functions`)
+        const ls = client.getLanguage(interaction.guild?.id)
 
         if (!Number.isInteger(amount)) {
             return client.errEmbed({
                 type: "reply",
                 ephemeral: true,
-                title: ls["cmds"]["slots"]["title"],
                 desc: ls["errors"]["nwn"]
             }, interaction)
         }
@@ -33,10 +36,11 @@ module.exports = {
             return client.errEmbed({
                 type: "reply",
                 ephemeral: true,
-                title: ls["cmds"]["slots"]["title"],
                 desc: ls["cmds"]["slots"]["nem"]
             }, interaction)
         }
+
+        EconomyService.removeWallet(profile, amount)
 
         let slotItems = [
             Math.floor(Math.random() * slotItemList.length),
@@ -60,26 +64,29 @@ module.exports = {
         const msg = await client.Embed([{
             title: ls["cmds"]["slots"]["title"],
             desc: `[ 🎰 | 🎰 | 🎰 ]\n\n🎰 *Spinning the slot reels...*`
-        }], [], "reply", true, interaction)
+        }], [], "reply", false, interaction)
 
-        if (!msg) return
+        if (!msg) {
+            EconomyService.addWallet(profile, amount)
+            return
+        }
 
         await sleep(700)
         await client.Embed([{
             title: ls["cmds"]["slots"]["title"],
             desc: `[ ${slotItemList[slotItems[0]]} | 🎰 | 🎰 ]\n\n🎰 *Spinning the slot reels...*`
-        }], [], "editReply", true, interaction)
+        }], [], "editReply", false, interaction)
 
         await sleep(700)
         await client.Embed([{
             title: ls["cmds"]["slots"]["title"],
             desc: `[ ${slotItemList[slotItems[0]]} | ${slotItemList[slotItems[1]]} | 🎰 ]\n\n🎰 *Spinning the slot reels...*`
-        }], [], "editReply", true, interaction)
+        }], [], "editReply", false, interaction)
 
         await sleep(700)
 
         if (win) {
-            profile.wallet += payout
+            EconomyService.addWallet(profile, payout)
 
             const winDesc = handlemsg(ls["cmds"]["slots"]["win"], {
                 item1: slotItemList[slotItems[0]],
@@ -92,28 +99,27 @@ module.exports = {
                 color: "#2ECC71",
                 desc: winDesc,
                 fields: [
-                    { name: ls["cmds"]["slots"]["fields"]["name1"], value: handlemsg(ls["cmds"]["slots"]["fields"]["value2"], { amount: payout }), inline: true },
+                    { name: ls["cmds"]["slots"]["fields"]["name1"], value: handlemsg(ls["cmds"]["slots"]["fields"]["value1"], { amount: payout }), inline: true },
                     { name: ls["cmds"]["slots"]["fields"]["name2"], value: handlemsg(ls["cmds"]["slots"]["fields"]["value2"], { amount: profile.wallet }), inline: true }
                 ]
-            }], [], "editReply", true, interaction)
+            }], [], "editReply", false, interaction)
         } else {
-            profile.wallet -= amount
-
             const lostDesc = handlemsg(ls["cmds"]["slots"]["lost"], {
                 item1: slotItemList[slotItems[0]],
                 item2: slotItemList[slotItems[1]],
                 item3: slotItemList[slotItems[2]]
             })
 
+            const coin = client.appEmojis?.lux_coin || "<:lux_coin:1550631084855922698>"
             await client.Embed([{
                 title: ls["cmds"]["slots"]["title"],
                 color: "#E74C3C",
                 desc: lostDesc,
                 fields: [
-                    { name: ls["cmds"]["slots"]["fields"]["name1"], value: handlemsg(ls["cmds"]["slots"]["fields"]["value1"], { amount: amount }), inline: true },
+                    { name: ls["cmds"]["slots"]["fields"]["name1"], value: `-${amount} ${coin}`, inline: true },
                     { name: ls["cmds"]["slots"]["fields"]["name2"], value: handlemsg(ls["cmds"]["slots"]["fields"]["value2"], { amount: profile.wallet }), inline: true }
                 ]
-            }], [], "editReply", true, interaction)
+            }], [], "editReply", false, interaction)
         }
     }
 }

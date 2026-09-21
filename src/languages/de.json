@@ -1,63 +1,98 @@
 {
     "cmds": {
+        "emoji-list": {
+            "title_server": "Server-Emojis",
+            "desc_overview": "**Gesamt:** `{total}` • **Statisch:** `{static}` • **Animiert:** `{animated}`",
+            "empty_server": "Auf diesem Server gibt es bisher keine benutzerdefinierten Emojis.",
+            "field_id": "ID",
+            "field_syntax": "Syntax",
+            "field_type": "Typ",
+            "type_static": "Statisch",
+            "type_animated": "Animiert",
+            "field_links": "Links",
+            "page_footer": "Seite {page} von {maxPage} • Emojis insgesamt: {total}",
+            "not_owner": "Du kannst dieses Menü nicht bedienen."
+        },
+        "twitch-notifications": {
+            "title": "Twitch-Benachrichtigungen",
+            "add_success": "Live-Benachrichtigungen für **{streamer}** im Kanal <#{channel}> erfolgreich eingerichtet.",
+            "remove_success": "**{streamer}** wurde erfolgreich aus den Benachrichtigungen entfernt.",
+            "not_tracked": "**{streamer}** wird auf diesem Server derzeit nicht verfolgt.",
+            "err_invalid_name": "Bitte gib einen gültigen Twitch-Namen ein (3-25 Zeichen, nur Buchstaben, Zahlen und Unterstriche).",
+            "err_not_found": "Der Twitch-Kanal **{streamer}** existiert nicht auf Twitch.",
+            "err_limit": "Dieser Server hat das Limit von maximal **3** getrackten Twitch-Streamern erreicht.",
+            "err_perms": "Mir fehlen die Berechtigungen **Nachrichten senden** und **Links einbetten** in <#{channel}>!",
+            "list_title": "Verfolgte Twitch-Streamer",
+            "list_empty": "Auf diesem Server werden derzeit keine Twitch-Streamer verfolgt."
+        },
+        "youtube-notifications": {
+            "title": "YouTube-Benachrichtigungen",
+            "add_success": "Upload-Benachrichtigungen für **{channel}** im Kanal <#{discord_channel}> erfolgreich eingerichtet.",
+            "remove_success": "**{channel}** wurde erfolgreich aus den YouTube-Benachrichtigungen entfernt.",
+            "not_tracked": "**{channel}** wird auf diesem Server derzeit nicht verfolgt.",
+            "err_not_found": "Der YouTube-Kanal **{channel}** existiert nicht oder konnte nicht gefunden werden. Bitte überprüfe das Handle (@Name) oder die Kanal-ID.",
+            "err_limit": "Dieser Server hat das Limit von maximal **5** getrackten YouTube-Kanälen erreicht.",
+            "err_perms": "Mir fehlen die Berechtigungen **Nachrichten senden** und **Links einbetten** in <#{channel}>!",
+            "list_title": "Verfolgte YouTube-Kanäle",
+            "list_empty": "Auf diesem Server werden derzeit keine YouTube-Kanäle verfolgt."
+        },
         "balance": {
             "title": "Kontostand von {target}",
             "fields": {
-                "wallet": "👛 Geldbörse",
-                "bank": "🏦 Bank",
-                "wallet_value": "{wallet} 💰",
-                "bank_value": "{bank} 💰"
+                "wallet": "<:lux_wallet:1550640829620559982> Geldbörse",
+                "bank": "<:lux_bank:1550640811853611180> Bank",
+                "wallet_value": "{wallet} <:lux_coin:1550631084855922698>",
+                "bank_value": "{bank} <:lux_coin:1550631084855922698>"
             }
         },
         "economy-manage": {
-            "title": "🏦 Economy-Verwaltung",
-            "add_success": "Erfolgreich **{amount} 💰** zum {type} von <@!{user}> hinzugefügt.",
-            "remove_success": "Erfolgreich **{amount} 💰** vom {type} von <@!{user}> abgezogen.",
-            "set_success": "Das Guthaben im {type} von <@!{user}> wurde erfolgreich auf **{amount} 💰** gesetzt.",
-            "err_invalid_amount": "Der Betrag muss eine positive Zahl sein.",
+            "title": "<:lux_bank:1550640811853611180> Economy-Verwaltung",
+            "add_success": "Erfolgreich **{amount} <:lux_coin:1550631084855922698>** zum {type} von <@!{user}> hinzugefügt.",
+            "remove_success": "Erfolgreich **{amount} <:lux_coin:1550631084855922698>** vom {type} von <@!{user}> abgezogen.",
+            "set_success": "Das Guthaben im {type} von <@!{user}> wurde erfolgreich auf **{amount} <:lux_coin:1550631084855922698>** gesetzt.",
             "wallet": "Geldbörse",
             "bank": "Bankkonto"
         },
         "daily": {
             "title": "📅 Tägliche Belohnung",
             "already_collected": "Du hast deine tägliche Belohnung bereits abgeholt! Bitte warte bis <t:{time}:f> (<t:{time}:R>).",
-            "collect": "Du hast deine tägliche Belohnung von **5.000 💰** erfolgreich abgeholt!"
+            "collect": "Du hast deine tägliche Belohnung von **5.000 <:lux_coin:1550631084855922698>** erfolgreich abgeholt!"
         },
         "weekly": {
             "title": "📆 Wöchentliche Belohnung",
             "already_collected": "Du hast deine wöchentliche Belohnung bereits abgeholt! Bitte warte bis <t:{time}:f> (<t:{time}:R>).",
-            "collect": "Du hast deine wöchentliche Belohnung von **10.000 💰** erfolgreich abgeholt!"
+            "collect": "Du hast deine wöchentliche Belohnung von **10.000 <:lux_coin:1550631084855922698>** erfolgreich abgeholt!"
         },
         "monthly": {
             "title": "🗓️ Monatliche Belohnung",
             "already_collected": "Du hast deine monatliche Belohnung bereits abgeholt! Bitte warte bis <t:{time}:f> (<t:{time}:R>).",
-            "collect": "Du hast deine monatliche Belohnung von **20.000 💰** erfolgreich abgeholt!"
+            "collect": "Du hast deine monatliche Belohnung von **20.000 <:lux_coin:1550631084855922698>** erfolgreich abgeholt!"
         },
         "deposit": {
-            "title": "🏦 Bankeinzahlung",
+            "title": "<:lux_bank:1550640811853611180> Bankeinzahlung",
             "nem": "Du hast nicht genug Geld in deiner Geldbörse, um diesen Betrag einzuzahlen!",
-            "successful": "Du hast erfolgreich **{amount} 💰** auf deine Bank eingezahlt."
+            "successful": "Du hast erfolgreich **{amount} <:lux_coin:1550631084855922698>** auf deine Bank eingezahlt."
         },
         "withdraw": {
-            "title": "🏦 Bankauszahlung",
+            "title": "<:lux_bank:1550640811853611180> Bankauszahlung",
             "nem": "Du hast nicht genug Geld auf der Bank, um diesen Betrag auszuzahlen!",
-            "successful": "Du hast erfolgreich **{amount} 💰** von deiner Bank abgehoben."
+            "successful": "Du hast erfolgreich **{amount} <:lux_coin:1550631084855922698>** von deiner Bank abgehoben."
         },
         "transfer": {
             "title": "💸 Geldüberweisung",
             "ctys": "Du kannst dir selbst kein Geld überweisen!",
             "nem": "Du hast nicht genug Geld auf der Bank, um diesen Betrag zu überweisen!",
             "nem_wallet": "Du hast nicht genug Geld in deiner Geldbörse, um diesen Betrag zu überweisen!",
-            "successful": "Du hast erfolgreich **{amount} 💰** an <@!{target}> überwiesen.",
+            "successful": "Du hast erfolgreich **{amount} <:lux_coin:1550631084855922698>** an <@!{target}> überwiesen.",
             "err_bot": "Du kannst kein Geld an Bots überweisen!"
         },
         "rob": {
             "title": "🦹 Raubüberfall",
             "crys": "Du kannst dich nicht selbst ausrauben!",
-            "rbl": "Du musst mindestens **5.000 💰** in deiner Geldbörse haben, um jemanden auszurauben!",
+            "rbl": "Du musst mindestens **5.000 <:lux_coin:1550631084855922698>** in deiner Geldbörse haben, um jemanden auszurauben!",
             "nts": "<@!{target}> hat kein Geld in der Geldbörse, das du stehlen könntest.",
-            "caught": "🚨 Du wurdest erwischt! Du musstest **{amount} 💰** Strafe an <@!{target}> zahlen.",
-            "success": "💰 Du hast erfolgreich **{amount} 💰** von <@!{target}> erbeutet!",
+            "caught": "🚨 Du wurdest erwischt! Du musstest **{amount} <:lux_coin:1550631084855922698>** Strafe an <@!{target}> zahlen.",
+            "success": "<:lux_coin:1550631084855922698> Du hast erfolgreich **{amount} <:lux_coin:1550631084855922698>** von <@!{target}> erbeutet!",
             "err_bot": "Du kannst Bots nicht ausrauben!"
         },
         "slots": {
@@ -68,23 +103,44 @@
             "fields": {
                 "name1": "Gewinn",
                 "name2": "Neuer Kontostand",
-                "value1": "+{amount} 💰",
-                "value2": "{amount} 💰"
+                "value1": "+{amount} <:lux_coin:1550631084855922698>",
+                "value2": "{amount} <:lux_coin:1550631084855922698>"
             }
         },
         "wheel": {
             "title": "🎡 Glücksrad",
-            "err_bet_min": "Der Mindesteinsatz beträgt **10 💰**!",
+            "err_bet_min": "Der Mindesteinsatz beträgt **10 <:lux_coin:1550631084855922698>**!",
             "err_bet_wallet": "Du hast nicht genug Geld in deiner Geldbörse für diesen Einsatz!",
             "spinning": "🎡 Das Glücksrad dreht sich...",
-            "win": "🎉 **JACKPOT!** Das Rad ist auf **{multiplier}x** gelandet! Du hast **+{payout} 💰** gewonnen!",
-            "profit": "✨ Das Rad ist auf **{multiplier}x** gelandet! Du hast **+{payout} 💰** Gewinn gemacht!",
-            "loss": "💥 Das Rad ist auf **{multiplier}x** gelandet! Du hast **-{loss} 💰** verloren!"
+            "win": "🎉 **JACKPOT!** Das Rad ist auf **{multiplier}x** gelandet! Du hast **+{payout} <:lux_coin:1550631084855922698>** gewonnen!",
+            "profit": "✨ Das Rad ist auf **{multiplier}x** gelandet! Du hast **+{payout} <:lux_coin:1550631084855922698>** Gewinn gemacht!",
+            "loss": "💥 Das Rad ist auf **{multiplier}x** gelandet! Du hast **-{loss} <:lux_coin:1550631084855922698>** verloren!"
         },
-        "restart": {
-            "title": "Bot Neustart",
-            "desc": "**Bot-Prozess wird neu gestartet...** Bitte warte einige Sekunden.",
-            "no_perm": "Nur der Bot-Entwickler darf diesen Befehl ausführen!"
+        "drop": {
+            "title": "🎉 Münz-Drop!",
+            "desc": "Ein Münz-Drop ist aufgetaucht!\n\n**Gedroppt von:** <@!{dropper}>\n**Betrag:** **{amount} <:lux_coin:1550631084855922698>**{custom_msg}\n\n*Klicke auf den Button unten, um den Drop einzusammeln!*",
+            "title_claimed": "🎉 Drop Eingesammelt!",
+            "desc_claimed": "<@!{winner}> war am schnellsten und hat **{amount} <:lux_coin:1550631084855922698>** in **{time}s** eingesammelt!\n\n**Gedroppt von:** <@!{dropper}>",
+            "title_expired": "⏰ Drop Abgelaufen",
+            "desc_expired": "Niemand hat den Drop über **{amount} <:lux_coin:1550631084855922698>** rechtzeitig eingesammelt!\nDie Münzen wurden an <@!{dropper}> zurückerstattet.",
+            "btn_claim": "Drop einsammeln! 🎉",
+            "btn_claimed": "Eingesammelt von {user} ⚡",
+            "btn_expired": "Abgelaufen ⏰",
+            "err_nem_wallet": "Du hast nicht genug Münzen in deiner Geldbörse, um diesen Betrag zu droppen!",
+            "err_self_claim": "Du kannst deinen eigenen Drop nicht einsammeln!"
+        },
+        "wordle": {
+            "title": "Wordle",
+            "desc_playing": "Errate das geheime **5-Buchstaben-Wort** in **6 Versuchen**!",
+            "desc_win": "🎉 **Gewonnen!** Du hast das Wordle in **{attempts}/6** Versuchen gelöst!\n\nDas gesuchte Wort war **{word}**.",
+            "desc_lose": "💥 **Spiel vorbei!** Du hattest keine Versuche mehr übrig.\n\nDas gesuchte Wort war **{word}**.",
+            "desc_cancel": "❌ **Spiel abgebrochen!**\n\nDas gesuchte Wort war **{word}**.",
+            "btn_guess": "Wort eingeben",
+            "btn_cancel": "Abbrechen",
+            "modal_title": "Wordle - Wort eingeben",
+            "modal_label": "Gib dein 5-Buchstaben-Wort ein",
+            "err_length": "Dein Wort muss genau 5 Buchstaben lang sein!",
+            "err_alpha": "Dein Wort darf nur Buchstaben (A-Z) enthalten!"
         },
         "bot-dbview": {
             "title": "Datenbank-Viewer",
@@ -161,7 +217,7 @@
             }
         },
         "fact": {
-            "title": "Fakt",
+            "title": "💡 Wusstest du schon?",
             "desc": "Angefordert von {user}\n```{response}```",
             "err_fetch": "Fakten konnten nicht geladen werden."
         },
@@ -194,10 +250,10 @@
             "desc": "**{user}** schlägt **{target}**"
         },
         "avatar": {
-            "title": "{user}'s Profilbild"
+            "title": "🖼️ {user}'s Profilbild"
         },
         "banner": {
-            "title": "Banner von {user}",
+            "title": "🎨 Banner von {user}",
             "desc1": "{target} hat kein Banner",
             "desc2": "Banner konnte nicht angefordert werden"
         },
@@ -205,27 +261,29 @@
             "section_general": "🤖 Allgemein",
             "section_stats": "📊 Statistiken",
             "section_system": "⚙️ System & Hardware",
-            "general_val": "> **Besitzer:** <@!399301340326789120>\n> **Erstellt am:** <t:{created}:D>\n> **Online seit:** <t:{start}:R>{shard}",
-            "stats_val": "> **Server:** {guilds} | **Mitglieder:** {members} | **Kanäle:** {channels}\n> **Befehle:** {total} ({user} User | {dev} Dev)\n> **Datenbank:** SQLite 3",
-            "system_val": "> **Ping:** Bot {bot}ms | WS {ws}ms\n> **Hardware:** {hardware}\n> **Speicher:** {ram} (Bot) | {host_ram} (RAM){disk}\n> **Host-System:** {os} | Online seit <t:{host_uptime}:R>\n> **Versionen:** Node.js {node} | Discord.js v{djs}",
+            "general_val": "> 👑 **Besitzer:** <@!399301340326789120>\n> 📅 **Erstellt am:** <t:{created}:D>\n> 🟢 **Online seit:** <t:{start}:R>{shard}",
+            "stats_val": "> 🌐 **Server:** `{guilds}` • 👥 **Mitglieder:** `{members}` • 💬 **Kanäle:** `{channels}`\n> ⚡ **Befehle:** `{total}` (`{user}` User • `{dev}` Dev)\n> 🗄️ **Datenbank:** `SQLite 3`",
+            "system_val": "> 🏓 **Ping:** Bot `{bot}ms` • WS `{ws}ms`\n> 💻 **CPU:** `{cpu}`{board}\n> 💾 **RAM:** `{ram}` *(Bot)* • `{host_ram}` *(Host)*{disk}\n> 🖥️ **Betriebssystem:** `{os}` • ⏱️ Online seit <t:{host_uptime}:R>\n> 📦 **Laufzeit:** Node.js `{node}` • Discord.js `v{djs}`",
+            "board_line": "\n> 🎛️ **Mainboard:** `{board}`",
+            "disk_line": "\n> 💽 **Speicher:** `{disk}`",
             "shard_info": " (Shard #{shard} von {total})"
         },
         "channelinfo": {
             "section_general": "💬 Allgemein",
             "section_settings": "⚙️ Einstellungen & Zugriff",
-            "general_val": "> **Art:** {type}\n> **Kategorie:** {category}\n> **Erstellt am:** <t:{created}:D> (<t:{created}:R>)\n> **Position:** #{pos}",
-            "settings_val": "> **Slowmode:** {slowmode}\n> **NSFW:** {nsfw}\n> **Berechtigungs-Overrides:** {overwrites}",
-            "voice_val": "\n> **Bitrate:** {bitrate} kbps | **User-Limit:** {limit}",
+            "general_val": "> 🏷️ **Art:** {type}\n> 📁 **Kategorie:** {category}\n> 📅 **Erstellt am:** <t:{created}:D> (<t:{created}:R>)\n> 🔢 **Position:** #{pos}",
+            "settings_val": "> ⏱️ **Slowmode:** {slowmode}\n> 🔞 **NSFW:** {nsfw}\n> 🔒 **Berechtigungs-Overrides:** {overwrites}",
+            "voice_val": "\n> 🔊 **Bitrate:** {bitrate} kbps | 👥 **User-Limit:** {limit}",
             "tnf": "Art nicht gefunden",
             "ntp": "Kein Thema angegeben",
-            "tc": "Text-Kanal",
-            "vc": "Sprach-Kanal",
-            "ac": "Ankündigungs-Kanal",
-            "at": "Ankündigungs-Thread",
-            "pt": "Öffentlicher Thread",
-            "pt2": "Privater Thread",
-            "svc": "Bühnensprachkanal",
-            "fc": "Forum-Kanal",
+            "tc": "💬 Text-Kanal",
+            "vc": "🔊 Sprach-Kanal",
+            "ac": "📢 Ankündigungs-Kanal",
+            "at": "🧵 Ankündigungs-Thread",
+            "pt": "🧵 Öffentlicher Thread",
+            "pt2": "🧵 Privater Thread",
+            "svc": "🎙️ Bühnensprachkanal",
+            "fc": "📋 Forum-Kanal",
             "none": "Keiner",
             "unlimited": "Unbegrenzt",
             "seconds": "{time} Sekunden",
@@ -234,16 +292,74 @@
             "topic_desc": "<#{channel}>\n*{topic}*",
             "id_footer": "Kanal-ID: {id}"
         },
+        "roleinfo": {
+            "section_general": "🏷️ Allgemein",
+            "section_details": "⚙️ Details & Berechtigungen",
+            "general_val": "> 🏷️ **Rolle:** <@&{id}>\n> 🎨 **Farbe:** `{color}`\n> 🔢 **Position:** #{pos} (von {total})\n> 📅 **Erstellt am:** <t:{created}:D> (<t:{created}:R>)",
+            "details_val": "> 👥 **Mitglieder:** **{members}** Mitglied(er)\n> 📌 **Separat angezeigt:** {hoist}\n> 📢 **Erwähnbar:** {mentionable}\n> 🤖 **Bot-Rolle:** {managed}\n> 🔑 **Schlüsselberechtigungen:** {perms}",
+            "perm_admin": "Administrator",
+            "perm_guild": "Server verwalten",
+            "perm_roles": "Rollen verwalten",
+            "perm_channels": "Kanäle verwalten",
+            "perm_ban": "Bannen",
+            "perm_kick": "Kicken",
+            "perm_msgs": "Nachrichten verwalten",
+            "perm_everyone": "@everyone erwähnen",
+            "no_special_perms": "Keine besonderen Rechte",
+            "id_footer": "Rollen-ID: {id}",
+            "yes": "Ja",
+            "no": "Nein"
+        },
+        "jail": {
+            "title": "⚖️ Ab ins Gefängnis!",
+            "desc": "👮 <@!{user}> wurde hinter Gitter gesperrt!",
+            "inmate_label": "HÄFTLING",
+            "err": "Konnte das Gefängnis-Bild nicht generieren."
+        },
+        "triggered": {
+            "title": "🤬 TRIGGERED",
+            "desc": "🔥 <@!{user}> ist absolut getriggert!",
+            "err": "Konnte das Triggered-GIF nicht generieren."
+        },
+        "steam": {
+            "title": "{name}",
+            "section_general": "💬 Allgemein",
+            "section_security": "🛡️ Status & Sicherheit",
+            "general_val": "> **Name:** **{name}**\n> **Status:** {status}\n> **ID:** `{steamid64}`\n> **Custom-URL:** {customurl}\n> **Erstellt am:** `{created}`\n> **Standort:** {location}",
+            "vac_clean": "🟢 `KEINE BANNS`",
+            "vac_banned": "🔴 `VAC GEBANNT`",
+            "trade_clean": "🟢 `KEINE BANNS`",
+            "trade_banned": "🔴 `TRADE GEBANNT`",
+            "privacy_public": "`ÖFFENTLICH`",
+            "privacy_friends": "`NUR FREUNDE`",
+            "privacy_private": "`PRIVAT`",
+            "none": "`Keine Angabe`",
+            "footer": "Steam Community | ID: {id}",
+            "profile_btn": "Steam-Profil öffnen",
+            "not_found": "Es konnte kein Steam-Profil für `{input}` gefunden werden. Bitte überprüfe den Namen, die Steam-ID oder den Link.",
+            "err_fetch": "Beim Abrufen des Steam-Profils ist ein Fehler aufgetreten."
+        },
         "poll": {
             "title": "📊 Umfrage",
             "desc": "**{question}**",
             "createdby": "Umfrage von {user}",
             "pollcreated": "Umfrage erstellt in <#{channel}>!",
-            "no_options": "Du musst mindestens 2 Optionen angeben!",
-            "too_many_options": "Du kannst maximal 5 Optionen angeben!",
             "results_title": "📊 Umfrage-Ergebnisse",
             "results_desc": "**{question}**\n\n{results}",
             "result_line": "{emoji} **{option}** — {count} Stimme(n) ({percent}%)",
+            "missing_perms": "Ich habe nicht genügend Berechtigungen in <#{channel}>!\n> Stelle sicher, dass ich Berechtigungen für **Nachrichten senden** und **Links einbetten** habe."
+        },
+        "giveaway": {
+            "title": "🎉 GIVEAWAY 🎉",
+            "desc": "**Preis:** 🎁 **{prize}**\n\nKlicke auf den Button unten, um teilzunehmen!\n\n⏰ **Endet:** <t:{endsAt}:R> (<t:{endsAt}:f>)\n👑 **Host:** <@{creatorId}>\n👥 **Teilnehmer:** `{entries}`",
+            "ended_title": "🎉 GIVEAWAY BEENDET 🎉",
+            "ended_desc": "**Preis:** 🎁 **{prize}**\n👑 **Host:** <@{creatorId}>\n\n🏆 **Gewinner:** {winners}\n👥 **Teilnehmer gesamt:** `{entries}`",
+            "no_winner": "Niemand hat teilgenommen! Es gibt keinen Gewinner.",
+            "congrats": "🎉 Herzlichen Glückwunsch {winner}! Du hast **{prize}** gewonnen!",
+            "participate_btn": "Teilnehmen",
+            "enter_success": "Du nimmst jetzt am Giveaway für **{prize}** teil! 🎉",
+            "leave_success": "Du hast deine Teilnahme am Giveaway zurückgezogen.",
+            "giveaway_created": "Giveaway erfolgreich in <#{channel}> gestartet!",
             "missing_perms": "Ich habe nicht genügend Berechtigungen in <#{channel}>!\n> Stelle sicher, dass ich Berechtigungen für **Nachrichten senden** und **Links einbetten** habe."
         },
         "birthday": {
@@ -257,7 +373,7 @@
             "wish": "🎂 Alles Gute zum Geburtstag <@!{user}>! 🎉 Ich wünsche dir einen wundervollen Tag! 🥳"
         },
         "birthday-setup": {
-            "title": "Geburtstags-Setup",
+            "title": "🎂 Geburtstags-Setup",
             "set_success": "Geburtstags-Kanal erfolgreich auf <#{channel}> gesetzt!",
             "disabled": "Geburtstags-Kanal erfolgreich deaktiviert.",
             "err_perms": "Mir fehlen die Rechte, Nachrichten oder Embeds in <#{channel}> zu senden!"
@@ -266,15 +382,13 @@
             "title": "🔢 Zählspiel",
             "setup_success": "Zähl-Kanal auf <#{channel}> gesetzt! Highscore: **{highscore}**",
             "disabled": "Zählspiel wurde deaktiviert.",
-            "info_desc": "Aktueller Status des Zählspiels:\n\n> **Aktuelle Zahl**: {current}\n> **Highscore**: {highscore}\n> **Letzter Zähler**: {last_user}",
+            "info_desc": "Aktueller Status des Zählspiels:\n\n> 🔢 **Aktueller Zähler**: {current}\n> 🏆 **Highscore**: {highscore}\n> 👤 **Letzter Zähler**: {last_user}",
             "no_last_user": "Noch niemand",
             "not_set": "Das Zählspiel ist auf diesem Server nicht eingerichtet.",
-            "admin_only": "Du musst Administrator sein, um dies zu konfigurieren.",
             "err_perms": "Mir fehlen die Rechte, Nachrichten in <#{channel}> zu lesen oder zu schreiben!",
             "ruined_title": "💥 Ruiniert!",
             "ruined_double": "<@!{user}> hat die Reihe ruiniert, da man nicht zweimal hintereinander zählen darf! Der Zähler wurde auf **0** zurückgesetzt.",
             "ruined_wrong": "<@!{user}> hat die Reihe bei **{wrong}** ruiniert! Erwartet war **{expected}**. Der Zähler wurde auf **0** zurückgesetzt.",
-            "highscore_announce": "🎉 **Neuer Server-Highscore!** Ihr habt **{highscore}** erreicht! Weiter so!",
             "set_count_success": "Der aktuelle Zähler wurde erfolgreich auf **{count}** gesetzt."
         },
         "voice-setup": {
@@ -282,18 +396,16 @@
             "setup_success": "Temp-Voice-Setup erfolgreich abgeschlossen! Kategorie: **{category}**, Beitritts-Kanal: <#{channel}>.",
             "disabled": "Temp-Voice wurde deaktiviert.",
             "default_channel_name": "🔊 Kanal von {user}",
-            "err_perms": "Mir fehlen die Rechte, Kanäle zu verwalten oder Mitglieder zu verschieben!"
+            "err_perms": "Mir fehlen die Rechte, Kanäle zu verwalten oder Mitglieder zu verschieben!",
+            "err_create": "Beim Erstellen der Kanäle ist ein Fehler aufgetreten. Stelle sicher, dass meine Rolle die entsprechenden Kanal-Rechte besitzt!",
+            "err_disable": "Beim Deaktivieren des Temp-Voice-Systems ist ein Fehler aufgetreten."
         },
         "voice": {
             "title": "🎙️ Sprachkanal-Steuerungs-Panel",
             "not_in_voice": "Du musst in einem temporären Sprachkanal sein, um diesen Befehl zu nutzen!",
             "not_owner": "Du bist nicht der Besitzer dieses temporären Sprachkanals!",
-            "locked": "Dein Kanal wurde gesperrt! 🔒",
-            "unlocked": "Dein Kanal ist nun entsperrt! 🔓",
             "name_changed": "Dein Kanal wurde in **{name}** umbenannt!",
             "limit_changed": "Das Benutzerlimit deines Kanals wurde auf **{limit}** gesetzt!",
-            "permitted": "<@!{target}> darf deinen Kanal nun betreten!",
-            "rejected": "<@!{target}> wurde aus deinem Kanal gekickt und blockiert!",
             "kicked": "<@!{target}> wurde aus deinem Kanal gekickt!",
             "kick_err_self": "Du kannst dich nicht selbst aus deinem Kanal kicken!",
             "kick_err_not_in_channel": "<@!{target}> ist nicht in deinem Sprachkanal!",
@@ -301,29 +413,24 @@
             "panel_status_public": "🔓 Öffentlich",
             "panel_status_private": "🔒 Privat (Gesperrt)",
             "panel_status_no_limit": "Kein Limit",
-            "panel_status_users": "{limit} Benutzer",
-            "btn_lock": "Sperren",
-            "btn_unlock": "Entsperren",
-            "btn_rename": "Umbenennen",
-            "btn_limit": "Limit setzen",
-            "btn_kick": "Kicken",
             "modal_rename_title": "Kanal umbenennen",
             "modal_rename_label": "Neuer Name",
             "modal_limit_title": "Benutzerlimit festlegen",
             "modal_limit_label": "Benutzerlimit (0-99, 0 = Kein Limit)",
             "modal_kick_title": "Mitglied kicken",
-            "modal_kick_label": "Benutzername oder ID des Mitglieds"
+            "modal_kick_label": "Benutzername oder ID des Mitglieds",
+            "panel_footer": "Temporäre Sprachkanal-Verwaltung"
         },
         "help": {
             "placeholder": "Kategorie auswählen...",
             "category_desc": "Befehle aus dem Modul {module}",
             "btn_home": "Startseite",
             "btn_cmdlist": "Alle Befehle",
+            "opt_home_desc": "Zurück zur Hauptübersicht",
+            "opt_all_desc": "Alle Bot-Befehle nach Kategorien gruppiert anzeigen",
             "title_home": "Hilfe & Befehlsübersicht",
-            "home_desc": "> 💡 **Tipp:** Wähle unten im Menü ein Modul aus, um alle Befehle & Details zu sehen.\n> ⏱️ *Dieses Menü deaktiviert sich automatisch nach **3 Minuten** Inaktivität.*\n\n[Website](https://lxst.cc) | [Bot Invite](https://discord.com/oauth2/authorize?client_id=1338080989775265792&permissions=8&integration_type=0&scope=bot) | [GitHub](https://github.com/lxstarino)",
+            "home_desc": "> 💡 **Tipp:** Wähle unten im Menü ein Modul aus, um alle Befehle & Details zu sehen.",
             "categories_title": "Verfügbare Kategorien",
-            "commands_label": "Befehle",
-            "category_item": "> {emoji} **{folder}:** `{count}` {label}",
             "footer_home": "Insgesamt {totalCmdCount} Befehle in {categoryCount} Kategorien",
             "title_all": "📋 Übersicht aller Befehle",
             "desc_all": "Hier ist eine schnelle Übersicht aller Befehle nach Kategorien gruppiert:",
@@ -332,11 +439,11 @@
         },
         "serverinfo": {
             "title": "Serverinformationen",
-            "section_general": "⛃ Allgemein",
+            "section_general": "🏛️ Allgemein",
             "section_features": "🚀 Server-Status",
-            "general_val": "> **Server-Besitzer:** <@!{owner}>\n> **Erstellt am:** <t:{created}:D> (<t:{created}:R>)\n> **Mitglieder:** **{count}** ({humans} User • {bots} Bots)\n> **Sicherheitsstufe:** {security}",
-            "afk_val": "\n> **AFK-Kanal:** <#{channel}> ({time} Min.)",
-            "features_val": "> **Boost-Level:** Level **{level}** ({count} Boosts) {emoji}\n> **Kanäle:** **{channels}** gesamt ({text} Text • {vc} Voice • {cats} Kategorien)\n> **Ressourcen:** {roles} Rollen • {emojis} Emojis • {stickers} Sticker",
+            "general_val": "> 👑 **Server-Besitzer:** <@!{owner}>\n> 📅 **Erstellt am:** <t:{created}:D> (<t:{created}:R>)\n> 👥 **Mitglieder:** **{count}** ({humans} User • {bots} Bots)\n> 🛡️ **Sicherheitsstufe:** {security}",
+            "afk_val": "\n> 💤 **AFK-Kanal:** <#{channel}> ({time} Min.)",
+            "features_val": "> 🚀 **Boost-Level:** Level **{level}** ({count} Boosts) {emoji}\n> 💬 **Kanäle:** **{channels}** gesamt ({text} Text • {vc} Voice • {cats} Kategorien)\n> 🏷️ **Ressourcen:** {roles} Rollen • {emojis} Emojis • {stickers} Sticker",
             "icon_link": "Icon",
             "banner_link": "Banner",
             "splash_link": "Splash",
@@ -351,11 +458,11 @@
             "title": "Benutzerinformationen",
             "section_general": "👤 Allgemein",
             "section_server": "🛡️ Server-Status",
-            "section_eco": "💰 Wirtschaft & Level",
-            "general_val": "> **Konto erstellt:** <t:{created}:D>\n> **Server beigetreten:** <t:{joined}:D>\n> **Server-Spitzname:** {nickname}\n> **Bot:** {bot}",
-            "server_val": "> **Höchste Rolle:** {highest}\n> **Berechtigungen:** {perms}\n> **Sprachkanal:** {voice}\n> **Verwarnungen:** `{warnings}`",
+            "section_eco": "<:lux_coin:1550631084855922698> Wirtschaft & Level",
+            "general_val": "> 📅 **Konto erstellt:** <t:{created}:D> (<t:{created}:R>)\n> 📥 **Server beigetreten:** <t:{joined}:D> (<t:{joined}:R>)\n> 🏷️ **Server-Spitzname:** {nickname}\n> 🤖 **Bot:** {bot}\n> 🛡️ **System:** {system}\n> ⚔️ **Clan:** {clan}\n> 🎨 **Akzentfarbe:** {color}\n> 🖼️ **Banner:** {banner}",
+            "server_val": "> 🎖️ **Höchste Rolle:** {highest}\n> 🔑 **Berechtigungen:** {perms}\n> 🔊 **Sprachkanal:** {voice}\n> ⚠️ **Verwarnungen:** `{warnings}`",
             "booster_val": "\n> **Server-Booster:** <t:{time}:R>",
-            "eco_val": "> **Kontostand:** 👛 **{wallet} 💰** | 🏦 **{bank} 💰**\n> **Level & Rang:** Level **{level}** • `{xp} / {needed} XP`",
+            "eco_val": "> **Kontostand:** <:lux_wallet:1550640829620559982> **{wallet} <:lux_coin:1550631084855922698>** | <:lux_bank:1550640811853611180> **{bank} <:lux_coin:1550631084855922698>**\n> **Level & Rang:** Level **{level}** • `{xp} / {needed} XP`",
             "roles": "Rollen ({size})",
             "no_roles": "Keine Rollen zugewiesen",
             "more_roles": "... und {count} weitere",
@@ -373,8 +480,8 @@
             "edesc2": "Die Aktion für <@!{target}> konnte nicht bearbeitet werden da der Benutzer nicht gefunden werden konnte",
             "edesc3": "Die Aktion für <@!{target}> konnte nicht bearbeitet werden da die Rolle ungültig ist",
             "edesc4": "Die Rolle ist entweder über mir oder mir fehlen die benötigen Rechte zu sie hinzuzufügen/entfernen",
-            "desc": "Fügte <@&{role}> zu <@!{target}> hinzu",
-            "desc2": "Entfernte <@&{role}> von <@!{target}>"
+            "desc": "🟢 Fügte <@&{role}> zu <@!{target}> hinzu",
+            "desc2": "🔴 Entfernte <@&{role}> von <@!{target}>"
         },
         "ban/unban": {
             "edesc1": "Die Aktion für <@!{target}> konnte nicht bearbeitet werden da der Bot fehlende Rechte hat",
@@ -382,8 +489,8 @@
             "edesc3": "Die Aktion für <@!{target}> konnte nicht bearbeitet werden da der Benutzer nicht gebannt ist",
             "btnconfirm": "Bestätigen",
             "btncancel": "Ablehnen",
-            "bantitle": "Ban Bestätigung",
-            "unbantitle": "Entbannung",
+            "bantitle": "🔨 Ban-Bestätigung",
+            "unbantitle": "🔨 Entbannung",
             "bandesc": "Bist du dir sicher das du <@!{target}> bannen möchtest?",
             "banned": "<@!{target}> wurde gebannt",
             "unbanned": "<@!{target}> wurde entbannt",
@@ -391,28 +498,29 @@
             "canceled2": "Der Prozess wurde abgelehnt aufgrund von Zeit"
         },
         "kick": {
-            "title": "Kick",
+            "title": "👢 Kick",
             "edesc1": "Die Aktion für <@!{target}> konnte nicht bearbeitet werden da der Benutzer nicht gefunden wurde",
             "edesc2": "Die Aktion für <@!{target}> konnte nicht bearbeitet werden da der Bot fehlende Rechte hat",
             "kicked": "<@!{target}> wurde gekickt"
         },
         "nuke": {
             "edesc1": "Die Aktion für <#{channel}> konnte nicht bearbeitet werden da der Bot fehlende Rechte hat",
-            "desc": "Channel geleert von <@!{user}>"
+            "desc": "Channel geleert von <@!{user}>",
+            "title": "💥 Nuke"
         },
         "welcome-msg": {
-            "title": "Willkommen Setup",
+            "title": "👋 Willkommen-Setup",
             "updated": "Willkommensnachricht wurde erfolgreich aktualisiert!",
             "created": "Willkommensnachricht wurde erfolgreich erstellt"
         },
         "autorole-setup": {
-            "title": "Auto-Rollen Setup",
+            "title": "🏷️ Auto-Rollen Setup",
             "set_success": "Auto-Rolle erfolgreich auf <@&{role}> gesetzt!",
             "disabled": "Auto-Rolle erfolgreich deaktiviert.",
             "err_bot_hierarchy": "Ich kann die Rolle <@&{role}> nicht zuweisen, da sie höher oder gleich meiner höchsten Rolle ist!"
         },
         "bot-embed": {
-            "title": "Embed",
+            "title": "🎨 Embed-Farbe",
             "success": "Embed-Farbe wurde erfolgreich auf `{hex}` geändert!",
             "invalid": "Bitte gebe eine gültige Hex-Farbe an!"
         },
@@ -439,10 +547,6 @@
             "timeout": "Das Modul-Konfigurationsmenü ist abgelaufen."
         },
         "t-setup": {
-            "err_title": "Ticket",
-            "err_desc": "Etwas ist schiefgelaufen, versuche es später noch einmal oder führe das Setup erneut aus",
-            "missing_perms_title": "Fehlende Berechtigungen",
-            "missing_perms_desc": "Dem Bot fehlen Berechtigungen!\n> Stelle sicher, dass der Bot die Berechtigung zum Verwalten von Kanälen und Rollen hat",
             "first_layer_title": "Ticket-Einrichtung",
             "first_layer_desc": ">>> Benutze die Auswahlmenüs unten, um deine Panels zu verwalten\nHinweis: Du hast 90 Sekunden Zeit für Interaktionen vor dem Timeout",
             "placeholder": "Richte ein Ticket-Panel ein",
@@ -452,7 +556,7 @@
             "timeout_title": "Zeitüberschreitung",
             "timeout_desc": "Deine Zeit für die Eingabe ist abgelaufen.",
             "support_title": "Support & Hilfe",
-            "support_desc": "Um ein Ticket zu erstellen, reagiere mit 📩",
+            "support_desc": "Um ein Ticket zu erstellen, klicke unten auf den Button 🎫",
             "btn_create_ticket": "Ticket erstellen",
             "success_desc": "Panel gesendet an <#{channel}>",
             "status_title": "Einstellungen für Panel #{panel}",
@@ -461,8 +565,6 @@
             "no_roles_added": "❌ *Keine Rollen*",
             "select_channel": "Ziel-Kanal auswählen...",
             "select_role_add": "Support-Rolle hinzufügen...",
-            "select_role_remove": "Support-Rolle entfernen...",
-            "select_role_remove_desc": "Rolle entfernen",
             "btn_category": "Kategorie erstellen",
             "btn_category_update": "Kategorie aktualisieren",
             "btn_send": "Ticket-System senden",
@@ -471,10 +573,8 @@
             "err_no_roles": "Bitte füge zuerst mindestens eine Support-Rolle hinzu!",
             "err_no_channel": "Ziel-Kanal nicht gefunden oder nicht konfiguriert!",
             "err_no_category": "Kategorie nicht gefunden! Bitte erstelle sie zuerst.",
-            "category_updated": "Kategorie-Berechtigungen wurden für die Rollen aktualisiert! | <#{channel}>",
             "err_max_roles": "Du kannst maximal 5 Support-Rollen hinzufügen!",
             "no_roles_found": "Keine zuweisbaren Rollen gefunden",
-            "warning_limit": "\n\n⚠️ **Hinweis:** Da dein Server mehr als 75 zuweisbare Rollen hat, wurden die restlichen Rollen abgeschnitten (Discord erlaubt maximal 5 Zeilen an Menüs/Knöpfen).",
             "err_role_limit": "Einige Rollen konnten nicht verarbeitet werden (fehlende Berechtigung, oder Limit von 5 erreicht)."
         },
         "role-setup": {
@@ -506,7 +606,6 @@
             "err_no_channel": "Ziel-Kanal nicht gefunden oder nicht konfiguriert!",
             "err_max_roles": "Du kannst maximal 5 Rollen zu einem Panel hinzufügen!",
             "no_roles_found": "Keine zuweisbaren Rollen gefunden",
-            "warning_limit": "\n\n⚠️ **Hinweis:** Da dein Server mehr als 75 zuweisbare Rollen hat, wurden die restlichen Rollen abgeschnitten (Discord erlaubt maximal 5 Zeilen an Menüs/Knöpfen).",
             "not_found": "Diese Rolle existiert auf diesem Server nicht mehr.",
             "hierarchy_error": "Ich kann dir die Rolle **{roleName}** nicht geben, da sie über oder gleichauf mit meiner höchsten Rolle steht!",
             "added": "Die Rolle **{roleName}** wurde dir erfolgreich zugewiesen.",
@@ -523,27 +622,16 @@
         },
         "bot-restart": {
             "title": "Bot wird neu gestartet",
-            "desc": "Der Bot wird <t:{time}:R> neu gestartet..."
+            "desc": "Der Bot-Prozess wird jetzt neu gestartet..."
         },
         "bot-reload": {
             "success": "`{command}` erfolgreich neu geladen!",
             "invalid_title": "Befehl nicht gefunden",
             "invalid_desc": "Gebe einen gültigen Befehl an!\n\nGültige Befehle:\n{commands}"
         },
-        "bot-reloadcmd": {
-            "success": "`{command}` erfolgreich neu geladen!",
-            "invalid_title": "Befehl nicht gefunden",
-            "invalid_desc": "Gebe einen gültigen Befehl an!\n\nGültige Befehle:\n{commands}"
-        },
-        "nsfw-test": {
-            "err_token": "API-Token konnte nicht abgerufen werden.",
-            "err_search": "Suchergebnisse konnten nicht abgerufen werden.",
-            "err_no_results": "Keine Videos für **{tag}** gefunden.",
-            "err_no_results_seconds": "Keine Videos für **{tag}** mit mindestens **{seconds}s** Länge gefunden."
-        },
         "work": {
             "title": "💼 Arbeit",
-            "success": "Du hast als **{job}** gearbeitet und **{amount} 💰** verdient!",
+            "success": "Du hast als **{job}** gearbeitet und **{amount} <:lux_coin:1550631084855922698>** verdient!",
             "already_worked": "Du hast bereits gearbeitet! Bitte erhole dich bis <t:{time}:f> (<t:{time}:R>).",
             "list": [
                 "professioneller Schläfer",
@@ -557,9 +645,9 @@
         },
         "crime": {
             "title": "🦹 Kriminalität",
-            "success": "Du hast erfolgreich **{crime}** und **{amount} 💰** Beute gemacht!",
-            "caught": "🚨 Du wurdest erwischt, als du **{crime}** und musstest **{amount} 💰** Strafe zahlen!",
-            "nem": "Du benötigst mindestens **1.000 💰** in deiner Geldbörse, um eine eventuelle Strafe zu zahlen!",
+            "success": "Du hast erfolgreich **{crime}** und **{amount} <:lux_coin:1550631084855922698>** Beute gemacht!",
+            "caught": "🚨 Du wurdest erwischt, als du **{crime}** und musstest **{amount} <:lux_coin:1550631084855922698>** Strafe zahlen!",
+            "nem": "Du benötigst mindestens **1.000 <:lux_coin:1550631084855922698>** in deiner Geldbörse, um eine eventuelle Strafe zu zahlen!",
             "already_crimed": "Die Polizei sucht noch nach dir! Bitte warte bis <t:{time}:f> (<t:{time}:R>).",
             "list": [
                 "einem Baby Süßigkeiten gestohlen",
@@ -572,13 +660,13 @@
         },
         "eco-lb": {
             "title": "🏆 Server-Wirtschaftsbestenliste",
-            "format": "**{rank}.** <@!{user}> • Gesamt: **{total} 💰**\n> 👛 Geldbörse: *{wallet}* | 🏦 Bank: *{bank}*",
+            "format": "{rank} <@!{user}> • Gesamt: **{total} <:lux_coin:1550631084855922698>**\n> <:lux_wallet:1550640829620559982> Geldbörse: *{wallet}* | <:lux_bank:1550640811853611180> Bank: *{bank}*",
             "empty": "Auf diesem Server wurden noch keine Wirtschaftsprofile gefunden."
         },
         "rps": {
             "title": "✂️ Schere, Stein, Papier",
-            "win": "🎉 **Gewonnen!** Der Bot hat **{botChoice}** gewählt. Du gewinnst **+{amount} 💰**!",
-            "lost": "💥 **Verloren!** Der Bot hat **{botChoice}** gewählt. Du verlierst **-{amount} 💰**!",
+            "win": "🎉 **Gewonnen!** Der Bot hat **{botChoice}** gewählt. Du gewinnst **+{amount} <:lux_coin:1550631084855922698>**!",
+            "lost": "💥 **Verloren!** Der Bot hat **{botChoice}** gewählt. Du verlierst **-{amount} <:lux_coin:1550631084855922698>**!",
             "draw": "🤝 **Unentschieden!** Beide haben **{choice}** gewählt. Dein Einsatz wurde erstattet.",
             "nem": "Du hast nicht genug Geld in deiner Geldbörse für diesen Einsatz!",
             "rock": "Stein 🪨",
@@ -596,8 +684,8 @@
             "comment_5": "Perfektes Match! Ihr seid füreinander bestimmt! 💍✨"
         },
         "level": {
-            "title": "Level-Rang",
-            "desc": "Rang von <@!{user}>:\n> **Level**: {level}\n> **XP**: {xp} / {needed} XP",
+            "title": "⭐ Level-Rang",
+            "desc": "Rang von <@!{user}>:\n> **Level**: {level}\n> **XP**: {xp} / {needed} XP ({percent}%)\n> {bar}",
             "next_reward": "> 🎁 **Nächste Belohnung (Level {level}):** <@&{role}>",
             "footer": "Rang-Status"
         },
@@ -608,43 +696,70 @@
             "set_success": "Das Level von <@!{user}> wurde erfolgreich auf **Level {level}** gesetzt.",
             "reset_success": "Das Level und die XP von <@!{user}> wurden erfolgreich auf **Level 1** (0 XP) zurückgesetzt.",
             "awarded_roles": "🏆 **Neue Rollen vergeben:** {roles}",
-            "err_min_level": "Das Level muss mindestens 1 betragen!",
             "err_bot": "Du kannst das Level von Bots nicht verwalten!"
         },
         "lvl-lb": {
-            "title": "XP-Bestenliste",
-            "format": "**{rank}.** <@!{user}> • Level: **{level}** ({xp} XP)",
+            "title": "🏆 XP-Bestenliste",
+            "format": "{rank} <@!{user}> • Level: **{level}** ({xp} XP)",
             "empty": "Keine Profile mit Leveln auf diesem Server gefunden."
         },
         "warn": {
-            "title": "Benutzer verwarnen",
+            "title": "⚠️ Benutzer verwarnen",
             "success": "Erfolgreich <@!{target}> verwarnt für: **{reason}**\n> Der Benutzer hat jetzt **{count}** Verwarnung(en)."
         },
         "warnings": {
-            "title": "Verwarnungen für {user}",
+            "title": "📋 Verwarnungen für {user}",
             "empty": "<@!{target}> hat keine Verwarnungen.",
             "format": "**#{index}.** Moderator: <@!{moderator}>\n> Grund: **{reason}**\n> Datum: <t:{time}:f>"
         },
         "clear-warns": {
-            "title": "Verwarnungen löschen",
+            "title": "🧹 Verwarnungen löschen",
             "success": "Erfolgreich alle Verwarnungen für <@!{target}> gelöscht."
+        },
+        "unwarn": {
+            "title": "⚠️ Verwarnung aufheben",
+            "no_warns": "<@!{target}> hat keine Verwarnungen.",
+            "invalid_id": "Ungültige Verwarnungs-ID! Bitte wähle eine Zahl zwischen 1 und {max}.",
+            "success": "Verwarnung **#{id}** von <@!{target}> wurde erfolgreich aufgehoben.\n> **Ursprünglicher Grund:** {reason}\n> Verbleibende Verwarnungen: **{remaining}**"
+        },
+        "honeypot-setup": {
+            "title": "🍯 Honeypot-Sicherheitssystem",
+            "status_title": "🍯 Honeypot-Status",
+            "status_desc": "> **Status:** {status}\n> **Kanal:** {channel}\n> **Aktion bei Auslösung:** `{action}`\n> **Erfasste Accounts:** `{count}`{caught_list}",
+            "active": "Aktiv",
+            "inactive": "Inaktiv",
+            "not_configured": "*Nicht eingerichtet*",
+            "recent_caught": "Zuletzt erfasste IDs",
+            "list_caught_title": "📋 Erfasste Accounts ({count})",
+            "no_caught": "Bisher wurden noch keine Accounts vom Honeypot erfasst.",
+            "not_in_caught_list": "Die ID `{id}` befindet sich nicht in der Liste der erfassten Accounts.",
+            "remove_caught_success": "Erfolgreich `<@!{id}>` (`{id}`) aus der Liste der erfassten Accounts entfernt.\n> Verbleibende Einträge: **{remaining}**",
+            "cleared_caught_success": "Die Liste der erfassten Accounts wurde erfolgreich zurückgesetzt (**{count}** Einträge gelöscht).",
+            "set_success": "Honeypot-Kanal erfolgreich auf <#{channel}> gesetzt!\n> **Aktion bei Auslösung:** `{action}` (serverweite 7-Tage-Nachrichtenlöschung inklusive).",
+            "disabled_success": "Das Honeypot-System wurde erfolgreich deaktiviert.",
+            "warning_embed_title": "⛔ SICHERHEITSZONE / BOT-FALLE",
+            "warning_embed_desc": "⚠️ **SCHREIBEN STRENGSTENS VERBOTEN!**\n\nDieser Kanal dient als automatisierte Sicherheitsfalle (Honeypot) gegen Spambots und gehackte Konten.\n\n> **Jede Nachricht in diesem Kanal führt zum sofortigen Serverausschluss und zur Löschung all deiner Nachrichten!**\n\n*Echte Mitglieder bitte diesen Kanal sofort verlassen und stummschalten.*\n\n🛡️ **Bisher eliminierte Spambots/Angreifer:** `{count}`",
+            "warning_embed_footer": "Sicherheitssystem • Automatische Bot-Falle",
+            "list_overflow": "\n*...und {count} weitere.*",
+            "err_channel_perms": "Mir fehlen die Berechtigungen **Nachrichten senden**, **Links einbetten** oder **Nachrichten verwalten** in <#{channel}>!",
+            "err_ban_perms": "Mir fehlt die Berechtigung **Mitglieder bannen** auf diesem Server!"
         },
         "shop-setup": {
             "title": "🏪 Shop-Einrichtung",
-            "added": "Rolle <@&{role}> erfolgreich für **{price} 💰** zum Shop hinzugefügt!",
+            "added": "Rolle <@&{role}> erfolgreich für **{price} <:lux_coin:1550631084855922698>** zum Shop hinzugefügt!",
             "removed": "Rolle <@&{role}> erfolgreich aus dem Shop entfernt.",
             "not_in_shop": "Diese Rolle befindet sich nicht im Shop!",
             "already_added": "Diese Rolle ist bereits im Shop verfügbar!",
-            "invalid_price": "Der Preis muss mindestens **1 💰** betragen!"
+            "invalid_price": "Der Preis muss mindestens **1 <:lux_coin:1550631084855922698>** betragen!"
         },
         "log-setup": {
-            "title": "Log-System Setup",
+            "title": "📜 Log-System Setup",
             "set_success": "Log-Kanal erfolgreich auf <#{channel}> gesetzt!",
             "disabled": "Log-Kanal erfolgreich deaktiviert.",
             "err_perms": "Mir fehlen die Rechte, Nachrichten oder Embeds in <#{channel}> zu senden!"
         },
         "freegames-setup": {
-            "title": "Free Games Tracker Setup",
+            "title": "<:steam:1550626219920195735> <:epicgames:1550631998161166459> Free Games Tracker Setup",
             "set_success": "Der Kanal für kostenlose Spiele wurde erfolgreich auf <#{channel}> gesetzt!",
             "disabled": "Der Free-Games-Tracker wurde erfolgreich deaktiviert.",
             "err_perms": "Mir fehlen die Rechte, Nachrichten oder Embeds in <#{channel}> zu senden!",
@@ -661,26 +776,75 @@
         },
         "buy": {
             "title": "🛍️ Rollenkauf",
-            "success": "Erfolgreich die Rolle <@&{role}> für **{price} 💰** gekauft!",
+            "success": "Erfolgreich die Rolle <@&{role}> für **{price} <:lux_coin:1550631084855922698>** gekauft!",
             "already_has": "Du besitzt die Rolle <@&{role}> bereits!",
-            "nem": "Du hast nicht genug Geld in deiner Geldbörse, um <@&{role}> zu kaufen (Benötigt: **{price} 💰**)! ",
+            "nem": "Du hast nicht genug Geld in deiner Geldbörse, um <@&{role}> zu kaufen (Benötigt: **{price} <:lux_coin:1550631084855922698>**)! ",
             "not_for_sale": "Diese Rolle steht im Shop aktuell nicht zum Verkauf!"
         },
         "fish": {
             "title": "🎣 Angelausflug",
-            "caught": "Du hast deine Angel ausgeworfen und einen **{fish}** {emoji} gefangen!\n> 🌟 Seltenheit: **{rarity}**\n> 💰 Wert: **{value} 💰**\n> Er wurde zu deinem Inventar hinzugefügt.",
-            "cooldown": "Du bist noch zu erschöpft vom Angeln! Bitte warte bis <t:{time}:f> (<t:{time}:R>)."
+            "caught": "Du hast deine Angel ausgeworfen und einen **{fish}** {emoji} gefangen!\n> 🌟 Seltenheit: **{rarity}**\n> <:lux_coin:1550631084855922698> Wert: **{value} <:lux_coin:1550631084855922698>**\n> Er wurde zu deinem Inventar hinzugefügt.",
+            "cooldown": "Du bist noch zu erschöpft vom Angeln! Bitte warte bis <t:{time}:f> (<t:{time}:R>).",
+            "no_tool": "Du besitzt kein(e) **{tool}** in deinem Inventar!\n\n💡 **Tipp:** Führe `/fish` einfach ohne Argument aus, um normal zu angeln, oder stelle dir Köder mit `/craft` her.",
+            "chest_found": "\n\n✨ **Bonus-Fund:** Du hast zusätzlich eine(n) **{chest}** {emoji} geborgen! *(Öffne sie mit `/open`)*"
         },
         "sell": {
             "title": "🏪 Marktplatz-Verkauf",
-            "success_all": "Du hast alle Gegenstände aus deinem Inventar erfolgreich für insgesamt **{amount} 💰** verkauft!",
+            "success_all": "Du hast alle Gegenstände aus deinem Inventar erfolgreich für insgesamt **{amount} <:lux_coin:1550631084855922698>** verkauft!",
             "empty": "Du hast keine Gegenstände in deinem Inventar zum Verkaufen!"
+        },
+        "craft": {
+            "title": "🔨 Werkbank",
+            "select_placeholder": "Wähle einen Gegenstand zum Herstellen...",
+            "btn_craft": "Gegenstand herstellen",
+            "in_inventory": "Im Inventar",
+            "durability": "Haltbarkeit",
+            "uses": "Verwendungen",
+            "perks": "Boni",
+            "type": "Typ",
+            "required_materials": "Benötigte Materialien",
+            "ready_to_craft": "✅ Du hast alle benötigten Materialien! Klicke auf **Gegenstand herstellen**.",
+            "missing_materials": "❌ Dir fehlen Materialien zur Herstellung dieses Gegenstands.",
+            "success": "🎉 Du hast erfolgreich **1x {tool}** {emoji} hergestellt!\n> 🛠️ Typ: **{type}**\n> 🔨 Haltbarkeit: **{durability} Verwendungen**\n> 🌟 Boni: **{perks}**\n> 📦 Verbrauchte Materialien: {materials}"
+        },
+        "open-chest": {
+            "title": "📦 Schatztruhe geöffnet!",
+            "opened": "Du hast **1x {chest}** {emoji} geöffnet!\n\n<:lux_coin:1550631084855922698> **Münzen erhalten:** **+{coins} <:lux_coin:1550631084855922698>**",
+            "no_chest": "Du besitzt kein(e) **{chest}** {emoji} in deinem Inventar!\n\n💡 **Tipp:** Du kannst Kisten zufällig beim Angeln (`/fish`) oder Minen (`/mine`) finden.",
+            "bonus_loot": "🎁 **Bonus-Beute:**",
+            "new_balance": "{walletEmoji} **Neuer Kontostand:** **{balance} {coin}**",
+            "remaining": "{remaining}x {chest} übrig"
         },
         "inventory": {
             "title": "🎒 Inventar von {user}",
-            "desc": "**Gegenstände im Besitz:**\n\n{items}\n\n💵 **Geschätzter Gesamtwert:** **{total} 💰**",
+            "desc": "**Gegenstände im Besitz:**\n\n{items}\n\n💵 **Geschätzter Gesamtwert:** **{total} <:lux_coin:1550631084855922698>**",
             "empty_self": "Dein Inventar ist aktuell leer! Nutze `/fish` oder `/mine`, um Beute zu sammeln.",
-            "empty_other": "Das Inventar von <@!{user}> ist aktuell leer!"
+            "empty_other": "Das Inventar von <@!{user}> ist aktuell leer!",
+            "tab_overview": "Übersicht",
+            "tab_fish": "Fische ({count})",
+            "tab_ores": "Erze ({count})",
+            "tab_hunt": "Jagd ({count})",
+            "tab_tools": "Werkzeuge ({count})",
+            "tab_chests": "Kisten ({count})",
+            "fish_header": "### 🎣 Fisch-Inventar ({count} gesamt)\n\n",
+            "ore_header": "### ⛏️ Erz-Inventar ({count} gesamt)\n\n",
+            "hunt_header": "### 🦃 Jagd-Inventar ({count} gesamt)\n\n",
+            "tools_header": "### 🛠️ Werkzeuge & Köder ({count} gesamt)\n\n",
+            "chests_header": "### 📦 Kisten & Truhen ({count} gesamt)\n\n",
+            "subtotal": "💵 **Zwischensumme:** **{value} <:lux_coin:1550631084855922698>**",
+            "chests_tip": "\n\n💡 *Nutze `/open-chest`, um deine Kisten zu öffnen und Schätze zu bergen!*",
+            "overview_total": "💵 **Geschätzter Gesamtwert:** **{value} <:lux_coin:1550631084855922698>**\n\n",
+            "overview_fish": "> 🎣 **Fische:** `{count} Gegenstände` (Wert: **{value} <:lux_coin:1550631084855922698>**)\n",
+            "overview_ores": "> ⛏️ **Erze:** `{count} Gegenstände` (Wert: **{value} <:lux_coin:1550631084855922698>**)\n",
+            "overview_hunt": "> 🦃 **Jagdbeute:** `{count} Gegenstände` (Wert: **{value} <:lux_coin:1550631084855922698>**)\n",
+            "overview_tools": "> 🛠️ **Werkzeuge:** `{count} Gegenstände`\n",
+            "overview_chests": "> 📦 **Kisten:** `{count} Gegenstände`\n",
+            "overview_footer": "\n*Nutze die Buttons unten, um jede Kategorie im Detail zu durchsuchen!*",
+            "tool_luck": "Glücks-Bonus",
+            "tool_min_rarity": "Min. Seltenheit",
+            "none": "Keine",
+            "open_tip": "*(Öffne mit `/open-chest chest:{chest}`)*",
+            "item_value": "(Wert: {value} <:lux_coin:1550631084855922698>)"
         },
         "fish_rarities": {
             "common": "Gewöhnlich",
@@ -691,16 +855,36 @@
         "fish_names": {
             "cod": "Dorsch",
             "salmon": "Lachs",
+            "trout": "Forelle",
+            "carp": "Karpfen",
+            "tuna": "Thunfisch",
+            "shrimp": "Garnele",
+            "crab": "Krabbe",
             "clownfish": "Clownfisch",
             "pufferfish": "Kugelfisch",
+            "catfish": "Wels",
+            "lobster": "Hummer",
+            "swordfish": "Schwertfisch",
+            "jellyfish": "Qualle",
+            "electric_eel": "Zitteraal",
             "squid": "Tintenfisch",
             "shark": "Hai",
-            "seadragon": "Seedrache"
+            "octopus": "Oktopus",
+            "manta_ray": "Manta-Rochen",
+            "anglerfish": "Anglerfisch",
+            "hammerhead": "Hammerhai",
+            "seadragon": "Seedrache",
+            "kraken": "Urzeit-Kraken",
+            "megalodon": "Megalodon",
+            "leviathan": "Leviathan",
+            "golden_koi": "Goldener Koi"
         },
         "mine": {
             "title": "⛏️ Bergbau-Ausflug",
-            "mined": "Du hast deine Spitzhacke geschwungen und **{ore}** {emoji} abgebaut!\n> 🌟 Seltenheit: **{rarity}**\n> 💰 Wert: **{value} 💰**\n> Es wurde zu deinem Inventar hinzugefügt.",
-            "cooldown": "Deine Muskeln brennen noch vom Minen! Bitte warte bis <t:{time}:f> (<t:{time}:R>)."
+            "mined": "Du hast deine Spitzhacke geschwungen und **{ore}** {emoji} abgebaut!\n> 🌟 Seltenheit: **{rarity}**\n> <:lux_coin:1550631084855922698> Wert: **{value} <:lux_coin:1550631084855922698>**\n> Es wurde zu deinem Inventar hinzugefügt.",
+            "cooldown": "Deine Muskeln brennen noch vom Minen! Bitte warte bis <t:{time}:f> (<t:{time}:R>).",
+            "no_tool": "Du besitzt kein(e) **{tool}** in deinem Inventar!\n\n💡 **Tipp:** Führe `/mine` einfach ohne Argument aus, um normal abzubauen, oder stelle dir eine Spitzhacke mit `/craft` her.",
+            "chest_found": "\n\n✨ **Bonus-Fund:** Du hast zusätzlich eine(n) **{chest}** {emoji} geborgen! *(Öffne sie mit `/open`)*"
         },
         "ore_rarities": {
             "common": "Gewöhnlich",
@@ -709,20 +893,93 @@
             "legendary": "Legendär"
         },
         "ore_names": {
+            "stone": "Stein",
             "coal": "Kohle",
+            "copper": "Kupfererz",
+            "tin": "Zinnerz",
             "iron": "Eisenerz",
+            "silver": "Silbererz",
+            "lapis": "Lapislazuli",
+            "quartz": "Quarzkristall",
             "gold": "Golderz",
-            "diamond": "Diamant"
+            "platinum": "Platinerz",
+            "emerald": "Smaragd",
+            "ruby": "Rubin",
+            "amethyst": "Amethyst",
+            "diamond": "Diamant",
+            "titanium": "Titanerz",
+            "obsidian": "Obsidian",
+            "tanzanite": "Tansanit",
+            "black_opal": "Schwarzer Opal",
+            "painite": "Painit",
+            "rhodium": "Rhodium"
+        },
+        "hunt": {
+            "title": "🏹 Jagdausflug",
+            "hunted": "Du bist auf die Jagd gegangen und hast ein(e) **{animal}** {emoji} erlegt!\n> 🌟 Seltenheit: **{rarity}**\n> <:lux_coin:1550631084855922698> Wert: **{value} <:lux_coin:1550631084855922698>**\n> Es wurde zu deinem Inventar hinzugefügt.",
+            "cooldown": "Du bist noch erschöpft von der Jagd! Bitte warte bis <t:{time}:f> (<t:{time}:R>).",
+            "no_tool": "Du besitzt kein(e) **{tool}** in deinem Inventar!\n\n💡 **Tipp:** Führe `/hunt` einfach ohne Argument aus, um normal zu jagen, oder stelle dir ein Schwert mit `/craft` her.",
+            "chest_found": "\n\n✨ **Bonus-Fund:** Du hast zusätzlich eine(n) **{chest}** {emoji} entdeckt! *(Öffne sie mit `/open`)*"
+        },
+        "hunt_rarities": {
+            "common": "Gewöhnlich",
+            "uncommon": "Ungewöhnlich",
+            "rare": "Selten",
+            "legendary": "Legendär"
+        },
+        "hunt_names": {
+            "rabbit": "Hase",
+            "chicken": "Huhn",
+            "duck": "Ente",
+            "turkey": "Truthahn",
+            "fox": "Fuchs",
+            "boar": "Wildschwein",
+            "deer": "Hirsch",
+            "wolf": "Wolf",
+            "bear": "Bär",
+            "bison": "Bison",
+            "alligator": "Alligator",
+            "lion": "Löwe",
+            "tiger": "Tiger",
+            "elephant": "Elefant",
+            "rhino": "Nashorn",
+            "mammoth": "Mammut",
+            "griffin": "Greif",
+            "chimera": "Chimäre",
+            "hydra": "Hydra",
+            "phoenix": "Phönix",
+            "dragon": "Uralter Drache"
+        },
+        "tool_names": {
+            "iron_pickaxe": "Eisenspitzhacke",
+            "gold_pickaxe": "Goldspitzhacke",
+            "diamond_pickaxe": "Diamantspitzhacke",
+            "iron_sword": "Eisenschwert",
+            "gold_sword": "Goldschwert",
+            "diamond_sword": "Diamantschwert",
+            "better_bait": "Besserer Köder",
+            "golden_bait": "Goldener Köder"
+        },
+        "chest_names": {
+            "wooden_crate": "Treibholz-Kiste",
+            "sunken_chest": "Versunkene Schatztruhe",
+            "miner_crate": "Bergmanns-Kiste",
+            "ancient_chest": "Antike Relikt-Truhe"
+        },
+        "rarities": {
+            "common": "Gewöhnlich",
+            "uncommon": "Ungewöhnlich",
+            "rare": "Selten",
+            "legendary": "Legendär"
         },
         "tictactoe": {
-            "title": "❌ Tic-Tac-Toe ⭕",
+            "title": "🎮 Tic-Tac-Toe",
             "bot_opponent": "Du kannst nicht gegen einen Bot spielen!",
             "self_opponent": "Du kannst nicht gegen dich selbst spielen!",
-            "invite": "<@!{opponent}>, du wurdest von <@!{challenger}> zu einer Runde Tic-Tac-Toe herausgefordert! Nimmst du an?",
-            "invite_declined": "<@!{opponent}> hat die Herausforderung abgelehnt.",
-            "invite_timeout": "<@!{opponent}> hat nicht rechtzeitig geantwortet.",
             "btn_accept": "Annehmen",
             "btn_decline": "Ablehnen",
+            "invite_title": "⚔️ Tic-Tac-Toe Herausforderung",
+            "invite_desc": "<@!{challenger}> fordert <@!{opponent}> heraus!",
             "game_start": "Spiel gestartet! <@!{player}> (❌) beginnt.",
             "your_turn": "Du bist an der Reihe, <@!{player}> ({symbol})!",
             "winner": "🎉 Glückwunsch! <@!{player}> ({symbol}) hat das Spiel gewonnen!",
@@ -733,11 +990,9 @@
             "title": "🔴 Vier Gewinnt 🟡",
             "bot_opponent": "Du kannst nicht gegen einen Bot spielen!",
             "self_opponent": "Du kannst nicht gegen dich selbst spielen!",
-            "invite": "<@!{opponent}>, du wurdest von <@!{challenger}> zu einer Runde Vier Gewinnt herausgefordert! Nimmst du an?",
-            "invite_declined": "<@!{opponent}> hat die Herausforderung abgelehnt.",
-            "invite_timeout": "<@!{opponent}> hat nicht rechtzeitig geantwortet.",
             "btn_accept": "Annehmen",
             "btn_decline": "Ablehnen",
+            "invite_desc": "⚔️ <@!{challenger}> fordert <@!{opponent}> zu Vier Gewinnt heraus!",
             "game_start": "Spiel gestartet! <@!{player}> (🔴) beginnt.",
             "your_turn": "Du bist an der Reihe, <@!{player}> ({symbol})!",
             "winner": "🎉 Glückwunsch! <@!{player}> ({symbol}) hat das Spiel gewonnen!",
@@ -745,7 +1000,7 @@
             "timeout": "Das Spiel wurde wegen Inaktivität abgebrochen."
         },
         "timeout": {
-            "title": "Mitglied stummschalten",
+            "title": "⏳ Mitglied stummschalten",
             "success": "Erfolgreich <@!{target}> für **{duration}** stummgeschaltet.\n> Grund: **{reason}**",
             "err_not_moderateable": "Ich kann dieses Mitglied nicht stummschalten! Es hat möglicherweise höhere Rollen als ich oder Administratorrechte.",
             "durations": {
@@ -758,12 +1013,12 @@
             }
         },
         "untimeout": {
-            "title": "Stummschaltung aufheben",
+            "title": "🔊 Stummschaltung aufheben",
             "success": "Stummschaltung für <@!{target}> erfolgreich aufgehoben.\n> Grund: **{reason}**",
             "err_not_timed_out": "Dieses Mitglied ist aktuell nicht stummgeschaltet!"
         },
         "purge": {
-            "title": "Nachrichten löschen",
+            "title": "🗑️ Nachrichten löschen",
             "success": "Erfolgreich **{count}** Nachrichten gelöscht.",
             "success_user": "Erfolgreich **{count}** Nachrichten von <@!{target}> gelöscht.",
             "err_limit": "Ich kann nur Nachrichten löschen, die jünger als 14 Tage sind!",
@@ -784,9 +1039,11 @@
         "bot-avatar": {
             "title": "Bot Avatar",
             "desc": "Avatar successfully updated for this server.",
-            "error_url": "Please provide a valid image URL.",
             "error_title": "Fehler",
             "error": "Es gab einen Fehler beim Aktualisieren des server-spezifischen Avatars.\n**Grund:** {error}"
+        },
+        "fake-message": {
+            "error": "Ein Fehler ist aufgetreten beim Generieren des Bildes."
         }
     },
     "events": {
@@ -794,6 +1051,10 @@
             "level_up_title": "🎉 Level Aufgestiegen!",
             "level_up_desc": "Herzlichen Glückwunsch <@!{user}>! Du bist auf **Level {level}** aufgestiegen!",
             "level_up_reward": "\n🏆 **Neue Rollen-Belohnung:** {roles}"
+        },
+        "honeypot": {
+            "dm_title": "🚨 Sicherheitswarnung",
+            "dm_desc": "Dein Account wurde auf dem Server **{guild}** sanktioniert (**{action}**), da eine Nachricht im gesicherten Honeypot-Kanal registriert wurde.\n\n⚠️ **Wichtig:** Falls du diese Nachricht nicht selbst gesendet hast, wurde dein Discord-Konto vermutlich durch Phishing/Malware kompromittiert! Bitte ändere **sofort** dein Discord-Passwort und aktiviere die Zwei-Faktor-Authentifizierung (2FA)."
         },
         "onjoin": {
             "joinmsg": "Hallo <@!{user}>,\nWillkommen zu **{guildname}**. Du bist unser {membercount}tes Mitglied"
@@ -804,9 +1065,8 @@
             "err_nsfw_only": "Dieser Befehl ist nur in NSFW-Kanälen verfügbar",
             "err_disabled": "Dieser Befehl ist auf diesem Server deaktiviert",
             "err_bot_missing_perms": "Mir fehlen die nötigen Discord-Rechte, um diese Aktion auszuführen!",
-            "err_bot_missing_basic_perms": "Ich benötige Berechtigungen zum **Senden von Nachrichten** und **Einbetten von Links** in diesem Kanal!",
             "cooldown_title": "Abklingzeit",
-            "cooldown_desc": "Du hast eine Abklingzeit für {time}s.",
+            "cooldown_desc": "Du kannst diesen Befehl {time} wieder verwenden.",
             "ticket_limit_title": "Ticket-Limit",
             "ticket_limit_desc": "Ticket-Limit erreicht. Du hast bereits 1 geöffnetes Ticket in <#{channel}>",
             "ticket_modal_label": "Beschreibe dein Problem/Anliegen",
@@ -817,7 +1077,7 @@
             "ticket_ping_success": "Supporter-Rollen wurden gepingt!\n{roles}",
             "ticket_ping_error": "Beim Versuch, die Rollen zu pingen, ist ein Fehler aufgetreten",
             "ticket_support_title": "Support & Hilfe",
-            "ticket_support_desc": "Hallo <@!{user}>\nDer Support wird in Kürze bei dir sein. Wenn du dieses Ticket schließen möchtest, reagiere mit 🔒\n\n**Angegebene Frage/Problem:**\n```{issue}```",
+            "ticket_support_desc": "Hallo <@!{user}>\nDer Support wird in Kürze bei dir sein. Um dieses Ticket zu schließen, klicke unten auf 🔒.\n\n**Angegebene Frage/Problem:**\n```{issue}```",
             "ticket_created": "Ticket erstellt in <#{channel}>",
             "ticket_no_panel_title": "Kein Panel gefunden",
             "ticket_no_panel_desc": "> Ich kann keine Daten für Panel #{panel} finden!\n> Führe `/t-setup` aus, um ein Panel zu erstellen.",
@@ -826,22 +1086,20 @@
     },
     "errors": {
         "error": "Fehler",
+        "unexpected_title": "Unerwarteter Fehler",
+        "unexpected_desc": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuche es später erneut.",
         "not_your_turn": "Du bist nicht an der Reihe!",
         "nwn": "Gebe eine ganze Zahl an",
         "unf": "Benutzer wurde nicht gefunden",
         "uab": "Benutzer ist bereits gebannt",
         "uinb": "Benutzer ist nicht gebannt",
         "mp": "Fehlende Berechtigungen",
-        "ivr": "Ungültige Rolle",
-        "npf": {
-            "title": "Kein Profil konnte gefunden werden",
-            "desc": "<@!{target}> hat kein Profil"
-        }
+        "ivr": "Ungültige Rolle"
     },
     "logs": {
         "ban_title": "🔨 Mitglied gebannt",
         "ban_desc": "**Mitglied**: <@!{target}> ({tag})\n**ID**: {target}\n**Moderator**: <@!{moderator}>\n**Grund**: {reason}",
-        "unban_title": "🔓 Entbannt",
+        "unban_title": "🔨 Mitglied entbannt",
         "unban_desc": "**Mitglied**: <@!{target}>\n**ID**: {target}\n**Moderator**: <@!{moderator}>\n**Grund**: {reason}",
         "kick_title": "👢 Mitglied gekickt",
         "kick_desc": "**Mitglied**: <@!{target}> ({tag})\n**ID**: {target}\n**Moderator**: <@!{moderator}>\n**Grund**: {reason}",
@@ -852,7 +1110,11 @@
         "warn_title": "⚠️ Mitglied verwarnt",
         "warn_desc": "**Mitglied**: <@!{target}> ({tag})\n**ID**: {target}\n**Moderator**: <@!{moderator}>\n**Grund**: {reason}\n**Verwarnungen gesamt**: {count}",
         "clear_warns_title": "🧹 Verwarnungen gelöscht",
-        "clear_warns_desc": "**Mitglied**: <@!{target}> ({tag})\n**ID**: {target}\n**Moderator**: <@!{moderator}",
+        "clear_warns_desc": "**Mitglied**: <@!{target}> ({tag})\n**ID**: {target}\n**Moderator**: <@!{moderator}>",
+        "unwarn_title": "⚠️ Verwarnung aufgehoben",
+        "unwarn_desc": "**Mitglied**: <@!{target}> ({tag})\n**ID**: {target}\n**Moderator**: <@!{moderator}>\n**Verwarnung**: #{id}\n**Grund**: {reason}\n**Verbleibende Verwarnungen**: {remaining}",
+        "honeypot_title": "🚨 Honeypot-Falle ausgelöst",
+        "honeypot_desc": "**Mitglied**: <@!{target}> ({tag})\n**ID**: {target}\n**Kanal**: <#{channel}>\n**Sanktion**: `{action}` (serverweiter 7-Tage-Purge)\n**Erfasste Accounts gesamt**: #{count}\n**Auslöser-Nachricht**:\n```{content}```",
         "purge_title": "🗑️ Nachrichten gelöscht",
         "purge_desc": "**Kanal**: <#{channel}>\n**Moderator**: <@!{moderator}>\n**Anzahl**: {count}",
         "purge_user_desc": "**Kanal**: <#{channel}>\n**Moderator**: <@!{moderator}>\n**Mitglied**: <@!{target}>\n**Anzahl**: {count}",
@@ -866,11 +1128,5 @@
         "role_remove_desc": "**Mitglied**: <@!{user}> ({tag})\n**Rolle entfernt**: <@&{role}>",
         "member_leave_title": "👋 Mitglied verlassen",
         "member_leave_desc": "**Nutzer**: {tag}\n**ID**: {userId}\n**Rollen**: {roles}"
-    },
-    "success": {
-        "pfc": {
-            "title": "Profil erstellt",
-            "desc": "Benutze den Befehl erneut um dein Saldo abzurufen"
-        }
     }
 }

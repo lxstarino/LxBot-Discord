@@ -1,6 +1,8 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+const { SlashCommandBuilder } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
 
 module.exports = {
+    guildOnly: false,
     devOnly: true,
     data: new SlashCommandBuilder()
         .setName("bot-presence")
@@ -46,8 +48,7 @@ module.exports = {
             "5": "Competing"
         }
 
-        let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
+        const ls = client.getLanguage(interaction.guild?.id)
 
         const activityData = {
             name: activity,

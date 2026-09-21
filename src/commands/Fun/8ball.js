@@ -1,6 +1,9 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+const { SlashCommandBuilder } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
 
 module.exports = {
+    guildOnly: false,
+    cooldown: 3,
     data: new SlashCommandBuilder()
         .setName("8ball")
         .setDescription("Question the 8Ball Oracle")
@@ -11,10 +14,9 @@ module.exports = {
             .setRequired(true)
         ),
     async execute(client, interaction) {
-        const question = interaction.options.get("question").value
+        const question = interaction.options.getString("question")
 
-        let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
+        const ls = client.getLanguage(interaction.guild?.id)
 
         client.Embed([{
             title: ls["cmds"]["8ball"]["title"],

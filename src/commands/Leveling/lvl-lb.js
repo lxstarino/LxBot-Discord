@@ -1,14 +1,16 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
+const { SlashCommandBuilder } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
+const ProfileRepository = require("../../repositories/ProfileRepository")
 
 module.exports = {
+    guildOnly: true,
     data: new SlashCommandBuilder()
         .setName("lvl-lb")
         .setDescription("Show the highest level users on the server"),
     async execute(client, interaction) {
-        let ls = client.getLanguage(interaction.guild?.id)
+        const ls = client.getLanguage(interaction.guild?.id)
 
-        const topTen = client.db.getLevelLeaderboard(interaction.guild.id, 10)
+        const topTen = ProfileRepository.getLeaderboard(client, interaction.guild.id, 10, "level")
 
         if (!topTen.length) {
             return client.Embed([{
@@ -17,15 +19,17 @@ module.exports = {
             }], undefined, "reply", undefined, interaction)
         }
 
+        const medals = ["🥇", "🥈", "🥉"]
         let descriptionLines = []
 
         topTen.forEach((profile, index) => {
+            const rankBadge = medals[index] || `\`#${index + 1}\``
             descriptionLines.push(
                 handlemsg(ls["cmds"]["lvl-lb"]["format"], {
-                    rank: index + 1,
+                    rank: rankBadge,
                     user: profile.userId,
                     level: profile.level || 1,
-                    xp: profile.xp || 0
+                    xp: (profile.xp || 0).toLocaleString()
                 })
             )
         })

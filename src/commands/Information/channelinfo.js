@@ -1,6 +1,9 @@
 const { SlashCommandBuilder, ChannelType } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
 
 module.exports = {
+    guildOnly: true,
+    cooldown: 3,
     data: new SlashCommandBuilder()
         .setName("channelinfo")
         .setDescription("Displays information about a channel")
@@ -9,7 +12,6 @@ module.exports = {
             .setDescription("The channel you want to view")),
     async execute(client, interaction) {
         const ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
 
         const targetChannel = interaction.options.getChannel("channel") || interaction.channel
         const channel = await interaction.guild.channels.fetch(targetChannel.id).catch(() => targetChannel)

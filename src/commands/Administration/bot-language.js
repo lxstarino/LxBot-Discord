@@ -1,5 +1,6 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { PermissionsBitField, ActionRowBuilder, StringSelectMenuBuilder } = require("discord.js")
+const { PermissionsBitField, ActionRowBuilder, StringSelectMenuBuilder, SlashCommandBuilder } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
+const { getOrCreateSettings } = require("../../repositories/SettingsRepository")
 
 const LANGUAGES = {
     de: { name: "Deutsch", flag: "🇩🇪" },
@@ -7,13 +8,13 @@ const LANGUAGES = {
 }
 
 module.exports = {
+    guildOnly: true,
     data: new SlashCommandBuilder()
         .setName("bot-language")
         .setDescription("Configure the bot language for this server")
         .setDefaultMemberPermissions(PermissionsBitField.Flags.Administrator),
 
     async execute(client, interaction) {
-        const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/utils/functions`)
         const settings = await getOrCreateSettings(client, interaction.guild.id)
 
         function buildView(currentLang) {
@@ -79,7 +80,7 @@ module.exports = {
             await i.update({
                 embeds: [updatedView.embed],
                 components: updatedView.components
-            }).catch(() => {})
+            }).catch((err) => console.error("[bot-language] Failed to update language selection:", err.message))
 
             client.successEmbed({
                 type: "reply",
@@ -88,21 +89,19 @@ module.exports = {
                     flag: selInfo.flag,
                     language: selInfo.name
                 })
-            }, i).catch(() => {})
+            }, i).catch((err) => console.error("[bot-language] Failed to send success embed:", err.message))
         })
 
         collector.on("end", async () => {
-            try {
-                const disabledMenu = new StringSelectMenuBuilder()
-                    .setCustomId("bot-language-select-disabled")
-                    .setPlaceholder("Selection expired")
-                    .setDisabled(true)
-                    .addOptions({ label: "Expired", value: "expired" })
+            const disabledMenu = new StringSelectMenuBuilder()
+                .setCustomId("bot-language-select-disabled")
+                .setPlaceholder("Selection expired")
+                .setDisabled(true)
+                .addOptions({ label: "Expired", value: "expired" })
 
-                await interaction.editReply({
-                    components: [new ActionRowBuilder().addComponents(disabledMenu)]
-                })
-            } catch {}
+            await interaction.editReply({
+                components: [new ActionRowBuilder().addComponents(disabledMenu)]
+            }).catch((err) => console.error("[bot-language] Failed to edit reply on collector end:", err.message))
         })
     }
 }

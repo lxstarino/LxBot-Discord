@@ -1,12 +1,14 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+const { SlashCommandBuilder } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
 
 module.exports = {
+    guildOnly: false,
+    cooldown: 3,
     data: new SlashCommandBuilder()
         .setName("roll")
         .setDescription("Roll a Dice"),
     async execute(client, interaction) {
-        let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
+        const ls = client.getLanguage(interaction.guild?.id)
 
         client.Embed([{
             title: `${ls["cmds"]["roll"]["title"]}`,

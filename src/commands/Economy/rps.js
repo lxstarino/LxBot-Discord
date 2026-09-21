@@ -1,4 +1,7 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+const { SlashCommandBuilder } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
+const { getOrCreateProfile } = require("../../repositories/ProfileRepository")
+const EconomyService = require("../../services/EconomyService")
 
 const emojis = {
     rock: "🪨",
@@ -9,6 +12,8 @@ const emojis = {
 const botChoices = ["rock", "paper", "scissors"]
 
 module.exports = {
+    guildOnly: true,
+    cooldown: 3,
     data: new SlashCommandBuilder()
         .setName("rps")
         .setDescription("Play rock paper scissors for money")
@@ -32,13 +37,12 @@ module.exports = {
         const userChoice = interaction.options.getString("choice")
         const betAmount = interaction.options.getInteger("amount")
 
-        let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/utils/functions`)
+        const ls = client.getLanguage(interaction.guild?.id)
 
         const profile = await getOrCreateProfile(client, interaction.user.id, interaction.guild.id)
 
         if (profile.wallet < betAmount) {
-            throw({
+            throw ({
                 title: ls["cmds"]["rps"]["title"],
                 desc: ls["cmds"]["rps"]["nem"]
             })
@@ -62,21 +66,19 @@ module.exports = {
             (userChoice === "paper" && botChoice === "rock") ||
             (userChoice === "scissors" && botChoice === "paper")
         ) {
-            profile.wallet += betAmount
+            EconomyService.addWallet(profile, betAmount)
 
             client.successEmbed({
                 type: "reply",
                 ephemeral: false,
-                title: ls["cmds"]["rps"]["title"],
                 desc: handlemsg(ls["cmds"]["rps"]["win"], { botChoice: botChoiceString, amount: betAmount })
             }, interaction)
         } else {
-            profile.wallet -= betAmount
+            EconomyService.removeWallet(profile, betAmount)
 
             client.errEmbed({
                 type: "reply",
                 ephemeral: false,
-                title: ls["cmds"]["rps"]["title"],
                 desc: handlemsg(ls["cmds"]["rps"]["lost"], { botChoice: botChoiceString, amount: betAmount })
             }, interaction)
         }

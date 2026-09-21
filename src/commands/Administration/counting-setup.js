@@ -1,7 +1,10 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { PermissionsBitField, ChannelType } = require("discord.js")
+
+const { PermissionsBitField, ChannelType, SlashCommandBuilder } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
+const { getOrCreateSettings } = require("../../repositories/SettingsRepository")
 
 module.exports = {
+    guildOnly: true,
     data: new SlashCommandBuilder()
         .setName("counting")
         .setDescription("Manage or view the counting game")
@@ -34,7 +37,6 @@ module.exports = {
     async execute(client, interaction) {
         const subcommand = interaction.options.getSubcommand()
         const ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/utils/functions`)
 
         const settings = await getOrCreateSettings(client, interaction.guild.id)
 
@@ -47,7 +49,6 @@ module.exports = {
                 return client.errEmbed({
                     type: "reply",
                     ephemeral: true,
-                    title: ls["cmds"]["counting"]["title"],
                     desc: handlemsg(ls["cmds"]["counting"]["err_perms"], { channel: channel.id })
                 }, interaction)
             }

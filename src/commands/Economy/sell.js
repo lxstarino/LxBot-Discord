@@ -1,36 +1,22 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-
-const fishPrices = {
-    cod: 150,
-    salmon: 200,
-    clownfish: 400,
-    pufferfish: 500,
-    squid: 1200,
-    shark: 2500,
-    seadragon: 10000
-}
-
-const orePrices = {
-    coal: 100,
-    iron: 250,
-    gold: 800,
-    diamond: 5000
-}
+const { SlashCommandBuilder } = require("discord.js")
+const { fishPrices, orePrices, huntPrices } = require("../../services/economyItems")
+const { handlemsg } = require("../../utils/stringUtils")
+const { getOrCreateProfile } = require("../../repositories/ProfileRepository")
+const EconomyService = require("../../services/EconomyService")
 
 module.exports = {
+    guildOnly: true,
     data: new SlashCommandBuilder()
         .setName("sell")
         .setDescription("Sell all caught fish and mined ores from your inventory for money"),
     async execute(client, interaction) {
-        let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/utils/functions`)
-
-        const cacheKey = `${interaction.guild.id}:${interaction.user.id}`
-        const profile = client.economy.mapCache?.get(cacheKey) || await getOrCreateProfile(client, interaction.user.id, interaction.guild.id)
+        const ls = client.getLanguage(interaction.guild?.id)
+        const profile = await getOrCreateProfile(client, interaction.user.id, interaction.guild.id)
 
         profile.inventory = profile.inventory || {}
         profile.inventory.fish = profile.inventory.fish || {}
         profile.inventory.ore = profile.inventory.ore || {}
+        profile.inventory.hunt = profile.inventory.hunt || {}
 
         let totalValue = 0
         let totalCount = 0
@@ -39,7 +25,9 @@ module.exports = {
             if (count > 0 && fishPrices[fishKey]) {
                 totalValue += fishPrices[fishKey] * count
                 totalCount += count
-                profile.inventory.fish[fishKey] = 0
+                delete profile.inventory.fish[fishKey]
+            } else if (count <= 0) {
+                delete profile.inventory.fish[fishKey]
             }
         })
 
@@ -47,7 +35,19 @@ module.exports = {
             if (count > 0 && orePrices[oreKey]) {
                 totalValue += orePrices[oreKey] * count
                 totalCount += count
-                profile.inventory.ore[oreKey] = 0
+                delete profile.inventory.ore[oreKey]
+            } else if (count <= 0) {
+                delete profile.inventory.ore[oreKey]
+            }
+        })
+
+        Object.entries(profile.inventory.hunt).forEach(([huntKey, count]) => {
+            if (count > 0 && huntPrices[huntKey]) {
+                totalValue += huntPrices[huntKey] * count
+                totalCount += count
+                delete profile.inventory.hunt[huntKey]
+            } else if (count <= 0) {
+                delete profile.inventory.hunt[huntKey]
             }
         })
 
@@ -55,12 +55,11 @@ module.exports = {
             return client.errEmbed({
                 type: "reply",
                 ephemeral: true,
-                title: ls["cmds"]["sell"]["title"],
                 desc: ls["cmds"]["sell"]["empty"]
             }, interaction)
         }
 
-        profile.wallet += totalValue
+        EconomyService.addWallet(profile, totalValue)
 
         client.Embed([{
             title: ls["cmds"]["sell"]["title"],

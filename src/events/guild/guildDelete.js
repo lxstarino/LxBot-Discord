@@ -1,4 +1,4 @@
-const { cleanupGuildData } = require(`${process.cwd()}/src/utils/functions`)
+const { cleanupGuildData } = require("../../repositories/SettingsRepository")
 
 module.exports = {
     name: "guildDelete",

@@ -1,9 +1,10 @@
 const { ActivityType } = require("discord.js")
-const RestoreManager = require(`${process.cwd()}/src/utils/RestoreManager`)
-const { cleanupGuildData } = require(`${process.cwd()}/src/utils/functions`)
+const fs = require("fs")
+const RestoreManager = require("../../restore/RestoreManager")
 
 module.exports = {
     name: "ready",
+    once: true,
     async execute(client) {
         client.user.setPresence({
             activities: [{
@@ -14,11 +15,27 @@ module.exports = {
             status: 'dnd'
         })
         const shardTag = client.shard ? `[Shard #${client.shard.ids.join(", ")}] ` : ""
-        console.log(`| ${shardTag}${client.user.tag} bot started!\n| Guilds: ${client.guilds.cache.size}\n| Dev Commands: ${client.commands.filter(cmd => cmd.devOnly === true).size} & User Commands ${client.commands.filter(cmd => cmd.devOnly !== true).size}`)
+        const devCount = client.commands.filter(cmd => cmd.devOnly === true).size
+        const userCount = client.commands.filter(cmd => cmd.devOnly !== true).size
+        const ping = client.ws.ping >= 0 ? `${client.ws.ping}ms` : "N/A"
 
-        client.settings.mapCache = new Map()
-        client.economy.mapCache = new Map()
+        console.log(`${shardTag}Online as ${client.user.tag} • ${client.guilds.cache.size} Guild(s) • ${client.commands.size} Commands (${userCount} User / ${devCount} Dev) • Ping: ${ping}`)
 
         await RestoreManager.restoreAll(client)
+
+        if (fs.existsSync("./src/tasks")) {
+            const taskFiles = fs.readdirSync("./src/tasks").filter(file => file.endsWith(".js"))
+            for (const taskFile of taskFiles) {
+                try {
+                    require(`../../tasks/${taskFile}`)(client)
+                } catch (err) {
+                    console.error(`${shardTag}[Tasks] Failed to load ${taskFile}:`, err.message)
+                }
+            }
+            if (taskFiles.length > 0) {
+                const taskNames = taskFiles.map(f => f.replace(".js", ""))
+                console.log(`${shardTag}[Tasks] Active (${taskNames.length}): ${taskNames.join(", ")}`)
+            }
+        }
     }
 }

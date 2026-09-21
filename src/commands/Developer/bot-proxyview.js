@@ -1,12 +1,8 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const {
-    ActionRowBuilder,
-    StringSelectMenuBuilder,
-    ButtonBuilder,
-    ButtonStyle
-} = require("discord.js")
+
+const { ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } = require("discord.js")
 
 module.exports = {
+    guildOnly: false,
     devOnly: true,
     data: new SlashCommandBuilder()
         .setName("bot-proxyview")
@@ -41,36 +37,24 @@ module.exports = {
 
                         return {
                             shardId: c.shard.ids[0],
-                            settings: getEntries(c.settings?.mapCache),
-                            economy: getEntries(c.economy?.mapCache),
-                            ticket: getEntries(c.ticket?.mapCache),
-                            reactionRoles: getEntries(c.reactionRoles?.mapCache),
-                            polls: getEntries(c.polls?.mapCache)
+                            settings: getEntries(c.settings),
+                            economy: getEntries(c.economy)
                         }
                     })
 
                     const combined = {
                         settings: [],
-                        economy: [],
-                        ticket: [],
-                        reactionRoles: [],
-                        polls: []
+                        economy: []
                     }
 
                     for (const res of shardResults) {
                         for (const item of res.settings) combined.settings.push({ shardId: res.shardId, key: item.key, val: item.raw })
                         for (const item of res.economy) combined.economy.push({ shardId: res.shardId, key: item.key, val: item.raw })
-                        for (const item of res.ticket) combined.ticket.push({ shardId: res.shardId, key: item.key, val: item.raw })
-                        for (const item of res.reactionRoles) combined.reactionRoles.push({ shardId: res.shardId, key: item.key, val: item.raw })
-                        for (const item of res.polls) combined.polls.push({ shardId: res.shardId, key: item.key, val: item.raw })
                     }
 
                     return [
                         { name: "Settings Proxies", key: "settings", entries: combined.settings, description: "Guild configuration & feature toggles" },
-                        { name: "Profile / Economy Proxies", key: "economy", entries: combined.economy, description: "User profiles, balances, levels & inventory" },
-                        { name: "Ticket Panels", key: "ticket", entries: combined.ticket, description: "Active ticket panel configs" },
-                        { name: "Reaction Role Panels", key: "reactionRoles", entries: combined.reactionRoles, description: "Active reaction role panels" },
-                        { name: "Poll Proxies", key: "polls", entries: combined.polls, description: "Active live polls in memory" }
+                        { name: "Profile / Economy Proxies", key: "economy", entries: combined.economy, description: "User profiles, balances, levels & inventory" }
                     ]
                 } catch (err) {
                     console.error("[bot-proxyview] Failed to broadcastEval across shards:", err)
@@ -88,11 +72,8 @@ module.exports = {
             }
 
             return [
-                { name: "Settings Proxies", key: "settings", entries: getLocalEntries(client.settings?.mapCache), description: "Guild configuration & feature toggles" },
-                { name: "Profile / Economy Proxies", key: "economy", entries: getLocalEntries(client.economy?.mapCache), description: "User profiles, balances, levels & inventory" },
-                { name: "Ticket Panels", key: "ticket", entries: getLocalEntries(client.ticket?.mapCache), description: "Active ticket panel configs" },
-                { name: "Reaction Role Panels", key: "reactionRoles", entries: getLocalEntries(client.reactionRoles?.mapCache), description: "Active reaction role panels" },
-                { name: "Poll Proxies", key: "polls", entries: getLocalEntries(client.polls?.mapCache), description: "Active live polls in memory" }
+                { name: "Settings Proxies", key: "settings", entries: getLocalEntries(client.settings), description: "Guild configuration & feature toggles" },
+                { name: "Profile / Economy Proxies", key: "economy", entries: getLocalEntries(client.economy), description: "User profiles, balances, levels & inventory" }
             ]
         }
 
@@ -275,7 +256,9 @@ module.exports = {
                         .setDisabled(true)
                 )
                 await interaction.editReply({ components: [disabledRow] })
-            } catch { }
+            } catch (err) {
+                console.error("[bot-proxyview] Failed to disable components on collector end:", err.message)
+            }
         })
     }
 }

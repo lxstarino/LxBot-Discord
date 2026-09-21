@@ -1,37 +1,43 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { PermissionsBitField, ChannelType } = require("discord.js")
+const { PermissionsBitField, ChannelType, SlashCommandBuilder } = require("discord.js")
+const { getOrCreateSettings } = require("../../repositories/SettingsRepository")
 
 module.exports = {
+    guildOnly: true,
     data: new SlashCommandBuilder()
         .setName("welcome-setup")
-        .setDescription("Setup a Welcome Message for your Server.")
+        .setDescription("Setup a Welcome Message for your server")
         .setDefaultMemberPermissions(PermissionsBitField.Flags.Administrator)
         .addBooleanOption(option =>
             option.setName("state")
-                .setDescription("Determines if welcome is enabled or disabled")
+                .setDescription("Determines if welcome messages are enabled or disabled")
                 .setRequired(true))
         .addChannelOption(option =>
             option.setName("channel")
-                .setDescription("The channel where you want to send welcome message")
-                .addChannelTypes(ChannelType.GuildText))
+                .setDescription("The text channel where welcome messages are sent")
+                .addChannelTypes(ChannelType.GuildText)
+                .setRequired(true))
         .addBooleanOption(option =>
             option.setName("card")
                 .setDescription("Determines if the welcome message includes a graphic card image")
-                .setRequired(false)),
+                .setRequired(true)),
     async execute(client, interaction) {
-        const channel = interaction.options.get("channel")
-        const state = interaction.options.get("state").value
-        const card = interaction.options.get("card")?.value ?? false
+        const channel = interaction.options.getChannel("channel")
+        const state = interaction.options.getBoolean("state")
+        const card = interaction.options.getBoolean("card")
 
-        let ls = client.getLanguage(interaction.guild?.id)
-        const { getOrCreateSettings } = require(`${process.cwd()}/src/utils/functions`)
+        const ls = client.getLanguage(interaction.guild?.id)
 
         const settings = await getOrCreateSettings(client, interaction.guild.id)
 
         settings.welcomestate = state
-        settings.welcomechannel = channel ? channel.channel.id : null;
+        settings.welcomechannel = channel ? channel.id : null
         settings.welcomecard = card
 
-        client.successEmbed({ type: "reply", ephemeral: true, title: ls["cmds"]["welcome-msg"]["title"], desc: ls["cmds"]["welcome-msg"]["updated"] }, interaction)
+        client.successEmbed({
+            type: "reply",
+            ephemeral: true,
+            title: ls["cmds"]["welcome-msg"]["title"],
+            desc: ls["cmds"]["welcome-msg"]["updated"]
+        }, interaction)
     }
 }

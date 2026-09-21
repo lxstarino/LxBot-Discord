@@ -1,6 +1,10 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+const { SlashCommandBuilder } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
+const { getOrCreateProfile } = require("../../repositories/ProfileRepository")
+const EconomyService = require("../../services/EconomyService")
 
 module.exports = {
+    guildOnly: true,
     cooldown: 5,
     data: new SlashCommandBuilder()
         .setName("wheel")
@@ -11,8 +15,7 @@ module.exports = {
             .setRequired(true)
         ),
     async execute(client, interaction) {
-        let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/utils/functions`)
+        const ls = client.getLanguage(interaction.guild?.id)
 
         const bet = interaction.options.getInteger("bet")
 
@@ -20,7 +23,6 @@ module.exports = {
             return client.errEmbed({
                 type: "reply",
                 ephemeral: true,
-                title: ls["cmds"]["wheel"]["title"],
                 desc: ls["cmds"]["wheel"]["err_bet_min"]
             }, interaction)
         }
@@ -30,10 +32,11 @@ module.exports = {
             return client.errEmbed({
                 type: "reply",
                 ephemeral: true,
-                title: ls["cmds"]["wheel"]["title"],
                 desc: ls["cmds"]["wheel"]["err_bet_wallet"]
             }, interaction)
         }
+
+        EconomyService.removeWallet(profile, bet)
 
         const outcomes = [
             { mult: 0.0, weight: 30 },
@@ -64,9 +67,12 @@ module.exports = {
             title: ls["cmds"]["wheel"]["title"],
             desc: `${frames[0]}\n\n${ls["cmds"]["wheel"]["spinning"]}`,
             footer: { text: `${interaction.user.tag} • Bet: ${bet} 💰`, iconURL: interaction.user.displayAvatarURL() }
-        }], [], "reply", true, interaction)
+        }], [], "reply", false, interaction)
 
-        if (!msg) return
+        if (!msg) {
+            profile.wallet += bet
+            return
+        }
 
         const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -75,21 +81,21 @@ module.exports = {
             title: ls["cmds"]["wheel"]["title"],
             desc: `${frames[1]}\n\n${ls["cmds"]["wheel"]["spinning"]}`,
             footer: { text: `${interaction.user.tag} • Bet: ${bet} 💰`, iconURL: interaction.user.displayAvatarURL() }
-        }], [], "editReply", true, interaction)
+        }], [], "editReply", false, interaction)
 
         await sleep(750)
         await client.Embed([{
             title: ls["cmds"]["wheel"]["title"],
             desc: `${frames[2]}\n\n${ls["cmds"]["wheel"]["spinning"]}`,
             footer: { text: `${interaction.user.tag} • Bet: ${bet} 💰`, iconURL: interaction.user.displayAvatarURL() }
-        }], [], "editReply", true, interaction)
+        }], [], "editReply", false, interaction)
 
         await sleep(750)
 
         const payout = Math.floor(bet * result.mult)
         const netChange = payout - bet
 
-        profile.wallet += netChange
+        EconomyService.addWallet(profile, payout)
 
         let resultText = ""
         let embedColor = "#95A5A6"
@@ -112,6 +118,6 @@ module.exports = {
             desc: `🎯 | [ **${result.mult.toFixed(1)}x** ]\n\n${resultText}`,
             footer: { text: `Balance: ${profile.wallet} 💰`, iconURL: interaction.user.displayAvatarURL() },
             timestamp: true
-        }], [], "editReply", true, interaction)
+        }], [], "editReply", false, interaction)
     }
 }

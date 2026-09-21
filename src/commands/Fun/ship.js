@@ -1,4 +1,5 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+const { SlashCommandBuilder } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
 
 function getShipPercentage(id1, id2) {
     const sorted = [id1, id2].sort()
@@ -11,6 +12,8 @@ function getShipPercentage(id1, id2) {
 }
 
 module.exports = {
+    guildOnly: false,
+    cooldown: 3,
     data: new SlashCommandBuilder()
         .setName("ship")
         .setDescription("Love compatibility matchmaking checker")
@@ -28,8 +31,7 @@ module.exports = {
         const u1 = interaction.options.getUser("user1")
         const u2 = interaction.options.getUser("user2") || interaction.user
 
-        let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
+        const ls = client.getLanguage(interaction.guild?.id)
 
         const percentage = getShipPercentage(u1.id, u2.id)
 

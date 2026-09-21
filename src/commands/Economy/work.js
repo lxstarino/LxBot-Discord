@@ -1,12 +1,15 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+const { SlashCommandBuilder } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
+const { getOrCreateProfile } = require("../../repositories/ProfileRepository")
+const EconomyService = require("../../services/EconomyService")
 
 module.exports = {
+    guildOnly: true,
     data: new SlashCommandBuilder()
         .setName("work")
         .setDescription("Work at a random job to earn money"),
     async execute(client, interaction) {
-        let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/utils/functions`)
+        const ls = client.getLanguage(interaction.guild?.id)
 
         const profile = await getOrCreateProfile(client, interaction.user.id, interaction.guild.id)
 
@@ -18,7 +21,6 @@ module.exports = {
             return client.errEmbed({
                 type: "reply",
                 ephemeral: true,
-                title: ls["cmds"]["work"]["title"],
                 desc: handlemsg(ls["cmds"]["work"]["already_worked"], { time: Math.round(Date.parse(nextWork) / 1000) })
             }, interaction)
         }
@@ -28,13 +30,12 @@ module.exports = {
 
         const earned = Math.floor(Math.random() * 501) + 100
 
-        profile.wallet += earned
+        EconomyService.addWallet(profile, earned)
         profile.work = new Date(interaction.createdTimestamp)
 
         client.successEmbed({
             type: "reply",
             ephemeral: false,
-            title: ls["cmds"]["work"]["title"],
             desc: handlemsg(ls["cmds"]["work"]["success"], { job: randomJob, amount: earned })
         }, interaction)
     }

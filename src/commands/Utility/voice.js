@@ -1,13 +1,16 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+const { SlashCommandBuilder } = require("discord.js")
+const { getOrCreateSettings } = require("../../repositories/SettingsRepository")
+const { getVoicePanelData } = require("../../services/VoiceService")
 
 module.exports = {
+    guildOnly: true,
+    cooldown: 3,
     data: new SlashCommandBuilder()
         .setName("voice")
         .setDescription("Open the Voice Channel Control Panel"),
 
     async execute(client, interaction) {
         const ls = client.getLanguage(interaction.guild?.id)
-        const { getOrCreateSettings, getVoicePanelData } = require(`${process.cwd()}/src/utils/functions`)
 
         const settings = await getOrCreateSettings(client, interaction.guild.id)
         const voiceChannel = interaction.member.voice.channel
@@ -16,7 +19,6 @@ module.exports = {
             return client.errEmbed({
                 type: "reply",
                 ephemeral: true,
-                title: ls["cmds"]["voice"]["title"],
                 desc: ls["cmds"]["voice"]["not_in_voice"]
             }, interaction)
         }
@@ -30,7 +32,6 @@ module.exports = {
             return client.errEmbed({
                 type: "reply",
                 ephemeral: true,
-                title: ls["cmds"]["voice"]["title"],
                 desc: ls["cmds"]["voice"]["not_in_voice"]
             }, interaction)
         }
@@ -40,7 +41,6 @@ module.exports = {
             return client.errEmbed({
                 type: "reply",
                 ephemeral: true,
-                title: ls["cmds"]["voice"]["title"],
                 desc: ls["cmds"]["voice"]["not_owner"]
             }, interaction)
         }

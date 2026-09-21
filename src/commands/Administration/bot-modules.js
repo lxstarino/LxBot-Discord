@@ -1,25 +1,27 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { PermissionsBitField, ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle } = require("discord.js")
+const { SlashCommandBuilder, PermissionsBitField, ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle } = require("discord.js")
 
 const MODULE_EMOJIS = {
-    "Economy": "💰",
+    "Economy": "<:lux_coin:1550631084855922698>",
     "Fun": "🎉",
     "Games": "🎮",
     "Information": "ℹ️",
     "Leveling": "🏆",
     "Moderation": "🛡️",
     "Utility": "⚙️",
+    "Socials": "🌐",
     "Developer": "👨‍💻"
 }
 
 module.exports = {
+    guildOnly: true,
     data: new SlashCommandBuilder()
         .setName("bot-modules")
         .setDescription("Enable or disable specific bot modules on your server")
         .setDefaultMemberPermissions(PermissionsBitField.Flags.Administrator),
     async execute(client, interaction) {
         const ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/utils/functions`)
+        const { handlemsg } = require("../../utils/stringUtils")
+        const { getOrCreateSettings } = require("../../repositories/SettingsRepository")
         const settings = await getOrCreateSettings(client, interaction.guild.id)
         if (!settings.disabled_modules) settings.disabled_modules = []
 

@@ -1,14 +1,16 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
+const { SlashCommandBuilder } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
+const ProfileRepository = require("../../repositories/ProfileRepository")
 
 module.exports = {
+    guildOnly: true,
     data: new SlashCommandBuilder()
         .setName("eco-lb")
         .setDescription("Show the richest users in the server"),
     async execute(client, interaction) {
-        let ls = client.getLanguage(interaction.guild?.id)
+        const ls = client.getLanguage(interaction.guild?.id)
 
-        const topTen = client.db.getEconomyLeaderboard(interaction.guild.id, 10)
+        const topTen = ProfileRepository.getLeaderboard(client, interaction.guild.id, 10, "economy")
 
         if (!topTen.length) {
             return client.Embed([{
@@ -17,17 +19,19 @@ module.exports = {
             }], undefined, "reply", undefined, interaction)
         }
 
+        const medals = ["🥇", "🥈", "🥉"]
         let descriptionLines = []
 
         topTen.forEach((profile, index) => {
             const total = (profile.wallet || 0) + (profile.bank || 0)
+            const rankBadge = medals[index] || `\`#${index + 1}\``
             descriptionLines.push(
                 handlemsg(ls["cmds"]["eco-lb"]["format"], {
-                    rank: index + 1,
+                    rank: rankBadge,
                     user: profile.userId,
-                    total: total,
-                    wallet: profile.wallet || 0,
-                    bank: profile.bank || 0
+                    total: total.toLocaleString(),
+                    wallet: (profile.wallet || 0).toLocaleString(),
+                    bank: (profile.bank || 0).toLocaleString()
                 })
             )
         })

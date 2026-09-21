@@ -1,52 +1,17 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { AttachmentBuilder } = require("discord.js")
+
+const { AttachmentBuilder, SlashCommandBuilder } = require("discord.js")
 const { createCanvas, loadImage, GlobalFonts } = require("@napi-rs/canvas")
 const fs = require("fs")
 const path = require("path")
 
-const fontsDir = path.join(process.cwd(), "src", "assets", "fonts");
+const fontsDir = path.join(__dirname, "..", "..", "assets", "fonts");
 const regularPath = path.join(fontsDir, "ggsans.woff2");
 const boldPath = path.join(fontsDir, "ggsansbold.woff2");
 
 let fontsRegistered = false;
 
-async function ensureFonts() {
+function ensureFonts() {
     if (fontsRegistered) return;
-
-    if (!fs.existsSync(fontsDir)) {
-        fs.mkdirSync(fontsDir, { recursive: true });
-    }
-
-    if (!fs.existsSync(regularPath)) {
-        console.log("[Fake-Message] Downloading ggsans.woff2...");
-        try {
-            const res = await fetch("https://github.com/damnxav/gg-sans-font/raw/main/ggsans.woff2", { signal: AbortSignal.timeout(8000) });
-            if (res.ok) {
-                const arrayBuffer = await res.arrayBuffer();
-                fs.writeFileSync(regularPath, Buffer.from(arrayBuffer));
-            } else {
-                throw new Error(`Failed to download regular font: ${res.status}`);
-            }
-        } catch (err) {
-            console.error("[Fake-Message] Error downloading regular font:", err);
-        }
-    }
-
-    if (!fs.existsSync(boldPath)) {
-        console.log("[Fake-Message] Downloading ggsansbold.woff2...");
-        try {
-            const res = await fetch("https://github.com/damnxav/gg-sans-font/raw/main/ggsansbold.woff2", { signal: AbortSignal.timeout(8000) });
-
-            if (res.ok) {
-                const arrayBuffer = await res.arrayBuffer();
-                fs.writeFileSync(boldPath, Buffer.from(arrayBuffer));
-            } else {
-                throw new Error(`Failed to download bold font: ${res.status}`);
-            }
-        } catch (err) {
-            console.error("[Fake-Message] Error downloading bold font:", err);
-        }
-    }
 
     try {
         if (fs.existsSync(regularPath)) {
@@ -56,7 +21,6 @@ async function ensureFonts() {
             GlobalFonts.registerFromPath(boldPath, "gg sans");
         }
         fontsRegistered = true;
-        console.log("[Fake-Message] gg sans fonts registered successfully.");
     } catch (err) {
         console.error("[Fake-Message] Error registering fonts:", err);
     }
@@ -82,24 +46,24 @@ function getLines(ctx, text, maxWidth) {
 }
 
 module.exports = {
-    cooldown: 30,
+    guildOnly: false,
+    cooldown: 15,
     data: new SlashCommandBuilder()
         .setName("fake-message")
-        .setDescription("Generiert ein gefälschtes Discord-Nachrichten-Bild.")
+        .setDescription("Generate a fake Discord message image")
         .addUserOption((option) => option
             .setName("user")
-            .setDescription("Der Benutzer, der die Nachricht geschrieben haben soll")
+            .setDescription("The user who supposedly sent the message")
             .setRequired(true)
         )
         .addStringOption((option) => option
             .setName("message")
-            .setDescription("Der Inhalt der gefälschten Nachricht")
+            .setDescription("The content of the fake message")
             .setRequired(true)
         ),
     async execute(client, interaction) {
         await interaction.deferReply();
-
-        await ensureFonts();
+        ensureFonts();
 
         const targetUser = interaction.options.getUser("user");
         const message = interaction.options.getString("message");
@@ -157,10 +121,10 @@ module.exports = {
             await interaction.editReply({ files: [attachment] });
         } catch (err) {
             console.error("[Fake-Message] Error generating fake message image:", err);
-            let ls = client.getLanguage(interaction.guild?.id);
+            const ls = client.getLanguage(interaction.guild?.id);
             await interaction.editReply({
-                content: ls["errors"]?.["error"] || "Ein Fehler ist aufgetreten beim Generieren des Bildes."
-            }).catch(() => { });
+                content: ls?.cmds?.["fake-message"]?.error || ls?.errors?.error || "An error occurred while generating the image."
+            }).catch((err) => console.error("[fake-message] Failed to edit reply with error message:", err.message));
         }
     }
 }

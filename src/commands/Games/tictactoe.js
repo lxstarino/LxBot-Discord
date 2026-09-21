@@ -1,5 +1,6 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require("discord.js")
+
+const { ButtonStyle, ComponentType, SlashCommandBuilder } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
 
 const winCombos = [
     [0, 1, 2], [3, 4, 5], [6, 7, 8],
@@ -17,6 +18,7 @@ function checkWinner(board) {
 }
 
 module.exports = {
+    guildOnly: true,
     cooldown: 10,
     data: new SlashCommandBuilder()
         .setName("tictactoe")
@@ -27,8 +29,7 @@ module.exports = {
             .setRequired(true)
         ),
     async execute(client, interaction) {
-        let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
+        const ls = client.getLanguage(interaction.guild?.id)
 
         const challenger = interaction.user
         const opponent = interaction.options.getUser("opponent")
@@ -37,7 +38,6 @@ module.exports = {
             return client.errEmbed({
                 type: "reply",
                 ephemeral: true,
-                title: ls["cmds"]["tictactoe"]["title"],
                 desc: ls["cmds"]["tictactoe"]["bot_opponent"]
             }, interaction)
         }
@@ -46,32 +46,46 @@ module.exports = {
             return client.errEmbed({
                 type: "reply",
                 ephemeral: true,
-                title: ls["cmds"]["tictactoe"]["title"],
                 desc: ls["cmds"]["tictactoe"]["self_opponent"]
             }, interaction)
         }
 
-        const inviteRow = new ActionRowBuilder().addComponents(
-            new ButtonBuilder()
-                .setCustomId("ttt-accept")
-                .setLabel(ls["cmds"]["tictactoe"]["btn_accept"])
-                .setStyle(ButtonStyle.Success),
-            new ButtonBuilder()
-                .setCustomId("ttt-decline")
-                .setLabel(ls["cmds"]["tictactoe"]["btn_decline"])
-                .setStyle(ButtonStyle.Danger)
-        )
+        await interaction.deferReply().catch((err) => console.error("[tictactoe] Failed to defer reply:", err.message))
 
-        const inviteEmbed = client.tempEmbed()
-            .setDescription(`⚔️ <@!${challenger.id}> challenges <@!${opponent.id}> to Tic-Tac-Toe!`)
-            .setColor("#5865F2")
+        await client.sendContainer({
+            sections: [
+                {
+                    text: [
+                        `**${ls["cmds"]["tictactoe"]["invite_title"] || "⚔️ Tic-Tac-Toe Challenge"}**`,
+                        handlemsg(ls["cmds"]["tictactoe"]["invite_desc"] || "<@!{challenger}> challenges <@!{opponent}>!", {
+                            challenger: challenger.id,
+                            opponent: opponent.id
+                        })
+                    ]
+                },
+                {
+                    type: "action_row",
+                    buttons: [
+                        {
+                            customId: "ttt-accept",
+                            label: ls["cmds"]["tictactoe"]["btn_accept"] || "Annehmen",
+                            style: ButtonStyle.Success,
+                            emoji: "✅"
+                        },
+                        {
+                            customId: "ttt-decline",
+                            label: ls["cmds"]["tictactoe"]["btn_decline"] || "Ablehnen",
+                            style: ButtonStyle.Danger,
+                            emoji: "❌"
+                        }
+                    ]
+                }
+            ],
+            accentColor: "#5865F2",
+            type: "editReply"
+        }, interaction)
 
-        const inviteMsg = await interaction.reply({
-            embeds: [inviteEmbed],
-            components: [inviteRow],
-            fetchReply: true
-        }).catch((err) => { console.log("Invite Error:\n" + err); return null; })
-
+        const inviteMsg = await interaction.fetchReply().catch(() => null)
         if (!inviteMsg) return
 
         const inviteCollector = inviteMsg.createMessageComponentCollector({
@@ -85,95 +99,110 @@ module.exports = {
         inviteCollector.on("collect", async (i) => {
             if (i.customId === "ttt-decline") {
                 inviteCollector.stop("declined")
-                const embed = client.tempEmbed()
-                    .setDescription(`❌ Challenge declined by <@!${opponent.id}>.`)
-                    .setColor("#E74C3C")
-                await i.update({
-                    embeds: [embed],
-                    components: []
-                }).catch(() => {})
-                return
+                return await client.sendContainer({
+                    sections: [
+                        {
+                            text: `❌ **Herausforderung abgelehnt** von <@!${opponent.id}>.`
+                        }
+                    ],
+                    accentColor: "#E74C3C",
+                    type: "update"
+                }, i)
             }
 
             if (i.customId === "ttt-accept") {
                 gameStarted = true
                 inviteCollector.stop("accepted")
-                await i.deferUpdate().catch(() => {})
-                await startGame()
+                await startGame(i)
             }
         })
 
         inviteCollector.on("end", async (collected, reason) => {
             if (!gameStarted && reason !== "declined") {
-                const embed = client.tempEmbed()
-                    .setDescription(`⏳ Invitation expired for <@!${opponent.id}>.`)
-                    .setColor("#95A5A6")
-                await inviteMsg.edit({
-                    embeds: [embed],
-                    components: []
-                }).catch(() => {})
+                await client.sendContainer({
+                    sections: [
+                        {
+                            text: `⏳ **Einladung abgelaufen** für <@!${opponent.id}>.`
+                        }
+                    ],
+                    accentColor: "#95A5A6",
+                    type: "editReply"
+                }, interaction).catch((err) => console.error("[tictactoe] Failed to send expired invite container:", err.message))
             }
         })
 
-        async function startGame() {
+        async function startGame(triggerInteraction) {
             const board = [" ", " ", " ", " ", " ", " ", " ", " ", " "]
             let currentPlayer = "X"
             let turnUser = challenger
 
-            const buildBoardComponents = (disabled = false) => {
-                const rows = []
+            const buildBoardSections = (statusText, winner = null, disabled = false) => {
+                let accent = "#5865F2"
+                if (winner === "X" || winner === "O") accent = "#2ECC71"
+                if (winner === "tie") accent = "#F1C40F"
+                if (winner === "timeout") accent = "#E74C3C"
+
+                const activeAvatar = (winner && winner !== "tie" && winner !== "timeout")
+                    ? (winner === "X" ? challenger.displayAvatarURL({ extension: "png", size: 256 }) : opponent.displayAvatarURL({ extension: "png", size: 256 }))
+                    : turnUser.displayAvatarURL({ extension: "png", size: 256 })
+
+                const boardSections = [
+                    {
+                        text: [
+                            `**🎮 Tic-Tac-Toe** (❌ <@!${challenger.id}> vs ⭕ <@!${opponent.id}>)`,
+                            statusText
+                        ],
+                        accessory: {
+                            type: "thumbnail",
+                            url: activeAvatar,
+                            description: "Player Avatar"
+                        }
+                    }
+                ]
+
                 for (let r = 0; r < 3; r++) {
-                    const row = new ActionRowBuilder()
+                    const rowButtons = []
                     for (let c = 0; c < 3; c++) {
                         const index = r * 3 + c
                         const cellValue = board[index]
 
                         let style = ButtonStyle.Secondary
-                        if (cellValue === "X") style = ButtonStyle.Primary
-                        if (cellValue === "O") style = ButtonStyle.Success
+                        let label = "-"
 
-                        row.addComponents(
-                            new ButtonBuilder()
-                                .setCustomId(`ttt-cell-${index}`)
-                                .setLabel(cellValue === " " ? "\u200b" : cellValue)
-                                .setStyle(style)
-                                .setDisabled(disabled || cellValue !== " ")
-                        )
+                        if (cellValue === "X") {
+                            style = ButtonStyle.Primary
+                            label = "X"
+                        } else if (cellValue === "O") {
+                            style = ButtonStyle.Success
+                            label = "O"
+                        }
+
+                        rowButtons.push({
+                            customId: `ttt-cell-${index}`,
+                            label: cellValue === " " ? "➖" : label,
+                            style: style,
+                            disabled: disabled || cellValue !== " "
+                        })
                     }
-                    rows.push(row)
+                    boardSections.push({
+                        type: "action_row",
+                        buttons: rowButtons
+                    })
                 }
-                return rows
+
+                return { sections: boardSections, accentColor: accent }
             }
 
-            const gameEmbed = (statusText, color = null) => {
-                const embed = client.tempEmbed()
-                    .setDescription(`🎮 **Tic-Tac-Toe**\n❌ <@!${challenger.id}> vs ⭕ <@!${opponent.id}>\n\n${statusText}`)
+            const initialStatus = `🎲 **Am Zug:** <@!${turnUser.id}> (\`X\`)`
+            const gameData = buildBoardSections(initialStatus)
 
-                if (color) {
-                    embed.setColor(color)
-                } else if (interaction.guild) {
-                    const hex = client.settings?.mapCache?.get(interaction.guild.id) || (client.db ? client.db.getSettings(interaction.guild.id) : null)
-                    if (hex && hex.embed_color) {
-                        embed.setColor(hex.embed_color)
-                    } else {
-                        embed.setColor("#5865F2")
-                    }
-                } else {
-                    embed.setColor("#5865F2")
-                }
-                return embed
-            }
+            await client.sendContainer({
+                sections: gameData.sections,
+                accentColor: gameData.accentColor,
+                type: "update"
+            }, triggerInteraction)
 
-            const initialStatus = handlemsg(ls["cmds"]["tictactoe"]["game_start"], { player: turnUser.id })
-
-            const gameMessage = await inviteMsg.edit({
-                embeds: [gameEmbed(initialStatus)],
-                components: buildBoardComponents()
-            }).catch(() => null)
-
-            if (!gameMessage) return
-
-            const gameCollector = gameMessage.createMessageComponentCollector({
+            const gameCollector = inviteMsg.createMessageComponentCollector({
                 filter: i => i.user.id === turnUser.id,
                 time: 300000,
                 componentType: ComponentType.Button
@@ -188,20 +217,19 @@ module.exports = {
                     gameCollector.stop(result)
 
                     let endStatus = ""
-                    let embedColor = "#95A5A6"
                     if (result === "tie") {
-                        endStatus = ls["cmds"]["tictactoe"]["tie"]
+                        endStatus = `🤝 **Unentschieden!** Niemand gewinnt.`
                     } else {
                         const winnerUser = result === "X" ? challenger : opponent
-                        endStatus = handlemsg(ls["cmds"]["tictactoe"]["winner"], { player: winnerUser.id, symbol: result })
-                        embedColor = "#2ECC71"
+                        endStatus = `🏆 **Sieg!** <@!${winnerUser.id}> (\`${result}\`) gewinnt das Spiel!`
                     }
 
-                    await i.update({
-                        embeds: [gameEmbed(endStatus, embedColor)],
-                        components: buildBoardComponents(true)
-                    }).catch(() => {})
-                    return
+                    const endData = buildBoardSections(endStatus, result, true)
+                    return await client.sendContainer({
+                        sections: endData.sections,
+                        accentColor: endData.accentColor,
+                        type: "update"
+                    }, i)
                 }
 
                 currentPlayer = currentPlayer === "X" ? "O" : "X"
@@ -209,21 +237,25 @@ module.exports = {
 
                 gameCollector.filter = (btnInt) => btnInt.user.id === turnUser.id
 
-                const nextTurnStatus = handlemsg(ls["cmds"]["tictactoe"]["your_turn"], { player: turnUser.id, symbol: currentPlayer })
+                const nextTurnStatus = `🎲 **Am Zug:** <@!${turnUser.id}> (\`${currentPlayer}\`)`
+                const nextData = buildBoardSections(nextTurnStatus)
 
-                await i.update({
-                    embeds: [gameEmbed(nextTurnStatus)],
-                    components: buildBoardComponents()
-                }).catch(() => {})
+                await client.sendContainer({
+                    sections: nextData.sections,
+                    accentColor: nextData.accentColor,
+                    type: "update"
+                }, i)
             })
 
             gameCollector.on("end", async (collected, reason) => {
                 if (reason === "time") {
-                    const embed = gameEmbed(ls["cmds"]["tictactoe"]["timeout"], "#E74C3C")
-                    await gameMessage.edit({
-                        embeds: [embed],
-                        components: buildBoardComponents(true)
-                    }).catch(() => {})
+                    const timeoutStatus = `⏳ **Zeit abgelaufen!** Inaktivität.`
+                    const timeoutData = buildBoardSections(timeoutStatus, "timeout", true)
+                    await client.sendContainer({
+                        sections: timeoutData.sections,
+                        accentColor: timeoutData.accentColor,
+                        type: "editReply"
+                    }, interaction).catch((err) => console.error("[tictactoe] Failed to send timeout container:", err.message))
                 }
             })
         }

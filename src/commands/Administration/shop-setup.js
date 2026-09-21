@@ -1,7 +1,10 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { PermissionsBitField } = require("discord.js")
+
+const { PermissionsBitField, SlashCommandBuilder } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
+const { getOrCreateSettings } = require("../../repositories/SettingsRepository")
 
 module.exports = {
+    guildOnly: true,
     data: new SlashCommandBuilder()
         .setName("shop-setup")
         .setDescription("Configure the server role shop")
@@ -37,17 +40,10 @@ module.exports = {
     async execute(client, interaction) {
         const subcommand = interaction.options.getSubcommand()
 
-        let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/utils/functions`)
+        const ls = client.getLanguage(interaction.guild?.id)
 
         const settings = await getOrCreateSettings(client, interaction.guild.id)
-        settings.shop_items = settings.shop_items || []
-
-        const initialCount = settings.shop_items.length
-        settings.shop_items = settings.shop_items.filter(item => interaction.guild.roles.cache.has(item.roleId))
-        if (settings.shop_items.length !== initialCount) {
-
-        }
+        settings.shop_items = (settings.shop_items || []).filter(item => interaction.guild.roles.cache.has(item.roleId))
 
         if (subcommand === "add") {
             const role = interaction.options.getRole("role")
@@ -57,7 +53,6 @@ module.exports = {
                 return client.errEmbed({
                     type: "reply",
                     ephemeral: true,
-                    title: ls["cmds"]["shop-setup"]["title"],
                     desc: ls["cmds"]["shop-setup"]["invalid_price"]
                 }, interaction)
             }
@@ -67,7 +62,6 @@ module.exports = {
                 return client.errEmbed({
                     type: "reply",
                     ephemeral: true,
-                    title: ls["cmds"]["shop-setup"]["title"],
                     desc: ls["cmds"]["shop-setup"]["already_added"]
                 }, interaction)
             }
@@ -91,7 +85,6 @@ module.exports = {
                 return client.errEmbed({
                     type: "reply",
                     ephemeral: true,
-                    title: ls["cmds"]["shop-setup"]["title"],
                     desc: ls["cmds"]["shop-setup"]["not_in_shop"]
                 }, interaction)
             }

@@ -1,7 +1,10 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { PermissionsBitField } = require("discord.js")
+
+const { PermissionsBitField, SlashCommandBuilder } = require("discord.js")
+const { getOrCreateSettings } = require("../../repositories/SettingsRepository")
+const { handlemsg } = require("../../utils/stringUtils")
 
 module.exports = {
+    guildOnly: true,
     data: new SlashCommandBuilder()
         .setName("autorole-setup")
         .setDescription("Configure auto-role given to joining members")
@@ -23,7 +26,6 @@ module.exports = {
     async execute(client, interaction) {
         const subcommand = interaction.options.getSubcommand()
         const ls = client.getLanguage(interaction.guild?.id)
-        const { getOrCreateSettings, handlemsg } = require(`${process.cwd()}/src/utils/functions`)
         const settings = await getOrCreateSettings(client, interaction.guild.id)
 
         if (subcommand === "set") {

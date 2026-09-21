@@ -1,4 +1,8 @@
 const { SlashCommandBuilder, PermissionsBitField } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
+const { getOrCreateProfile } = require("../../repositories/ProfileRepository")
+const { emojis } = require("../../core/constants")
+const LevelingService = require("../../services/LevelingService")
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -12,20 +16,19 @@ module.exports = {
         const user = await target.fetch().catch(() => target)
         const member = interaction.guild ? await interaction.guild.members.fetch(user.id).catch(() => null) : null
 
-        let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/utils/functions`)
+        const ls = client.getLanguage(interaction.guild?.id)
 
         const houseEmojis = {
-            HypeSquadOnlineHouse1: client.emojis.cache.find(e => e.id === "1194675493362995220")?.toString() || "🟣",
-            HypeSquadOnlineHouse2: client.emojis.cache.find(e => e.id === "1194675488120115261")?.toString() || "🪸",
-            HypeSquadOnlineHouse3: client.emojis.cache.find(e => e.id === "1194675491135819917")?.toString() || "🟢"
+            HypeSquadOnlineHouse1: emojis.house_brave || "🟣",
+            HypeSquadOnlineHouse2: emojis.house_brilliance || "🪸",
+            HypeSquadOnlineHouse3: emojis.house_balance || "🟢"
         }
         const badges = (user.flags ? user.flags.toArray() : []).map(f => houseEmojis[f]).filter(Boolean)
         if (user.avatar?.startsWith("a_") || user.banner || user.avatarDecoration) {
-            badges.push(client.emojis.cache.find(e => e.id === "1541467333212639262")?.toString() || "💳")
+            badges.push(emojis.nitro || "💳")
         }
         if (member?.premiumSince) {
-            badges.push(client.emojis.cache.find(e => e.id === "1541468285671972995")?.toString() || "🚀")
+            badges.push(emojis.boosts || "🚀")
         }
         if (user.bot) badges.push("🤖")
 
@@ -69,7 +72,7 @@ module.exports = {
                 bank: (profile.bank || 0).toLocaleString(),
                 level: String(lvl),
                 xp: xp.toLocaleString(),
-                needed: (lvl * lvl * 100).toLocaleString()
+                needed: LevelingService.getRequiredXp(lvl).toLocaleString()
             })
 
             fields.push(
@@ -80,8 +83,8 @@ module.exports = {
         }
 
         client.Embed([{
-            author: { name: user.username, iconURL: user.displayAvatarURL({ dynamic: true }) },
-            thumbnail: user.displayAvatarURL({ dynamic: true, size: 512 }),
+            author: { name: user.username, iconURL: user.displayAvatarURL() },
+            thumbnail: user.displayAvatarURL({ size: 512 }),
             color: member?.displayHexColor && member.displayHexColor !== "#000000" ? member.displayHexColor : null,
             desc: desc,
             fields: fields,

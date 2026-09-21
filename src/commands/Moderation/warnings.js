@@ -1,6 +1,9 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+const { SlashCommandBuilder } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
+const { getOrCreateProfile } = require("../../repositories/ProfileRepository")
 
 module.exports = {
+    guildOnly: true,
     data: new SlashCommandBuilder()
         .setName("warnings")
         .setDescription("Check the warnings of a user")
@@ -12,8 +15,7 @@ module.exports = {
     async execute(client, interaction) {
         const user = interaction.options.getUser("target") || interaction.user
 
-        let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/utils/functions`)
+        const ls = client.getLanguage(interaction.guild?.id)
 
         const profile = await getOrCreateProfile(client, user.id, interaction.guild.id)
         const warnings = profile ? (profile.warnings || []) : []

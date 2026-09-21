@@ -1,5 +1,5 @@
 const { Collection } = require("discord.js")
-const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
+const { handlemsg } = require("../../utils/stringUtils")
 
 const developers = process.env.developers
     ? process.env.developers.split(",").map(id => id.trim())
@@ -16,60 +16,25 @@ module.exports = {
         }, 15000)
 
         const settings = interaction.guild
-            ? (client.settings?.mapCache?.get(interaction.guild.id) || (client.db ? client.db.getSettings(interaction.guild.id) : null))
+            ? (client.settings?.get(interaction.guild.id) || client.db?.getSettings(interaction.guild.id))
             : null
-        let ls = client.getLanguage(interaction.guild?.id)
-
-        const handleExecutionError = async (err, interaction) => {
-            if (err.code === 10062 || err.message?.includes("Unknown interaction")) {
-                return
-            }
-            console.error(err)
-
-            let title = err.title ? err.title : (ls["errors"]["error"] || "Error")
-            let desc = `> ${err.desc ? err.desc : err}`
-
-            if (err.code === 50013 || err.message?.includes("Missing Permissions")) {
-                title = ls["errors"]["mp"] || "Missing Permissions"
-                desc = `> ${ls["events"]["interactionCreate"]["err_bot_missing_perms"]}`
-            }
-
-            if (interaction.deferred || interaction.replied) {
-                await client.errEmbed({
-                    type: "editReply",
-                    ephemeral: true,
-                    title: title,
-                    desc: desc
-                }, interaction).catch(() => { })
-            } else {
-                await client.errEmbed({
-                    type: "reply",
-                    ephemeral: true,
-                    title: title,
-                    desc: desc
-                }, interaction).catch(() => { })
-            }
-        }
+        const ls = client.getLanguage(interaction.guild?.id)
 
         if (interaction.isCommand()) {
             const command = client.commands.get(interaction.commandName)
 
             if (!command) return
-            if (!interaction.guild) return client.errEmbed({ type: "reply", ephemeral: true, desc: ls["events"]["interactionCreate"]["err_server_only"] }, interaction)
+            if (!interaction.guild && command.guildOnly) return client.errEmbed({ type: "reply", ephemeral: true, desc: ls["events"]["interactionCreate"]["err_server_only"] }, interaction)
             if (command.devOnly && !developers.includes(interaction.user.id)) return client.errEmbed({ type: "reply", ephemeral: true, desc: ls["events"]["interactionCreate"]["err_dev_only"] }, interaction)
-            if (command.nsfw && !interaction.channel.nsfw) return client.errEmbed({ type: "reply", ephemeral: true, desc: ls["events"]["interactionCreate"]["err_nsfw_only"] }, interaction)
+            if (command.nsfw && interaction.guild && !interaction.channel?.nsfw) return client.errEmbed({ type: "reply", ephemeral: true, desc: ls["events"]["interactionCreate"]["err_nsfw_only"] }, interaction)
 
-            if (settings) {
-                if (settings.disabled_modules) {
-                    if (settings.disabled_modules.includes(command.Folder)) {
-                        return client.errEmbed({ type: "reply", ephemeral: true, desc: ls["events"]["interactionCreate"]["err_disabled"] }, interaction)
-                    }
-                }
+            if (settings?.disabled_modules?.includes(command.Folder)) {
+                return client.errEmbed({ type: "reply", ephemeral: true, desc: ls["events"]["interactionCreate"]["err_disabled"] }, interaction)
             }
 
-            let cooldownAmount = 0;
+            let cooldownAmount = 0
             if (command.cooldown) {
-                cooldownAmount = typeof command.cooldown === "object" ? (command.cooldown.time || 0) : (command.cooldown * 1000);
+                cooldownAmount = typeof command.cooldown === "object" ? (command.cooldown.time || 0) : (command.cooldown * 1000)
             }
 
             if (cooldownAmount > 0) {
@@ -82,12 +47,12 @@ module.exports = {
                 if (timestamps.has(interaction.user.id)) {
                     const expirationTime = timestamps.get(interaction.user.id) + cooldownAmount
                     if (now < expirationTime) {
-                        const timeLeft = (expirationTime - now) / 1000
+                        const expiryTimestamp = Math.floor(expirationTime / 1000)
                         return client.errEmbed({
                             type: "reply",
                             ephemeral: true,
                             title: ls["events"]["interactionCreate"]["cooldown_title"],
-                            desc: handlemsg(ls["events"]["interactionCreate"]["cooldown_desc"], { time: timeLeft.toFixed(1) })
+                            desc: handlemsg(ls["events"]["interactionCreate"]["cooldown_desc"], { time: `<t:${expiryTimestamp}:R>` })
                         }, interaction)
                     }
                 }
@@ -100,12 +65,10 @@ module.exports = {
             } catch (err) {
                 if (cooldownAmount > 0) {
                     const timestamps = client.cooldowns.get(command.data.name)
-                    if (timestamps) {
-                        timestamps.delete(interaction.user.id)
-                    }
+                    if (timestamps) timestamps.delete(interaction.user.id)
                 }
 
-                await handleExecutionError(err, interaction)
+                await client.handleExecutionError?.(err, interaction)
             }
         }
 
@@ -124,7 +87,7 @@ module.exports = {
                 try {
                     await button.execute(client, interaction, ls, handlemsg)
                 } catch (err) {
-                    await handleExecutionError(err, interaction)
+                    await client.handleExecutionError?.(err, interaction)
                 }
             }
         }
@@ -144,7 +107,7 @@ module.exports = {
                 try {
                     await modal.execute(client, interaction, ls, handlemsg)
                 } catch (err) {
-                    await handleExecutionError(err, interaction)
+                    await client.handleExecutionError?.(err, interaction)
                 }
             }
         }

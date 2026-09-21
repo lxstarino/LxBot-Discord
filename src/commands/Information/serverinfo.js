@@ -1,21 +1,25 @@
-const { SlashCommandBuilder } = require("discord.js")
+const { SlashCommandBuilder, ChannelType } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
+const { emojis } = require("../../core/constants")
 
 module.exports = {
+    guildOnly: true,
+    cooldown: 3,
     data: new SlashCommandBuilder()
         .setName("serverinfo")
         .setDescription("Displays information about the current server"),
     async execute(client, interaction) {
         const { guild } = interaction
-        let ls = client.getLanguage(guild?.id)
-        const boostEmoji = client.emojis.cache.find(e => e.id === "1541468285671972995")?.toString() || "🚀"
+        const ls = client.getLanguage(guild?.id)
+        const boostEmoji = emojis.boosts
 
         const allMembers = await guild.members.fetch().catch(() => guild.members.cache)
         const bots = allMembers.filter(m => m.user.bot).size
         const humans = guild.memberCount - bots
 
-        const text = guild.channels.cache.filter(c => c.type === 0 || c.type === 5).size
-        const vc = guild.channels.cache.filter(c => c.type === 2 || c.type === 13).size
-        const cats = guild.channels.cache.filter(c => c.type === 4).size
+        const text = guild.channels.cache.filter(c => c.type === ChannelType.GuildText || c.type === ChannelType.GuildAnnouncement).size
+        const vc = guild.channels.cache.filter(c => c.type === ChannelType.GuildVoice || c.type === ChannelType.GuildStageVoice).size
+        const cats = guild.channels.cache.filter(c => c.type === ChannelType.GuildCategory).size
 
         const created = Math.round(guild.createdTimestamp / 1000)
 
@@ -38,8 +42,6 @@ module.exports = {
         if (guild.vanityURLCode) descParts.push(`🔗 **discord.gg/${guild.vanityURLCode}**`)
         if (assets.length) descParts.push(assets.join(" • "))
 
-        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
-
         let generalInfo = handlemsg(ls["cmds"]["serverinfo"]["general_val"], {
             owner: guild.ownerId,
             created: String(created),
@@ -57,7 +59,7 @@ module.exports = {
 
         let featuresInfo = handlemsg(ls["cmds"]["serverinfo"]["features_val"], {
             level: String(guild.premiumTier),
-            count: String(guild.premiumSubscriptionCount),
+            count: String(guild.premiumSubscriptionCount || 0),
             emoji: boostEmoji,
             channels: String(guild.channels.cache.size),
             text: String(text),
@@ -69,8 +71,8 @@ module.exports = {
         })
 
         client.Embed([{
-            author: { name: guild.name, iconURL: guild.iconURL({ dynamic: true }) },
-            thumbnail: guild.iconURL({ dynamic: true, size: 512 }),
+            author: { name: guild.name, iconURL: guild.iconURL() },
+            thumbnail: guild.iconURL({ size: 512 }),
             desc: descParts.length ? descParts.join("\n") : undefined,
             fields: [
                 { name: ls["cmds"]["serverinfo"]["section_general"], value: generalInfo, inline: false },

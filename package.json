@@ -19,7 +19,6 @@
     "nodemon": "^3.1.14"
   },
   "optionalDependencies": {
-    "@napi-rs/canvas-linux-x64-gnu": "^1.0.8",
-    "@napi-rs/canvas-win32-x64-msvc": "^1.0.8"
+    "@napi-rs/canvas-linux-x64-gnu": "^1.0.8"
   }
 }

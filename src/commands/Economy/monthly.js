@@ -1,12 +1,15 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+const { SlashCommandBuilder } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
+const { getOrCreateProfile } = require("../../repositories/ProfileRepository")
+const EconomyService = require("../../services/EconomyService")
 
 module.exports = {
+    guildOnly: true,
     data: new SlashCommandBuilder()
-    .setName("monthly")
-    .setDescription("Collect your monthly reward"),
-    async execute (client, interaction) {
-        let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateProfile } = require(`${process.cwd()}/src/utils/functions`)
+        .setName("monthly")
+        .setDescription("Collect your monthly reward"),
+    async execute(client, interaction) {
+        const ls = client.getLanguage(interaction.guild?.id)
 
         const profile = await getOrCreateProfile(client, interaction.user.id, interaction.guild.id)
 
@@ -18,17 +21,15 @@ module.exports = {
             client.errEmbed({
                 type: "reply",
                 ephemeral: true,
-                title: `${ls["cmds"]["monthly"]["title"]}`,
-                desc: `${handlemsg(ls["cmds"]["monthly"]["already_collected"], {time: Math.round(Date.parse(monthly) / 1000)})}`
+                desc: `${handlemsg(ls["cmds"]["monthly"]["already_collected"], { time: Math.round(Date.parse(monthly) / 1000) })}`
             }, interaction)
         } else {
-            profile.wallet += 20000
+            EconomyService.addWallet(profile, 20000)
             profile.monthly = new Date(interaction.createdTimestamp)
 
             client.successEmbed({
                 type: "reply",
-                ephemeral: true,
-                title: `${ls["cmds"]["monthly"]["title"]}`,
+                ephemeral: false,
                 desc: `${ls["cmds"]["monthly"]["collect"]}`
             }, interaction)
         }

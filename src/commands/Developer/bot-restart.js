@@ -1,84 +1,42 @@
 const { SlashCommandBuilder } = require("discord.js")
 
 module.exports = {
+    guildOnly: false,
     devOnly: true,
     data: new SlashCommandBuilder()
         .setName("bot-restart")
         .setDescription("Safely restart all bot processes and shards"),
     async execute(client, interaction) {
         const ls = client.getLanguage(interaction.guild?.id)
-        const restartLs = ls?.cmds?.["bot-restart"] || ls?.cmds?.["restart"] || {
+        const restartLs = ls?.cmds?.["bot-restart"] || {
             title: "Bot Restarting",
-            desc: "The bot will restart in {seconds}s..."
-        }
-
-        let remainingSeconds = 3
-        const baseDesc = restartLs.desc || "The bot will restart in {seconds}s..."
-
-        const getDesc = (seconds) => {
-            if (baseDesc.includes("<t:{time}:R>")) {
-                return baseDesc.replace("<t:{time}:R>", `in **${seconds}s**`)
-            }
-            if (baseDesc.includes("{time}")) {
-                return baseDesc.replace("{time}", `in **${seconds}s**`)
-            }
-            if (baseDesc.includes("{seconds}")) {
-                return baseDesc.replace("{seconds}", seconds)
-            }
-            return `${baseDesc}\n\nRestarting in **${seconds}s**...`
+            desc: "The bot is restarting now..."
         }
 
         try {
             await client.Embed([{
                 title: restartLs.title || "Bot Restarting",
-                color: "#F1C40F",
-                desc: getDesc(remainingSeconds)
+                color: "#E74C3C",
+                desc: restartLs.desc?.replace("<t:{time}:R>", "now...") || "**Bot-Prozess wird jetzt neu gestartet...**"
             }], [], "reply", true, interaction)
         } catch (err) {
             console.error("Failed to send restart embed:", err)
         }
 
-        const interval = setInterval(async () => {
-            remainingSeconds--
-
-            if (remainingSeconds > 0) {
-                try {
-                    await client.Embed([{
-                        title: restartLs.title || "Bot Restarting",
-                        color: "#F1C40F",
-                        desc: getDesc(remainingSeconds)
-                    }], [], "editReply", true, interaction)
-                } catch (err) {
-                    console.error("[bot-restart] Failed to edit countdown embed:", err.message)
+        setTimeout(() => {
+            try {
+                if (client && typeof client.destroy === "function") {
+                    client.destroy()
                 }
-            } else {
-                clearInterval(interval)
-                try {
-                    await client.Embed([{
-                        title: restartLs.title || "Bot Restarting",
-                        color: "#E74C3C",
-                        desc: "**Bot-Prozess wird jetzt neu gestartet...**"
-                    }], [], "editReply", true, interaction)
-                } catch (err) {
-                    console.error("[bot-restart] Failed to edit final restart embed:", err.message)
-                }
-
-                setTimeout(() => {
-                    try {
-                        if (client && typeof client.destroy === "function") {
-                            client.destroy()
-                        }
-                    } catch (err) {
-                        console.error("[bot-restart] Failed to destroy client:", err.message)
-                    }
-
-                    if (process.send) {
-                        process.send({ type: "SHARD_RESTART_ALL" })
-                    }
-
-                    process.exit(42)
-                }, 500)
+            } catch (err) {
+                console.error("[bot-restart] Failed to destroy client:", err.message)
             }
-        }, 1000)
+
+            if (process.send) {
+                process.send({ type: "SHARD_RESTART_ALL" })
+            }
+
+            process.exit(42)
+        }, 300)
     }
 }

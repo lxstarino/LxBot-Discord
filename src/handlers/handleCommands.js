@@ -1,4 +1,3 @@
-require("dotenv").config()
 const fs = require("fs")
 const { REST, Routes } = require("discord.js")
 
@@ -16,6 +15,10 @@ module.exports = (client) => {
                 if (!command || !command.data || !command.execute) {
                     console.warn(`[WARN] Command file "${commandFile}" in "${Folder}" is missing "data" or "execute" properties. Skipping.`);
                     return;
+                }
+
+                if (typeof command.data.setDMPermission === "function") {
+                    command.data.setDMPermission(!command.guildOnly)
                 }
 
                 const properties = { Folder, ...command }

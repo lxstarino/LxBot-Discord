@@ -1,5 +1,4 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { PermissionsBitField, ActionRowBuilder, ButtonBuilder, StringSelectMenuBuilder, ChannelSelectMenuBuilder, RoleSelectMenuBuilder, ButtonStyle, ChannelType } = require("discord.js")
+const { SlashCommandBuilder, PermissionsBitField, ActionRowBuilder, ButtonBuilder, StringSelectMenuBuilder, ChannelSelectMenuBuilder, RoleSelectMenuBuilder, ButtonStyle, ChannelType } = require("discord.js")
 
 const emojis = {
     "1": "1️⃣",
@@ -14,6 +13,9 @@ const emojis = {
     "10": "🔟"
 }
 
+const defaultDb = require("../../database/Database")
+const { handlemsg, getSetupControls } = require("../../utils/stringUtils")
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("ticket-setup")
@@ -21,7 +23,6 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionsBitField.Flags.Administrator),
     async execute(client, interaction) {
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getSetupControls, getOrCreateTicketPanel } = require(`${process.cwd()}/src/utils/functions`)
 
         try {
             let SetupNumber = null
@@ -93,9 +94,16 @@ module.exports = {
                     await menu.deferUpdate()
                     SetupNumber = menu.values[0].split(" ")[0]
 
-                    let panel = await getOrCreateTicketPanel(client, interaction.guild.id, SetupNumber);
+                    const database = client.db || defaultDb
+                    let panel = database.getTicket(interaction.guild.id, SetupNumber) || {
+                        guildId: String(interaction.guild.id),
+                        panel: SetupNumber,
+                        roles: [],
+                        channel: 0,
+                        category: 0
+                    }
 
-                    start_second_layer(panel);
+                    start_second_layer(panel)
                 })
 
                 col.on('end', (c, reason) => {
@@ -145,11 +153,11 @@ module.exports = {
                             .setPlaceholder(ls["cmds"]["t-setup"]["select_role_add"] || "Search and select roles")
                             .setMinValues(0)
                             .setMaxValues(5);
-                            
+
                         if (panel.roles && panel.roles.length > 0) {
                             roleMenu.addDefaultRoles(panel.roles);
                         }
-                            
+
                         comp.push(new ActionRowBuilder().addComponents(roleMenu));
                     }
 
@@ -172,6 +180,9 @@ module.exports = {
                 }
 
                 async function render_panel(i) {
+                    const database = client.db || defaultDb
+                    database.saveTicket(panel)
+
                     const statusTitle = handlemsg(ls["cmds"]["t-setup"]["status_title"], { panel: SetupNumber })
                     let statusDesc = handlemsg(ls["cmds"]["t-setup"]["status_desc"], {
                         panel: SetupNumber,
@@ -216,7 +227,7 @@ module.exports = {
                         const selectedRoleIds = i.values;
                         const validRoles = [];
                         let limitReached = false;
-                        
+
                         for (const roleId of selectedRoleIds) {
                             if (assignableRoleIds.has(roleId)) {
                                 if (validRoles.length < 5) {
@@ -226,10 +237,9 @@ module.exports = {
                                 }
                             }
                         }
-                        
+
                         panel.roles = validRoles;
 
-                        
                         if (validRoles.length < selectedRoleIds.length || limitReached) {
                             await i.deferUpdate();
                             await interaction.followUp({
@@ -331,6 +341,9 @@ module.exports = {
                                 .setStyle(ButtonStyle.Secondary)
                                 .setEmoji("📩")
                         )
+
+                        const database = client.db || defaultDb
+                        database.saveTicket(panel)
 
                         await client.Embed([{ title: ls["cmds"]["t-setup"]["support_title"], desc: ls["cmds"]["t-setup"]["support_desc"] }], [row], undefined, undefined, channel)
 

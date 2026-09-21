@@ -1,21 +1,17 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+const { SlashCommandBuilder } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
+const { getOrCreateSettings } = require("../../repositories/SettingsRepository")
 
 module.exports = {
+    guildOnly: true,
     data: new SlashCommandBuilder()
         .setName("shop")
         .setDescription("View items available for purchase in the server shop"),
     async execute(client, interaction) {
-        let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/utils/functions`)
+        const ls = client.getLanguage(interaction.guild?.id)
 
         const settings = await getOrCreateSettings(client, interaction.guild.id)
-        settings.shop_items = settings.shop_items || []
-
-        const initialCount = settings.shop_items.length
-        settings.shop_items = settings.shop_items.filter(item => interaction.guild.roles.cache.has(item.roleId))
-        if (settings.shop_items.length !== initialCount) {
-
-        }
+        settings.shop_items = (settings.shop_items || []).filter(item => interaction.guild.roles.cache.has(item.roleId))
 
         if (settings.shop_items.length === 0) {
             return client.Embed([{
@@ -25,8 +21,9 @@ module.exports = {
             }], undefined, "reply", false, interaction)
         }
 
+        const coin = client.appEmojis?.lux_coin || "<:lux_coin:1550631084855922698>"
         const itemsStr = settings.shop_items.map((item, index) => {
-            return `**${index + 1}.** <@&${item.roleId}> - **${item.price.toLocaleString()} 💰**`
+            return `**${index + 1}.** <@&${item.roleId}> - **${item.price.toLocaleString()} ${coin}**`
         }).join("\n")
 
         client.Embed([{

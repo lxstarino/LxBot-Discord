@@ -1,13 +1,14 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+const { SlashCommandBuilder } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
 
 module.exports = {
-    devOnly: true,
+    guildOnly: false,
+    cooldown: 3,
     data: new SlashCommandBuilder()
-    .setName("fact")
-    .setDescription("Get a random fact"),
+        .setName("fact")
+        .setDescription("Get a random fact"),
     async execute(client, interaction) {
-        let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
+        const ls = client.getLanguage(interaction.guild?.id)
 
         try {
             const response = await fetch("https://uselessfacts.jsph.pl/api/v2/facts/random", { signal: AbortSignal.timeout(5000) })
@@ -17,8 +18,8 @@ module.exports = {
 
             client.Embed([{
                 title: `${ls["cmds"]["fact"]["title"]}`,
-                desc: `${handlemsg(ls["cmds"]["fact"]["desc"], {user: interaction.user.tag, response: data.text})}`,
-                footer: {text: `ID: ${data.id}`}
+                desc: `${handlemsg(ls["cmds"]["fact"]["desc"], { user: interaction.user.tag, response: data.text })}`,
+                footer: { text: `ID: ${data.id}` }
             }], undefined, "reply", false, interaction)
         } catch (err) {
             console.error(err)

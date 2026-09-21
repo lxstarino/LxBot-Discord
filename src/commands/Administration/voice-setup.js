@@ -1,7 +1,9 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { PermissionsBitField, ChannelType } = require("discord.js")
+const { SlashCommandBuilder, PermissionsBitField, ChannelType } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
+const { getOrCreateSettings } = require("../../repositories/SettingsRepository")
 
 module.exports = {
+    guildOnly: true,
     data: new SlashCommandBuilder()
         .setName("voice-setup")
         .setDescription("Setup or disable the Join-to-Create temporary voice channel system")
@@ -18,7 +20,6 @@ module.exports = {
     async execute(client, interaction) {
         const subcommand = interaction.options.getSubcommand()
         const ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/utils/functions`)
 
         const settings = await getOrCreateSettings(client, interaction.guild.id)
 
@@ -27,7 +28,6 @@ module.exports = {
             return client.errEmbed({
                 type: "reply",
                 ephemeral: true,
-                title: ls["cmds"]["voice-setup"]["title"],
                 desc: ls["cmds"]["voice-setup"]["err_perms"]
             }, interaction)
         }
@@ -63,8 +63,7 @@ module.exports = {
                 console.error("Temp-Voice setup failed:", err)
                 client.errEmbed({
                     type: "editReply",
-                    title: ls["cmds"]["voice-setup"]["title"],
-                    desc: "An error occurred while creating the channels. Make sure my role has correct channel permissions!"
+                    desc: ls["cmds"]["voice-setup"]["err_create"] || "An error occurred while creating the channels. Make sure my role has correct channel permissions!"
                 }, interaction)
             }
 
@@ -76,9 +75,9 @@ module.exports = {
                     const creatorChan = interaction.guild.channels.cache.get(settings.voice_creator_channel)
                     if (creatorChan) {
                         const category = creatorChan.parent
-                        await creatorChan.delete().catch(() => {})
+                        await creatorChan.delete().catch((err) => console.error("[voice-setup] Failed to delete creator channel:", err.message))
                         if (category && category.children.cache.size === 0) {
-                            await category.delete().catch(() => {})
+                            await category.delete().catch((err) => console.error("[voice-setup] Failed to delete voice category:", err.message))
                         }
                     }
                 }
@@ -89,7 +88,7 @@ module.exports = {
                         if (!chId) continue
                         const channel = interaction.guild.channels.cache.get(chId) || await interaction.guild.channels.fetch(chId).catch(() => null)
                         if (channel) {
-                            await channel.delete().catch(() => {})
+                            await channel.delete().catch((err) => console.error("[voice-setup] Failed to delete temp channel:", err.message))
                         }
                     }
                 }
@@ -107,8 +106,7 @@ module.exports = {
                 console.error("Temp-Voice disable failed:", err)
                 client.errEmbed({
                     type: "editReply",
-                    title: ls["cmds"]["voice-setup"]["title"],
-                    desc: "An error occurred while disabling the system."
+                    desc: ls["cmds"]["voice-setup"]["err_disable"] || "An error occurred while disabling the system."
                 }, interaction)
             }
         }

@@ -1,7 +1,10 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { PermissionsBitField, ChannelType } = require("discord.js")
+
+const { PermissionsBitField, ChannelType, SlashCommandBuilder } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
+const { getOrCreateSettings } = require("../../repositories/SettingsRepository")
 
 module.exports = {
+    guildOnly: true,
     data: new SlashCommandBuilder()
         .setName("log-setup")
         .setDescription("Configure the moderation logs system")
@@ -23,8 +26,7 @@ module.exports = {
     async execute(client, interaction) {
         const subcommand = interaction.options.getSubcommand()
 
-        let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, getOrCreateSettings } = require(`${process.cwd()}/src/utils/functions`)
+        const ls = client.getLanguage(interaction.guild?.id)
 
         const settings = await getOrCreateSettings(client, interaction.guild.id)
 

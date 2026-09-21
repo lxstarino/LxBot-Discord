@@ -1,14 +1,10 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const {
-    ActionRowBuilder,
-    StringSelectMenuBuilder,
-    ButtonBuilder,
-    ButtonStyle
-} = require("discord.js")
-const db = require(`${process.cwd()}/src/utils/Database`)
-const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
+
+const { ActionRowBuilder, StringSelectMenuBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } = require("discord.js")
+const db = require("../../database/Database")
+const { handlemsg } = require("../../utils/stringUtils")
 
 module.exports = {
+    guildOnly: false,
     devOnly: true,
     data: new SlashCommandBuilder()
         .setName("bot-dbview")
@@ -21,7 +17,7 @@ module.exports = {
 
         function getTables() {
             const rows = rawDb.prepare(`
-                SELECT name FROM sqlite_master 
+                SELECT name FROM sqlite_master
                 WHERE type='table' AND name NOT LIKE 'sqlite_%'
                 ORDER BY name ASC
             `).all()
@@ -66,11 +62,23 @@ module.exports = {
                 })
             })
 
-            const selectOptions = tables.map(t => ({
-                label: `${t.name} (${t.count})`,
-                value: t.name,
-                description: `${t.name} table`
-            }))
+            const selectOptions = tables.map(t => {
+                let desc = `${t.name} table`
+                if (t.name === "twitch_notifications") desc = "Twitch live stream notification settings"
+                else if (t.name === "youtube_notifications") desc = "YouTube video upload notification settings"
+                else if (t.name === "settings") desc = "Guild configuration & settings"
+                else if (t.name === "profiles") desc = "User economy & leveling profiles"
+                else if (t.name === "tickets") desc = "Ticket panels & configurations"
+                else if (t.name === "reaction_roles") desc = "Reaction role panels"
+                else if (t.name === "polls") desc = "Live polls data"
+                else if (t.name === "free_games") desc = "Announced free games records"
+
+                return {
+                    label: `${t.name} (${t.count})`,
+                    value: t.name,
+                    description: desc.substring(0, 100)
+                }
+            })
 
             const menuRow = new ActionRowBuilder().addComponents(
                 new StringSelectMenuBuilder()
@@ -124,6 +132,11 @@ module.exports = {
                         } catch {
                             fieldText = `\`${row.data}\``
                         }
+                    } else if (tableName === "twitch_notifications") {
+                        const status = row.is_live ? "🔴 LIVE" : "⚫ Offline"
+                        fieldText = `**Streamer:** [${row.streamer_login}](https://twitch.tv/${row.streamer_login})\n**Guild ID:** \`${row.guild_id}\`\n**Channel:** <#${row.channel_id}>\n**Status:** ${status}\n**Last Stream ID:** \`${row.last_stream_id || "None"}\`\n**Custom Message:** ${row.custom_message ? `\`${row.custom_message}\`` : "*None*"}`
+                    } else if (tableName === "youtube_notifications") {
+                        fieldText = `**YouTube Channel:** [${row.channel_name || row.channel_id}](https://www.youtube.com/channel/${row.channel_id})\n**Channel ID:** \`${row.channel_id}\`\n**Guild ID:** \`${row.guild_id}\`\n**Discord Channel:** <#${row.discord_channel_id}>\n**Last Video ID:** \`${row.last_video_id || "None"}\`\n**Custom Message:** ${row.custom_message ? `\`${row.custom_message}\`` : "*None*"}`
                     } else {
                         const compact = JSON.stringify(row, null, 2)
                         fieldText = `\`\`\`json\n${compact}\n\`\`\``
@@ -231,7 +244,9 @@ module.exports = {
         collector.on("end", async () => {
             try {
                 await interaction.editReply({ components: [] })
-            } catch {}
+            } catch (err) {
+                console.error("[bot-dbview] Failed to remove components on collector end:", err.message)
+            }
         })
     }
 }

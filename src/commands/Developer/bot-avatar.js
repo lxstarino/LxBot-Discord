@@ -1,6 +1,8 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+const { SlashCommandBuilder } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils");
 
 module.exports = {
+    guildOnly: true,
     devOnly: true,
     data: new SlashCommandBuilder()
         .setName("bot-avatar")
@@ -13,8 +15,7 @@ module.exports = {
     async execute(client, interaction) {
         const attachment = interaction.options.getAttachment("avatar");
 
-        let ls = client.getLanguage(interaction.guild?.id);
-        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`);
+        const ls = client.getLanguage(interaction.guild?.id);
 
         try {
             const response = await fetch(attachment.url);

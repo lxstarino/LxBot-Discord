@@ -1,15 +1,17 @@
-const { SlashCommandBuilder } = require("discord.js")
+const { SlashCommandBuilder, version: djsVersion } = require("discord.js")
 const os = require("os")
 const fs = require("fs")
+const { handlemsg } = require("../../utils/stringUtils")
 
 module.exports = {
+    guildOnly: false,
+    cooldown: 5,
     data: new SlashCommandBuilder()
         .setName("botinfo")
         .setDescription("Displays information and statistics about the bot"),
     async execute(client, interaction) {
         const replyMessage = await interaction.deferReply({ fetchReply: true })
         const ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
 
         let totalGuilds = client.guilds.cache.size
         let cachedUsers = client.guilds.cache.reduce((acc, guild) => acc + (guild.memberCount || 0), 0)
@@ -57,65 +59,87 @@ module.exports = {
 
         const firstCpu = os.cpus()[0]
         const cpuSpeed = firstCpu?.speed ? ` @ ${(firstCpu.speed / 1000).toFixed(2)} GHz` : ""
-        const cpuModel = firstCpu?.model ? firstCpu.model.trim() : "CPU"
+        const cpuModel = firstCpu?.model ? firstCpu.model.trim().replace(/\s+/g, " ") : "CPU"
         const cpuInfo = `${cpuModel}${cpuSpeed} (${os.cpus().length} Cores)`
 
         let boardModel = ""
+        let boardLine = ""
         try {
+            let boardName = ""
+            let biosVer = ""
             if (fs.existsSync("/sys/class/dmi/id/board_name")) {
                 const rawBoard = fs.readFileSync("/sys/class/dmi/id/board_name", "utf8").replace(/\0/g, "").trim()
                 if (rawBoard && !rawBoard.toLowerCase().includes("default string")) {
-                    boardModel = rawBoard
+                    boardName = rawBoard
                 }
             }
             if (fs.existsSync("/sys/class/dmi/id/bios_version")) {
                 const rawBios = fs.readFileSync("/sys/class/dmi/id/bios_version", "utf8").replace(/\0/g, "").trim()
                 if (rawBios && !rawBios.toLowerCase().includes("default string")) {
-                    boardModel += boardModel ? ` (BIOS ${rawBios})` : `BIOS ${rawBios}`
+                    biosVer = rawBios
+                }
+            }
+            if (boardName || biosVer) {
+                boardModel = boardName && biosVer ? `${boardName} (BIOS ${biosVer})` : (boardName || `BIOS ${biosVer}`)
+                if (ls["cmds"]?.["botinfo"]?.["board_line"]) {
+                    boardLine = handlemsg(ls["cmds"]["botinfo"]["board_line"], { board: boardModel })
+                } else {
+                    boardLine = `\n> **Mainboard:** \`${boardModel}\``
                 }
             }
         } catch (err) {
             console.error("[botinfo] Could not read motherboard/BIOS info:", err.message)
         }
 
-        const hardwareInfo = boardModel ? `${cpuInfo} | ${boardModel}` : cpuInfo
-
-        let diskText = ""
+        let diskLine = ""
         try {
             if (typeof fs.statfsSync === "function") {
                 const stat = fs.statfsSync(".")
                 const totalDisk = (stat.bsize * stat.blocks / 1024 / 1024 / 1024).toFixed(1)
                 const freeDisk = (stat.bsize * stat.bfree / 1024 / 1024 / 1024).toFixed(1)
                 const usedDisk = (totalDisk - freeDisk).toFixed(1)
-                diskText = ` | ${usedDisk} / ${totalDisk} GB (Disk)`
+                const percent = Math.round((usedDisk / totalDisk) * 100)
+                const diskUsage = `${usedDisk} / ${totalDisk} GB (${percent}%)`
+                if (ls["cmds"]?.["botinfo"]?.["disk_line"]) {
+                    diskLine = handlemsg(ls["cmds"]["botinfo"]["disk_line"], { disk: diskUsage })
+                } else {
+                    diskLine = `\n> **Speicher:** \`${diskUsage}\``
+                }
             }
         } catch (err) {
             console.error("[botinfo] Could not query disk statistics:", err.message)
         }
 
-        const hostUsedMem = ((os.totalmem() - os.freemem()) / 1024 / 1024 / 1024).toFixed(1)
-        const hostTotalMem = (os.totalmem() / 1024 / 1024 / 1024).toFixed(1)
+        const hostTotal = (os.totalmem() / 1024 / 1024 / 1024).toFixed(1)
+        const hostUsed = ((os.totalmem() - os.freemem()) / 1024 / 1024 / 1024).toFixed(1)
+        const hostRamPercent = Math.round(((os.totalmem() - os.freemem()) / os.totalmem()) * 100)
+        const hostRamText = `${hostUsed} / ${hostTotal} GB (${hostRamPercent}%)`
+
         const hostBootTimestamp = Math.round(Date.now() / 1000 - os.uptime())
-        const osWithRelease = `${os.platform()} ${os.release()} (${os.arch()})`
+        const platformNames = { linux: "Linux", darwin: "macOS", win32: "Windows" }
+        const osName = platformNames[os.platform()] || os.platform()
+        const osWithRelease = `${osName} ${os.release()} (${os.arch()})`
 
         const systemSection = handlemsg(ls["cmds"]["botinfo"]["system_val"], {
             bot: String(replyMessage.createdTimestamp - interaction.createdTimestamp),
             ws: String(client.ws.ping),
-            hardware: hardwareInfo,
+            hardware: boardModel ? `${cpuInfo} | ${boardModel}` : cpuInfo,
+            cpu: cpuInfo,
+            board: boardLine,
             ram: memUsage,
-            host_ram: `${hostUsedMem} / ${hostTotalMem} GB`,
-            disk: diskText,
+            host_ram: hostRamText,
+            disk: diskLine,
             os: osWithRelease,
             host_uptime: String(hostBootTimestamp),
             node: process.version,
-            djs: require("discord.js/package.json").version
+            djs: djsVersion
         })
 
         client.Embed([{
             type: "editReply",
-            author: { name: client.user.username, iconURL: client.user.displayAvatarURL({ dynamic: true }) },
-            thumbnail: client.user.displayAvatarURL({ dynamic: true, size: 512 }),
-            desc: `[Website](https://lxst.cc) | [Bot Invite](https://discord.com/oauth2/authorize?client_id=${client.user.id}&permissions=8&integration_type=0&scope=bot) | [GitHub](https://github.com/lxstarino)`,
+            author: { name: client.user.username, iconURL: client.user.displayAvatarURL() },
+            thumbnail: client.user.displayAvatarURL({ size: 512 }),
+            desc: `${client.appEmojis?.lx_logo || "<:lx_logo:1550651032076554311>"} [Website](https://lxst.cc) • 🤖 [Bot Invite](https://discord.com/oauth2/authorize?client_id=${client.user.id}&permissions=8&integration_type=0&scope=bot) • ${client.appEmojis?.github || "<:github:1550651201442414622>"} [GitHub](https://github.com/lxstarino)`,
             fields: [
                 { name: ls["cmds"]["botinfo"]["section_general"], value: generalSection, inline: false },
                 { name: ls["cmds"]["botinfo"]["section_stats"], value: statsSection, inline: false },

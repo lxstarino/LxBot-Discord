@@ -1,4 +1,5 @@
-const { sendModLog, handlemsg } = require(`${process.cwd()}/src/utils/functions`)
+const { sendModLog } = require("../../services/SecurityService")
+const { handlemsg } = require("../../utils/stringUtils")
 
 module.exports = {
     name: "guildMemberUpdate",
@@ -13,7 +14,7 @@ module.exports = {
 
         if (addedRoles.size === 0 && removedRoles.size === 0) return
 
-        let ls = client.getLanguage(newMember.guild.id)
+        const ls = client.getLanguage(newMember.guild.id)
 
         for (const [, role] of addedRoles) {
             await sendModLog(client, newMember.guild, {

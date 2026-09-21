@@ -1,5 +1,5 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require("discord.js")
+const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
 
 function checkWinner(board) {
     const rows = 6
@@ -48,6 +48,7 @@ function checkWinner(board) {
 }
 
 module.exports = {
+    guildOnly: true,
     cooldown: 10,
     data: new SlashCommandBuilder()
         .setName("connect4")
@@ -59,7 +60,6 @@ module.exports = {
         ),
     async execute(client, interaction) {
         let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
 
         const challenger = interaction.user
         const opponent = interaction.options.getUser("opponent")
@@ -68,7 +68,6 @@ module.exports = {
             return client.errEmbed({
                 type: "reply",
                 ephemeral: true,
-                title: ls["cmds"]["connect4"]["title"],
                 desc: ls["cmds"]["connect4"]["bot_opponent"]
             }, interaction)
         }
@@ -77,7 +76,6 @@ module.exports = {
             return client.errEmbed({
                 type: "reply",
                 ephemeral: true,
-                title: ls["cmds"]["connect4"]["title"],
                 desc: ls["cmds"]["connect4"]["self_opponent"]
             }, interaction)
         }
@@ -93,8 +91,12 @@ module.exports = {
                 .setStyle(ButtonStyle.Danger)
         )
 
+        const inviteDesc = handlemsg(ls["cmds"]["connect4"]["invite_desc"] || "⚔️ <@!{challenger}> challenges <@!{opponent}> to Connect 4!", {
+            challenger: challenger.id,
+            opponent: opponent.id
+        })
         const inviteEmbed = client.tempEmbed()
-            .setDescription(`⚔️ <@!${challenger.id}> challenges <@!${opponent.id}> to Connect 4!`)
+            .setDescription(inviteDesc)
             .setColor("#5865F2")
 
         const inviteMsg = await interaction.reply({
@@ -122,14 +124,14 @@ module.exports = {
                 await i.update({
                     embeds: [embed],
                     components: []
-                }).catch(() => {})
+                }).catch((err) => console.error("[connect4] Failed to update declined invite:", err.message))
                 return
             }
 
             if (i.customId === "c4-accept") {
                 gameStarted = true
                 inviteCollector.stop("accepted")
-                await i.deferUpdate().catch(() => {})
+                await i.deferUpdate().catch((err) => console.error("[connect4] Failed to defer update:", err.message))
                 await startGame()
             }
         })
@@ -142,7 +144,7 @@ module.exports = {
                 await inviteMsg.edit({
                     embeds: [embed],
                     components: []
-                }).catch(() => {})
+                }).catch((err) => console.error("[connect4] Failed to edit expired invite message:", err.message))
             }
         })
 
@@ -242,7 +244,7 @@ module.exports = {
                 }
 
                 if (rowPlaced === -1) {
-                    await i.deferUpdate().catch(() => {})
+                    await i.deferUpdate().catch((err) => console.error("[connect4] Failed to defer invalid move update:", err.message))
                     return
                 }
 
@@ -264,7 +266,7 @@ module.exports = {
                     await i.update({
                         embeds: [gameEmbed(endStatus, embedColor)],
                         components: buildBoardComponents(true)
-                    }).catch(() => {})
+                    }).catch((err) => console.error("[connect4] Failed to update winner screen:", err.message))
                     return
                 }
 
@@ -279,7 +281,7 @@ module.exports = {
                 await i.update({
                     embeds: [gameEmbed(nextTurnStatus)],
                     components: buildBoardComponents()
-                }).catch(() => {})
+                }).catch((err) => console.error("[connect4] Failed to update board for next turn:", err.message))
             })
 
             gameCollector.on("end", async (collected, reason) => {
@@ -288,7 +290,7 @@ module.exports = {
                     await gameMessage.edit({
                         embeds: [embed],
                         components: buildBoardComponents(true)
-                    }).catch(() => {})
+                    }).catch((err) => console.error("[connect4] Failed to edit game message on timeout:", err.message))
                 }
             })
         }

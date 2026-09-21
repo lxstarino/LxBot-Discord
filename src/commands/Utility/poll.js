@@ -1,147 +1,11 @@
-const { SlashCommandBuilder, PermissionsBitField, ChannelType, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js")
-const RestoreManager = require(`${process.cwd()}/src/utils/RestoreManager`)
-
-const POLL_EMOJIS = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣"]
-const POLL_BUTTON_STYLES = [ButtonStyle.Primary, ButtonStyle.Success, ButtonStyle.Danger, ButtonStyle.Secondary, ButtonStyle.Primary]
-
-function buildComponents(options, disabled = false) {
-    const rows = []
-    for (let i = 0; i < options.length; i += 3) {
-        const row = new ActionRowBuilder()
-        options.slice(i, i + 3).forEach((opt, ci) => {
-            const idx = i + ci
-            row.addComponents(
-                new ButtonBuilder()
-                    .setCustomId(`poll_vote_${idx}`)
-                    .setLabel(`${POLL_EMOJIS[idx]} ${opt}`)
-                    .setStyle(POLL_BUTTON_STYLES[idx])
-                    .setDisabled(disabled)
-            )
-        })
-        rows.push(row)
-    }
-    return rows
-}
-
-function getColor(client, guildId) {
-    const settings = client.settings?.mapCache?.get(guildId) || (client.db ? client.db.getSettings(guildId) : null)
-    const hex = settings?.embed_color?.replace("#", "") || "5865F2"
-    return parseInt(hex, 16)
-}
-
-function buildResultsText(options, voterMap, handlemsg, ls) {
-    const totalVotes = Object.keys(voterMap).length
-    return options.map((opt, i) => {
-        const count = Object.values(voterMap).filter(v => v === i).length
-        const percent = totalVotes > 0 ? Math.round((count / totalVotes) * 100) : 0
-        const bar = "█".repeat(Math.round(percent / 10)) + "░".repeat(10 - Math.round(percent / 10))
-        return handlemsg(ls["cmds"]["poll"]["result_line"], {
-            emoji: POLL_EMOJIS[i], option: opt, count: String(count), percent: String(percent)
-        }) + `\n\`${bar}\``
-    }).join("\n\n")
-}
-
-function buildEmbed(title, question, options, voterMap, endsAt, creatorTag, creatorAvatar, client, guildId, handlemsg, ls) {
-    const ts = Math.floor(endsAt / 1000)
-    return {
-        title,
-        description: `${handlemsg(ls["cmds"]["poll"]["desc"], { question })}\n\n${buildResultsText(options, voterMap, handlemsg, ls)}\n\n⏰ Ends <t:${ts}:R>`,
-        color: getColor(client, guildId),
-        footer: { text: handlemsg(ls["cmds"]["poll"]["createdby"], { user: creatorTag }), icon_url: creatorAvatar },
-        timestamp: new Date().toISOString()
-    }
-}
-
-function attachCollector(client, pollMsg, pollData, handlemsg) {
-    const { pollId, question, options, endsAt, creatorTag, creatorAvatar, guildId } = pollData
-    const remaining = endsAt - Date.now()
-
-    if (remaining <= 0) {
-        finalisePoll(client, pollMsg, pollData, handlemsg)
-        return
-    }
-
-    const ls = client.getLanguage(guildId)
-    const collector = pollMsg.createMessageComponentCollector({ time: remaining })
-
-    collector.on("collect", async (i) => {
-        if (!i.customId.startsWith("poll_vote_")) return
-        const optionIdx = parseInt(i.customId.replace("poll_vote_", ""))
-
-        pollData.voterMap[i.user.id] = optionIdx
-        const record = client.polls.mapCache?.get(String(pollId))
-        if (record) {
-            record.voterMap = pollData.voterMap
-        }
-
-        await i.update({
-            embeds: [buildEmbed(ls["cmds"]["poll"]["title"], question, options, pollData.voterMap, endsAt, creatorTag, creatorAvatar, client, guildId, handlemsg, ls)],
-            components: buildComponents(options, false)
-        }).catch(() => { })
-    })
-
-    collector.on("end", () => finalisePoll(client, pollMsg, pollData, handlemsg))
-}
-
-async function finalisePoll(client, pollMsg, pollData, handlemsg) {
-    const { pollId, question, options, voterMap, creatorTag, creatorAvatar, guildId } = pollData
-    const ls = client.getLanguage(guildId)
-    const totalVotes = Object.keys(voterMap).length
-    const finalResults = buildResultsText(options, voterMap, handlemsg, ls)
-
-    await pollMsg.edit({
-        embeds: [{
-            title: ls["cmds"]["poll"]["results_title"],
-            description: handlemsg(ls["cmds"]["poll"]["results_desc"], { question, results: finalResults })
-                + `\n\n📊 **Total votes: ${totalVotes}**`,
-            color: getColor(client, guildId),
-            footer: { text: handlemsg(ls["cmds"]["poll"]["createdby"], { user: creatorTag }), icon_url: creatorAvatar },
-            timestamp: new Date().toISOString()
-        }],
-        components: buildComponents(options, true)
-    }).catch(() => { })
-
-    if (client.db) {
-        client.db.deletePoll(pollId)
-    }
-    
-    if (client.polls && client.polls.mapCache) {
-        client.polls.mapCache.delete(pollId)
-    }
-}
-
-RestoreManager.register("Polls", async (client) => {
-    const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
-    const activePolls = client.db ? client.db.getAllPolls() : []
-    if (activePolls.length === 0) return
-
-    for (const pollData of activePolls) {
-        try {
-            const guild = client.guilds.cache.get(pollData.guildId)
-            if (!guild) continue
-            const channel = guild.channels.cache.get(pollData.channelId)
-            if (!channel) continue
-            const message = await channel.messages.fetch(pollData.messageId).catch(() => null)
-            if (!message) {
-                if (client.db) client.db.deletePoll(pollData.pollId)
-                continue
-            }
-
-            const proxy = require(`${process.cwd()}/src/utils/functions`).createAutoSaveProxy(pollData, (p) => {
-                if (client.db) client.db.savePoll(p.__raw || p)
-            })
-            if (client.polls && client.polls.mapCache) {
-                client.polls.mapCache.set(String(pollData.pollId), proxy)
-            }
-
-            attachCollector(client, message, proxy, handlemsg)
-        } catch (err) {
-            console.error(`  > [Poll Restore] Failed for poll ${pollData.pollId}: ${err.message}`)
-        }
-    }
-})
+const { SlashCommandBuilder, PermissionsBitField, ChannelType } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
+const defaultDb = require("../../database/Database")
+const { attachCollector, buildComponents, buildEmbed } = require("../../restore/modules/polls")
 
 module.exports = {
+    guildOnly: true,
+    cooldown: 5,
     data: new SlashCommandBuilder()
         .setName("poll")
         .setDescription("Create an interactive poll with up to 5 options")
@@ -202,7 +66,6 @@ module.exports = {
         const durationMs = (interaction.options.getInteger("duration") || 60) * 60 * 1000
 
         const ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg, createPoll } = require(`${process.cwd()}/src/utils/functions`)
 
         const options = ["option1", "option2", "option3", "option4", "option5"]
             .map(name => interaction.options.getString(name))
@@ -212,14 +75,12 @@ module.exports = {
         if (!perms.has(PermissionsBitField.Flags.SendMessages) || !perms.has(PermissionsBitField.Flags.EmbedLinks)) {
             return client.errEmbed({
                 type: "reply", ephemeral: true,
-                title: ls["cmds"]["poll"]["title"],
                 desc: handlemsg(ls["cmds"]["poll"]["missing_perms"], { channel: targetChannel.id })
             }, interaction)
         }
 
         const endsAt = Date.now() + durationMs
         const pollData = {
-            pollId: null,
             guildId: interaction.guild.id,
             channelId: targetChannel.id,
             messageId: null,
@@ -229,14 +90,17 @@ module.exports = {
             voterMap: {}
         }
 
-        const pollMsg = await targetChannel.send({
-            embeds: [buildEmbed(ls["cmds"]["poll"]["title"], question, options, {}, endsAt, pollData.creatorTag, pollData.creatorAvatar, client, interaction.guild.id, handlemsg, ls)],
-            components: buildComponents(options, false)
-        })
+        const pollMsg = await client.Embed(
+            [buildEmbed(ls["cmds"]["poll"]["title"], question, options, {}, endsAt, pollData.creatorTag, pollData.creatorAvatar, handlemsg, ls, client)],
+            buildComponents(options, false),
+            "send",
+            false,
+            targetChannel
+        )
 
-        pollData.pollId = pollMsg.id
         pollData.messageId = pollMsg.id
-        await createPoll(client, pollData)
+        const database = client.db || defaultDb
+        database.savePoll(pollData)
 
         attachCollector(client, pollMsg, pollData, handlemsg)
 

@@ -1,43 +1,6 @@
 const { ChannelType } = require("discord.js")
-const RestoreManager = require(`${process.cwd()}/src/utils/RestoreManager`)
-const { getOrCreateSettings } = require(`${process.cwd()}/src/utils/functions`)
-
-RestoreManager.register("Temp Voice Cleanup", async (client) => {
-    const allSettings = client.db ? client.db.getAllSettings() : (client.settings.storage?.data || [])
-    for (const rawSettings of allSettings) {
-        if (!rawSettings.temp_voice_channels || rawSettings.temp_voice_channels.length === 0) continue
-
-        const guild = client.guilds.cache.get(rawSettings.guildId) || await client.guilds.fetch(rawSettings.guildId).catch(() => null)
-        if (!guild) continue
-
-        const activeChans = []
-        for (const chInfo of rawSettings.temp_voice_channels) {
-            const chId = typeof chInfo === "string" ? chInfo : chInfo.channelId
-            if (!chId) continue
-
-            try {
-                const channel = guild.channels.cache.get(chId) || await guild.channels.fetch(chId).catch(() => null)
-                if (channel) {
-                    if (channel.members.size === 0) {
-                        await channel.delete().catch(err => console.error("[Voice Restore] Failed to delete leftover temp channel:", err.message))
-                        console.log(`  > [Voice Restore] Deleted leftover empty temp channel ${chId} in guild ${guild.name}`)
-                    } else {
-                        activeChans.push(chInfo)
-                    }
-                }
-            } catch (err) {
-                console.error(`  > [Voice Restore] Failed to check channel ${chId}:`, err.message)
-            }
-        }
-
-        if (activeChans.length !== rawSettings.temp_voice_channels.length) {
-            const settings = client.settings.mapCache?.get(rawSettings.guildId) || await getOrCreateSettings(client, rawSettings.guildId)
-            settings.temp_voice_channels = activeChans
-
-            console.log(`  > [Voice Restore] Cleaned up ${rawSettings.temp_voice_channels.length - activeChans.length} invalid/empty temp voice channel(s) for guild ${rawSettings.guildId}`)
-        }
-    }
-})
+const { getOrCreateSettings } = require("../../repositories/SettingsRepository")
+const { handlemsg } = require("../../utils/stringUtils")
 
 module.exports = {
     name: "voiceStateUpdate",
@@ -45,13 +8,12 @@ module.exports = {
         const guild = newState.guild || oldState.guild
         if (!guild) return
 
-        const settings = client.settings.mapCache?.get(guild.id) || await getOrCreateSettings(client, guild.id)
+        const settings = client.settings?.get(guild.id) || await getOrCreateSettings(client, guild.id)
 
         if (settings.voice_creator_channel && newState.channelId === settings.voice_creator_channel) {
             const creatorChan = guild.channels.cache.get(settings.voice_creator_channel) || await guild.channels.fetch(settings.voice_creator_channel).catch(() => null)
             if (creatorChan) {
                 const ls = client.getLanguage(guild.id)
-                const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
 
                 try {
                     const tempChannelName = handlemsg(ls["cmds"]["voice-setup"]["default_channel_name"], {
@@ -97,10 +59,8 @@ module.exports = {
                         const chId = typeof c === "string" ? c : c.channelId
                         return chId !== oldState.channelId
                     })
-
                 }
             }
         }
-
     }
 }

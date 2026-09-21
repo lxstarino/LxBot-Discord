@@ -1,6 +1,10 @@
 const { SlashCommandBuilder, PermissionsBitField } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
+const { sendModLog } = require("../../services/SecurityService")
 
 module.exports = {
+    guildOnly: true,
+    cooldown: 5,
     data: new SlashCommandBuilder()
         .setName("purge")
         .setDescription("Delete a specified amount of messages in this channel")
@@ -18,8 +22,7 @@ module.exports = {
             .setRequired(false)
         ),
     async execute(client, interaction) {
-        let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
+        const ls = client.getLanguage(interaction.guild?.id)
 
         if (!interaction.guild.members.me.permissionsIn(interaction.channel).has(PermissionsBitField.Flags.ManageMessages)) {
             return client.errEmbed({
@@ -51,7 +54,6 @@ module.exports = {
                 deletedCount = deleted.size
             }
 
-            const { sendModLog } = require(`${process.cwd()}/src/utils/functions`)
             await sendModLog(client, interaction.guild, {
                 title: ls["logs"]["purge_title"],
                 desc: targetUser

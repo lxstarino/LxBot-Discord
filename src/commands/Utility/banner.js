@@ -1,6 +1,9 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+const { SlashCommandBuilder } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
 
 module.exports = {
+    guildOnly: false,
+    cooldown: 3,
     data: new SlashCommandBuilder()
         .setName("banner")
         .setDescription("Displays a User Banner")
@@ -12,40 +15,26 @@ module.exports = {
     async execute(client, interaction) {
         const user = interaction.options.getUser("target") || interaction.user
 
-        let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
+        const ls = client.getLanguage(interaction.guild?.id)
 
         try {
-            const res = await fetch(`https://discord.com/api/v10/users/${user.id}`, {
-                headers: { Authorization: `Bot ${client.token}` },
-                signal: AbortSignal.timeout(5000)
-            })
+            const fullUser = await client.users.fetch(user.id, { force: true })
+            const bannerUrl = fullUser.bannerURL({ size: 1024 })
 
-            if (!res.ok) {
-                return client.errEmbed({
-                    type: "reply",
-                    desc: ls["cmds"]["banner"]["desc2"]
-                }, interaction)
-            }
-
-            const { banner, accent_color } = await res.json()
-            const embedColor = accent_color ? `#${accent_color.toString(16).padStart(6, "0")}` : null
-
-            if (banner) {
-                const format = banner.startsWith("a_") ? ".gif" : ".png"
+            if (bannerUrl) {
                 client.Embed([{
-                    title: handlemsg(ls["cmds"]["banner"]["title"], { user: user.tag }),
-                    image: `https://cdn.discordapp.com/banners/${user.id}/${banner}${format}?size=1024`,
-                    color: embedColor,
+                    title: handlemsg(ls["cmds"]["banner"]["title"], { user: fullUser.tag }),
+                    image: bannerUrl,
+                    color: fullUser.hexAccentColor || null,
                 }], undefined, "reply", false, interaction)
             } else {
                 client.errEmbed({
                     type: "reply",
-                    desc: `${handlemsg(ls["cmds"]["banner"]["desc1"], { target: user.tag })}`
+                    desc: handlemsg(ls["cmds"]["banner"]["desc1"], { target: fullUser.tag })
                 }, interaction)
             }
         } catch (err) {
-            console.error(err)
+            console.error("[banner] Failed to fetch user banner:", err)
             client.errEmbed({
                 type: "reply",
                 desc: ls["cmds"]["banner"]["desc2"]

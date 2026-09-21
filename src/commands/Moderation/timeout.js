@@ -1,5 +1,6 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { PermissionsBitField } = require("discord.js")
+const { PermissionsBitField, SlashCommandBuilder } = require("discord.js")
+const { handlemsg } = require("../../utils/stringUtils")
+const { sendModLog } = require("../../services/SecurityService")
 
 const durationMap = {
     "60000": "60s",
@@ -11,6 +12,7 @@ const durationMap = {
 }
 
 module.exports = {
+    guildOnly: true,
     data: new SlashCommandBuilder()
         .setName("timeout")
         .setDescription("Timeout/Mute a member on the server")
@@ -40,14 +42,13 @@ module.exports = {
             .setRequired(false)
         ),
     async execute(client, interaction) {
-        const target = interaction.options.get("target")
+        const targetUser = interaction.options.getUser("target")
         const durationVal = interaction.options.getString("duration")
         const reason = interaction.options.getString("reason") || "No reason provided"
 
-        let ls = client.getLanguage(interaction.guild?.id)
-        const { handlemsg } = require(`${process.cwd()}/src/utils/functions`)
+        const ls = client.getLanguage(interaction.guild?.id)
 
-        const member = await interaction.guild.members.fetch(target.user.id).catch(() => null)
+        const member = await interaction.guild.members.fetch(targetUser.id).catch(() => null)
         if (!member) {
             throw ({ title: ls["cmds"]["timeout"]["title"], desc: ls["errors"]["unf"] })
         }
@@ -70,7 +71,7 @@ module.exports = {
         client.Embed([{
             title: ls["cmds"]["timeout"]["title"],
             desc: handlemsg(ls["cmds"]["timeout"]["success"], {
-                target: target.user.id,
+                target: targetUser.id,
                 duration: durationTranslated,
                 reason: reason
             }),
@@ -78,12 +79,11 @@ module.exports = {
             footer: { text: `Moderator: ${interaction.user.tag}` }
         }], undefined, "reply", false, interaction)
 
-        const { sendModLog } = require(`${process.cwd()}/src/utils/functions`)
         await sendModLog(client, interaction.guild, {
             title: ls["logs"]["timeout_title"],
             desc: handlemsg(ls["logs"]["timeout_desc"], {
-                target: target.user.id,
-                tag: target.user.tag,
+                target: targetUser.id,
+                tag: targetUser.tag,
                 moderator: interaction.user.id,
                 duration: durationTranslated,
                 reason: reason
